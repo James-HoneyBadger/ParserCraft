@@ -1,0 +1,223 @@
+name: "Ruby-Like Language"
+version: "1.0"
+description: "An object-oriented language inspired by Ruby with blocks and iterators"
+
+keywords:
+  # Control flow
+  if: "if"
+  then: "then"
+  else: "else"
+  elsif: "elsif"
+  unless: "unless"
+  while: "while"
+  until: "until"
+  for: "for"
+  break: "break"
+  continue: "next"
+  
+  # Functions and methods
+  function: "def"
+  return: "return"
+  yield: "yield"
+  
+  # Classes and modules
+  class: "class"
+  module: "module"
+  self: "self"
+  super: "super"
+  
+  # Variables
+  let: "let"
+  var: "var"
+  
+  # Logic
+  and: "and"
+  or: "or"
+  not: "not"
+  
+  # Boolean values
+  true: "true"
+  false: "false"
+  null: "nil"
+  
+  # Exception handling
+  try: "begin"
+  except: "rescue"
+  finally: "ensure"
+  raise: "raise"
+  
+  # Other
+  import: "require"
+  with: "with"
+  as: "as"
+  in: "in"
+  is: "is"
+  case: "case"
+  when: "when"
+  do: "do"
+  end: "end"
+  lambda: "lambda"
+  proc: "proc"
+
+functions:
+  print:
+    name: "puts"
+    min_args: 0
+    max_args: -1
+    description: "Print with newline"
+  
+  write:
+    name: "print"
+    min_args: 0
+    max_args: -1
+    description: "Print without newline"
+  
+  input:
+    name: "gets"
+    min_args: 0
+    max_args: 0
+    description: "Read input"
+  
+  len:
+    name: "length"
+    min_args: 1
+    max_args: 1
+    description: "Get length"
+  
+  size:
+    name: "size"
+    min_args: 1
+    max_args: 1
+    description: "Get size"
+  
+  int:
+    name: "to_i"
+    min_args: 1
+    max_args: 1
+    description: "Convert to integer"
+  
+  str:
+    name: "to_s"
+    min_args: 1
+    max_args: 1
+    description: "Convert to string"
+  
+  float:
+    name: "to_f"
+    min_args: 1
+    max_args: 1
+    description: "Convert to float"
+  
+  map:
+    name: "map"
+    min_args: 1
+    max_args: 2
+    description: "Map over collection"
+  
+  select:
+    name: "select"
+    min_args: 1
+    max_args: 2
+    description: "Filter collection"
+  
+  reject:
+    name: "reject"
+    min_args: 1
+    max_args: 2
+    description: "Reject from collection"
+  
+  each:
+    name: "each"
+    min_args: 1
+    max_args: 2
+    description: "Iterate over collection"
+  
+  reduce:
+    name: "reduce"
+    min_args: 1
+    max_args: 3
+    description: "Reduce collection"
+  
+  sort:
+    name: "sort"
+    min_args: 1
+    max_args: 2
+    description: "Sort collection"
+  
+  reverse:
+    name: "reverse"
+    min_args: 1
+    max_args: 1
+    description: "Reverse collection"
+  
+  range:
+    name: "Range.new"
+    min_args: 2
+    max_args: 3
+    description: "Create range"
+
+operators:
+  - symbol: "+"
+    precedence: 4
+    associativity: "left"
+  - symbol: "-"
+    precedence: 4
+    associativity: "left"
+  - symbol: "*"
+    precedence: 5
+    associativity: "left"
+  - symbol: "/"
+    precedence: 5
+    associativity: "left"
+  - symbol: "%"
+    precedence: 5
+    associativity: "left"
+  - symbol: "**"
+    precedence: 6
+    associativity: "right"
+  - symbol: "="
+    precedence: 2
+    associativity: "right"
+  - symbol: "=="
+    precedence: 3
+    associativity: "left"
+  - symbol: "!="
+    precedence: 3
+    associativity: "left"
+  - symbol: "<"
+    precedence: 3
+    associativity: "left"
+  - symbol: ">"
+    precedence: 3
+    associativity: "left"
+  - symbol: "<="
+    precedence: 3
+    associativity: "left"
+  - symbol: ">="
+    precedence: 3
+    associativity: "left"
+  - symbol: "<=>"
+    precedence: 3
+    associativity: "left"
+  - symbol: "&&"
+    precedence: 1
+    associativity: "left"
+  - symbol: "||"
+    precedence: 1
+    associativity: "left"
+
+parsing:
+  comment_style: "#"
+  string_delimiters:
+    - "\""
+    - "'"
+  multiline_comment_start: "=begin"
+  multiline_comment_end: "=end"
+
+syntax:
+  array_index_base: 0
+  array_index_one_based: false
+  function_keyword_required: true
+  parentheses_required: false
+  block_end_required: true
+  statement_separator: null

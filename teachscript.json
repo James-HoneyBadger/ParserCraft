@@ -1,0 +1,204 @@
+{
+  "metadata": {
+    "name": "TeachScript",
+    "version": "1.0",
+    "description": "A beginner-friendly educational programming language"
+  },
+  "keywords": {
+    "if": {
+      "original": "if",
+      "custom": "when",
+      "category": "control_flow"
+    },
+    "else": {
+      "original": "else",
+      "custom": "otherwise",
+      "category": "control_flow"
+    },
+    "elif": {
+      "original": "elif",
+      "custom": "or_when",
+      "category": "control_flow"
+    },
+    "while": {
+      "original": "while",
+      "custom": "repeat_while",
+      "category": "control_flow"
+    },
+    "for": {
+      "original": "for",
+      "custom": "repeat_for",
+      "category": "control_flow"
+    },
+    "break": {
+      "original": "break",
+      "custom": "stop",
+      "category": "control_flow"
+    },
+    "continue": {
+      "original": "continue",
+      "custom": "skip",
+      "category": "control_flow"
+    },
+    "def": {
+      "original": "def",
+      "custom": "teach",
+      "category": "declaration"
+    },
+    "return": {
+      "original": "return",
+      "custom": "give_back",
+      "category": "control_flow"
+    },
+    "True": {
+      "original": "True",
+      "custom": "yes",
+      "category": "literal"
+    },
+    "False": {
+      "original": "False",
+      "custom": "no",
+      "category": "literal"
+    },
+    "None": {
+      "original": "None",
+      "custom": "nothing",
+      "category": "literal"
+    },
+    "and": {
+      "original": "and",
+      "custom": "and_also",
+      "category": "operator"
+    },
+    "or": {
+      "original": "or",
+      "custom": "or_else",
+      "category": "operator"
+    },
+    "not": {
+      "original": "not",
+      "custom": "opposite",
+      "category": "operator"
+    },
+    "in": {
+      "original": "in",
+      "custom": "inside",
+      "category": "operator"
+    },
+    "is": {
+      "original": "is",
+      "custom": "equals",
+      "category": "operator"
+    }
+  },
+  "builtin_functions": {
+    "print": {
+      "name": "say",
+      "arity": -1,
+      "enabled": true,
+      "description": "Print output"
+    },
+    "input": {
+      "name": "ask",
+      "arity": -1,
+      "enabled": true,
+      "description": "Get user input"
+    },
+    "int": {
+      "name": "make_number",
+      "arity": 1,
+      "enabled": true,
+      "description": "Convert to integer"
+    },
+    "float": {
+      "name": "make_decimal",
+      "arity": 1,
+      "enabled": true,
+      "description": "Convert to float"
+    },
+    "str": {
+      "name": "make_text",
+      "arity": 1,
+      "enabled": true,
+      "description": "Convert to string"
+    },
+    "bool": {
+      "name": "make_boolean",
+      "arity": 1,
+      "enabled": true,
+      "description": "Convert to boolean"
+    },
+    "len": {
+      "name": "length_of",
+      "arity": 1,
+      "enabled": true,
+      "description": "Get length"
+    },
+    "abs": {
+      "name": "absolute",
+      "arity": 1,
+      "enabled": true,
+      "description": "Absolute value"
+    },
+    "round": {
+      "name": "round_to",
+      "arity": -1,
+      "enabled": true,
+      "description": "Round number"
+    },
+    "max": {
+      "name": "biggest",
+      "arity": -1,
+      "enabled": true,
+      "description": "Maximum value"
+    },
+    "min": {
+      "name": "smallest",
+      "arity": -1,
+      "enabled": true,
+      "description": "Minimum value"
+    },
+    "sum": {
+      "name": "total",
+      "arity": 1,
+      "enabled": true,
+      "description": "Sum of values"
+    },
+    "type": {
+      "name": "type_of",
+      "arity": 1,
+      "enabled": true,
+      "description": "Get type"
+    },
+    "range": {
+      "name": "numbers_from",
+      "arity": -1,
+      "enabled": true,
+      "description": "Generate range"
+    },
+    "enumerate": {
+      "name": "count_through",
+      "arity": -1,
+      "enabled": true,
+      "description": "Enumerate items"
+    },
+    "sorted": {
+      "name": "arrange",
+      "arity": 1,
+      "enabled": true,
+      "description": "Sort items"
+    },
+    "reversed": {
+      "name": "backwards",
+      "arity": 1,
+      "enabled": true,
+      "description": "Reverse items"
+    }
+  },
+  "syntax_options": {
+    "array_start_index": 0,
+    "single_line_comment": "#",
+    "multi_line_comment_start": "###",
+    "multi_line_comment_end": "###"
+  }
+}

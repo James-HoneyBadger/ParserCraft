@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "name": "Minimal Teaching Language",
+    "version": "1.0",
+    "description": "Simplified language for teaching programming basics",
+    "author": "HB_LCS"
+  },
+  "keywords": {
+    "const": {
+      "original": "const",
+      "custom": "const",
+      "category": "declaration"
+    },
+    "function": {
+      "original": "function",
+      "custom": "function",
+      "category": "declaration"
+    },
+    "if": {
+      "original": "if",
+      "custom": "if",
+      "category": "control_flow"
+    },
+    "while": {
+      "original": "while",
+      "custom": "while",
+      "category": "control_flow"
+    },
+    "return": {
+      "original": "return",
+      "custom": "return",
+      "category": "control_flow"
+    },
+    "for": {
+      "original": "for",
+      "custom": "for",
+      "category": "control_flow"
+    }
+  },
+  "builtin_functions": {
+    "print": {
+      "name": "print",
+      "arity": -1,
+      "enabled": true,
+      "description": "Print to console"
+    },
+    "len": {
+      "name": "len",
+      "arity": 1,
+      "enabled": true,
+      "description": "Get length"
+    },
+    "range": {
+      "name": "range",
+      "arity": -1,
+      "enabled": true,
+      "description": "Generate range"
+    },
+    "input": {
+      "name": "input",
+      "arity": -1,
+      "enabled": true,
+      "description": "Get user input"
+    },
+    "int": {
+      "name": "int",
+      "arity": 1,
+      "enabled": true,
+      "description": "Convert to integer"
+    }
+  },
+  "syntax_options": {
+    "array_start_index": 0,
+    "allow_fractional_indexing": false,
+    "single_line_comment": "//",
+    "multi_line_comment_start": "/*",
+    "multi_line_comment_end": "*/",
+    "statement_terminator": "!",
+    "require_semicolons": false,
+    "enable_satirical_keywords": false,
+    "three_valued_logic": false,
+    "probabilistic_variables": false,
+    "temporal_variables": false,
+    "enable_quantum_features": false,
+    "enable_time_travel": false,
+    "enable_gaslighting": false
+  },
+  "operators": [],
+  "debug_mode": false,
+  "strict_mode": true,
+  "compatibility_mode": "strict"
+}

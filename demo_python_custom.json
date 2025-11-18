@@ -1,0 +1,223 @@
+{
+  "metadata": {
+    "name": "Python-Like Custom",
+    "version": "1.0.0",
+    "description": "A customizable programming language",
+    "author": "",
+    "target_interpreter": "python"
+  },
+  "keywords": {
+    "if": {
+      "original": "if",
+      "custom": "if",
+      "category": "control",
+      "description": "Conditional statement"
+    },
+    "when": {
+      "original": "when",
+      "custom": "when",
+      "category": "control",
+      "description": "Reactive programming"
+    },
+    "function": {
+      "original": "function",
+      "custom": "def",
+      "category": "function",
+      "description": "Function definition"
+    },
+    "return": {
+      "original": "return",
+      "custom": "return",
+      "category": "function",
+      "description": "Return value"
+    },
+    "const": {
+      "original": "const",
+      "custom": "const",
+      "category": "variable",
+      "description": "Constant declaration"
+    },
+    "var": {
+      "original": "var",
+      "custom": "var",
+      "category": "variable",
+      "description": "Variable declaration"
+    },
+    "class": {
+      "original": "class",
+      "custom": "blueprint",
+      "category": "oop",
+      "description": "Class definition"
+    }
+  },
+  "functions": {
+    "print": {
+      "name": "print",
+      "arity": -1,
+      "implementation": "builtin.print",
+      "description": "Print to stdout",
+      "enabled": true
+    },
+    "Number": {
+      "name": "Number",
+      "arity": 1,
+      "implementation": "builtin.to_number",
+      "description": "Convert to number",
+      "enabled": true
+    },
+    "String": {
+      "name": "String",
+      "arity": 1,
+      "implementation": "builtin.to_string",
+      "description": "Convert to string",
+      "enabled": true
+    },
+    "Boolean": {
+      "name": "Boolean",
+      "arity": 1,
+      "implementation": "builtin.to_boolean",
+      "description": "Convert to boolean",
+      "enabled": true
+    },
+    "List": {
+      "name": "List",
+      "arity": -1,
+      "implementation": "builtin.list",
+      "description": "Create list",
+      "enabled": true
+    }
+  },
+  "operators": {
+    "+": {
+      "symbol": "+",
+      "precedence": 10,
+      "associativity": "left",
+      "enabled": true
+    },
+    "-": {
+      "symbol": "-",
+      "precedence": 10,
+      "associativity": "left",
+      "enabled": true
+    },
+    "*": {
+      "symbol": "*",
+      "precedence": 20,
+      "associativity": "left",
+      "enabled": true
+    },
+    "/": {
+      "symbol": "/",
+      "precedence": 20,
+      "associativity": "left",
+      "enabled": true
+    },
+    "==": {
+      "symbol": "==",
+      "precedence": 5,
+      "associativity": "none",
+      "enabled": true
+    },
+    "!=": {
+      "symbol": "!=",
+      "precedence": 5,
+      "associativity": "none",
+      "enabled": true
+    },
+    ">": {
+      "symbol": ">",
+      "precedence": 5,
+      "associativity": "none",
+      "enabled": true
+    },
+    "<": {
+      "symbol": "<",
+      "precedence": 5,
+      "associativity": "none",
+      "enabled": true
+    },
+    ">=": {
+      "symbol": ">=",
+      "precedence": 5,
+      "associativity": "none",
+      "enabled": true
+    },
+    "<=": {
+      "symbol": "<=",
+      "precedence": 5,
+      "associativity": "none",
+      "enabled": true
+    },
+    "=": {
+      "symbol": "=",
+      "precedence": 1,
+      "associativity": "right",
+      "enabled": true
+    }
+  },
+  "syntax_options": {
+    "array_start_index": 0,
+    "allow_fractional_indexing": false,
+    "flexible_quoting": true,
+    "string_interpolation": true,
+    "interpolation_symbol": "$",
+    "single_line_comment": "//",
+    "multi_line_comment_start": null,
+    "multi_line_comment_end": null,
+    "require_semicolons": false,
+    "statement_terminator": "",
+    "three_valued_logic": true,
+    "probabilistic_variables": true,
+    "temporal_variables": true,
+    "enable_satirical_keywords": false,
+    "enable_quantum_features": true,
+    "enable_time_travel": true,
+    "enable_gaslighting": true
+  },
+  "parsing_config": {
+    "block_start": "{",
+    "block_end": "}",
+    "list_start": "[",
+    "list_end": "]",
+    "tuple_start": "(",
+    "tuple_end": ")",
+    "dict_start": "{",
+    "dict_end": "}",
+    "statement_separator": ";",
+    "parameter_separator": ",",
+    "key_value_separator": ":",
+    "string_delimiters": [
+      "\"",
+      "'",
+      "\"\"\""
+    ],
+    "escape_character": "\\",
+    "allow_raw_strings": true,
+    "raw_string_prefix": "r",
+    "member_access": ".",
+    "index_access_start": "[",
+    "index_access_end": "]",
+    "function_call_start": "(",
+    "function_call_end": ")",
+    "if_then_separator": null,
+    "else_keyword": "else",
+    "elif_keyword": "elif",
+    "function_param_start": "(",
+    "function_param_end": ")",
+    "function_arrow": null,
+    "return_type_separator": null,
+    "class_inheritance_separator": ":",
+    "class_body_start": "{",
+    "class_body_end": "}",
+    "import_separator": ".",
+    "from_keyword": "from",
+    "as_keyword": "as",
+    "allow_custom_operators": true,
+    "allow_operator_overloading": true
+  },
+  "runtime": {
+    "debug_mode": false,
+    "strict_mode": false,
+    "compatibility_mode": "standard"
+  }
+}

@@ -1,0 +1,200 @@
+name: "Pascal-Like Language"
+version: "1.0"
+description: "A structured programming language inspired by Pascal"
+
+keywords:
+  # Program structure
+  program: "PROGRAM"
+  begin: "BEGIN"
+  end: "END"
+  
+  # Control flow
+  if: "IF"
+  then: "THEN"
+  else: "ELSE"
+  elif: "ELSIF"
+  while: "WHILE"
+  for: "FOR"
+  to: "TO"
+  downto: "DOWNTO"
+  do: "DO"
+  break: "BREAK"
+  continue: "CONTINUE"
+  
+  # Functions and procedures
+  function: "FUNCTION"
+  procedure: "PROCEDURE"
+  return: "RETURN"
+  
+  # Variables and types
+  var: "VAR"
+  const: "CONST"
+  type: "TYPE"
+  array: "ARRAY"
+  of: "OF"
+  record: "RECORD"
+  
+  # Logic
+  and: "AND"
+  or: "OR"
+  not: "NOT"
+  
+  # Boolean values
+  true: "TRUE"
+  false: "FALSE"
+  null: "NIL"
+  
+  # Other
+  import: "USES"
+  class: "CLASS"
+  try: "TRY"
+  except: "EXCEPT"
+  finally: "FINALLY"
+  with: "WITH"
+  as: "AS"
+  in: "IN"
+  is: "IS"
+  case: "CASE"
+  repeat: "REPEAT"
+  until: "UNTIL"
+
+functions:
+  print:
+    name: "WriteLn"
+    min_args: 0
+    max_args: -1
+    description: "Write line to output"
+  
+  write:
+    name: "Write"
+    min_args: 1
+    max_args: -1
+    description: "Write to output"
+  
+  input:
+    name: "ReadLn"
+    min_args: 0
+    max_args: 1
+    description: "Read line from input"
+  
+  read:
+    name: "Read"
+    min_args: 1
+    max_args: 1
+    description: "Read from input"
+  
+  len:
+    name: "Length"
+    min_args: 1
+    max_args: 1
+    description: "Get length"
+  
+  int:
+    name: "Trunc"
+    min_args: 1
+    max_args: 1
+    description: "Truncate to integer"
+  
+  round:
+    name: "Round"
+    min_args: 1
+    max_args: 1
+    description: "Round to nearest integer"
+  
+  str:
+    name: "IntToStr"
+    min_args: 1
+    max_args: 1
+    description: "Convert to string"
+  
+  abs:
+    name: "Abs"
+    min_args: 1
+    max_args: 1
+    description: "Absolute value"
+  
+  sqrt:
+    name: "Sqrt"
+    min_args: 1
+    max_args: 1
+    description: "Square root"
+  
+  sin:
+    name: "Sin"
+    min_args: 1
+    max_args: 1
+    description: "Sine function"
+  
+  cos:
+    name: "Cos"
+    min_args: 1
+    max_args: 1
+    description: "Cosine function"
+  
+  new:
+    name: "New"
+    min_args: 1
+    max_args: 1
+    description: "Allocate memory"
+  
+  dispose:
+    name: "Dispose"
+    min_args: 1
+    max_args: 1
+    description: "Free memory"
+
+operators:
+  - symbol: "+"
+    precedence: 4
+    associativity: "left"
+  - symbol: "-"
+    precedence: 4
+    associativity: "left"
+  - symbol: "*"
+    precedence: 5
+    associativity: "left"
+  - symbol: "/"
+    precedence: 5
+    associativity: "left"
+  - symbol: "DIV"
+    precedence: 5
+    associativity: "left"
+  - symbol: "MOD"
+    precedence: 5
+    associativity: "left"
+  - symbol: ":="
+    precedence: 2
+    associativity: "right"
+  - symbol: "="
+    precedence: 3
+    associativity: "left"
+  - symbol: "<>"
+    precedence: 3
+    associativity: "left"
+  - symbol: "<"
+    precedence: 3
+    associativity: "left"
+  - symbol: ">"
+    precedence: 3
+    associativity: "left"
+  - symbol: "<="
+    precedence: 3
+    associativity: "left"
+  - symbol: ">="
+    precedence: 3
+    associativity: "left"
+
+parsing:
+  comment_style: "//"
+  string_delimiters:
+    - "'"
+  multiline_comment_start: "(*"
+  multiline_comment_end: "*)"
+
+syntax:
+  array_index_base: 1
+  array_index_one_based: true
+  function_keyword_required: true
+  parentheses_required: true
+  block_end_required: true
+  statement_separator: ";"

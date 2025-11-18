@@ -1,0 +1,24 @@
+# TeachScript Example: Conditionals
+# Shows if/else logic with readable keywords
+
+remember temperature = 75
+
+say("Current temperature:", temperature, "degrees")
+
+when temperature > 80:
+    say("It's hot outside!")
+or_when temperature > 60:
+    say("It's a pleasant day!")
+otherwise:
+    say("It's a bit chilly!")
+
+# Boolean operations
+remember is_sunny = yes
+remember is_weekend = no
+
+when is_sunny and_also is_weekend:
+    say("Perfect day for a picnic!")
+or_when is_sunny or_else is_weekend:
+    say("Not bad, could be fun!")
+otherwise:
+    say("Maybe stay inside today.")

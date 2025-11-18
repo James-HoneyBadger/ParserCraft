@@ -1,0 +1,219 @@
+name: "Functional ML-Like Language"
+version: "1.0"
+description: "A functional language inspired by ML/OCaml with pattern matching and type inference"
+
+keywords:
+  # Control flow
+  if: "if"
+  then: "then"
+  else: "else"
+  elif: "elif"
+  
+  # Pattern matching
+  match: "match"
+  case: "case"
+  with: "with"
+  when: "when"
+  
+  # Function definition
+  function: "fun"
+  let: "let"
+  rec: "rec"
+  in: "in"
+  
+  # Types
+  type: "type"
+  of: "of"
+  
+  # Logic
+  and: "and"
+  or: "or"
+  not: "not"
+  
+  # Boolean values
+  true: "true"
+  false: "false"
+  null: "None"
+  some: "Some"
+  
+  # Exceptions
+  try: "try"
+  except: "with"
+  raise: "raise"
+  
+  # Other
+  import: "open"
+  module: "module"
+  struct: "struct"
+  end: "end"
+  as: "as"
+  is: "="
+  lambda: "fun"
+  for: "for"
+  while: "while"
+  do: "do"
+  done: "done"
+  to: "to"
+  downto: "downto"
+
+functions:
+  print:
+    name: "print_endline"
+    min_args: 1
+    max_args: 1
+    description: "Print with newline"
+  
+  write:
+    name: "print_string"
+    min_args: 1
+    max_args: 1
+    description: "Print string"
+  
+  input:
+    name: "read_line"
+    min_args: 0
+    max_args: 0
+    description: "Read input line"
+  
+  len:
+    name: "List.length"
+    min_args: 1
+    max_args: 1
+    description: "Get list length"
+  
+  int:
+    name: "int_of_string"
+    min_args: 1
+    max_args: 1
+    description: "Convert to integer"
+  
+  str:
+    name: "string_of_int"
+    min_args: 1
+    max_args: 1
+    description: "Convert to string"
+  
+  float:
+    name: "float_of_int"
+    min_args: 1
+    max_args: 1
+    description: "Convert to float"
+  
+  map:
+    name: "List.map"
+    min_args: 2
+    max_args: 2
+    description: "Map over list"
+  
+  filter:
+    name: "List.filter"
+    min_args: 2
+    max_args: 2
+    description: "Filter list"
+  
+  fold:
+    name: "List.fold_left"
+    min_args: 3
+    max_args: 3
+    description: "Fold (reduce) list"
+  
+  head:
+    name: "List.hd"
+    min_args: 1
+    max_args: 1
+    description: "Get first element"
+  
+  tail:
+    name: "List.tl"
+    min_args: 1
+    max_args: 1
+    description: "Get tail of list"
+  
+  cons:
+    name: "cons"
+    min_args: 2
+    max_args: 2
+    description: "Cons operation"
+  
+  append:
+    name: "List.append"
+    min_args: 2
+    max_args: 2
+    description: "Append lists"
+  
+  reverse:
+    name: "List.rev"
+    min_args: 1
+    max_args: 1
+    description: "Reverse list"
+  
+  sort:
+    name: "List.sort"
+    min_args: 2
+    max_args: 2
+    description: "Sort list"
+
+operators:
+  - symbol: "+"
+    precedence: 4
+    associativity: "left"
+  - symbol: "-"
+    precedence: 4
+    associativity: "left"
+  - symbol: "*"
+    precedence: 5
+    associativity: "left"
+  - symbol: "/"
+    precedence: 5
+    associativity: "left"
+  - symbol: "mod"
+    precedence: 5
+    associativity: "left"
+  - symbol: ":="
+    precedence: 2
+    associativity: "right"
+  - symbol: "="
+    precedence: 3
+    associativity: "left"
+  - symbol: "<>"
+    precedence: 3
+    associativity: "left"
+  - symbol: "<"
+    precedence: 3
+    associativity: "left"
+  - symbol: ">"
+    precedence: 3
+    associativity: "left"
+  - symbol: "<="
+    precedence: 3
+    associativity: "left"
+  - symbol: ">="
+    precedence: 3
+    associativity: "left"
+  - symbol: "::"
+    precedence: 5
+    associativity: "right"
+  - symbol: "@"
+    precedence: 5
+    associativity: "right"
+  - symbol: "&&"
+    precedence: 1
+    associativity: "left"
+  - symbol: "||"
+    precedence: 1
+    associativity: "left"
+
+parsing:
+  comment_style: "//"
+  string_delimiters:
+    - "\""
+  multiline_comment_start: "(*"
+  multiline_comment_end: "*)"
+
+syntax:
+  array_index_base: 0
+  array_index_one_based: false
+  function_keyword_required: true
+  parentheses_required: true
+  block_end_required: false
+  statement_separator: ";;"

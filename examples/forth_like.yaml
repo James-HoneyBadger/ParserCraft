@@ -1,0 +1,170 @@
+name: "Forth-Like Language"
+version: "1.0"
+description: "A stack-based language inspired by Forth with postfix notation"
+
+keywords:
+  # Control flow (with stack-based semantics)
+  if: "IF"
+  then: "THEN"
+  else: "ELSE"
+  elif: "ELSEIF"
+  while: "BEGIN"
+  for: "DO"
+  break: "LEAVE"
+  continue: "AGAIN"
+  
+  # Function definition
+  function: ":"
+  return: ";"
+  
+  # Stack operations
+  dup: "DUP"
+  drop: "DROP"
+  swap: "SWAP"
+  over: "OVER"
+  rot: "ROT"
+  
+  # Variables and memory
+  let: "VARIABLE"
+  const: "CONSTANT"
+  array: "CREATE"
+  
+  # Logic
+  and: "AND"
+  or: "OR"
+  not: "NOT"
+  
+  # Boolean values
+  true: "TRUE"
+  false: "FALSE"
+  null: "NULL"
+  
+  # Loops
+  until: "UNTIL"
+  repeat: "REPEAT"
+  loop: "LOOP"
+  
+  # Other
+  import: "INCLUDE"
+  class: "OBJECT"
+  with: "WITH"
+  as: "AS"
+  in: "IN"
+  is: "="
+
+functions:
+  print:
+    name: "."
+    min_args: 1
+    max_args: 1
+    description: "Print top of stack"
+  
+  emit:
+    name: "EMIT"
+    min_args: 1
+    max_args: 1
+    description: "Emit character"
+  
+  input:
+    name: "ACCEPT"
+    min_args: 0
+    max_args: 1
+    description: "Read input"
+  
+  len:
+    name: "COUNT"
+    min_args: 1
+    max_args: 1
+    description: "Get string length"
+  
+  int:
+    name: "CONVERT"
+    min_args: 1
+    max_args: 1
+    description: "Convert to integer"
+  
+  str:
+    name: "S\""
+    min_args: 1
+    max_args: 1
+    description: "String literal"
+  
+  abs:
+    name: "ABS"
+    min_args: 1
+    max_args: 1
+    description: "Absolute value"
+  
+  min:
+    name: "MIN"
+    min_args: 2
+    max_args: 2
+    description: "Minimum of two values"
+  
+  max:
+    name: "MAX"
+    min_args: 2
+    max_args: 2
+    description: "Maximum of two values"
+  
+  allot:
+    name: "ALLOT"
+    min_args: 1
+    max_args: 1
+    description: "Allocate memory"
+  
+  fetch:
+    name: "@"
+    min_args: 1
+    max_args: 1
+    description: "Fetch from memory"
+  
+  store:
+    name: "!"
+    min_args: 2
+    max_args: 2
+    description: "Store to memory"
+
+operators:
+  - symbol: "+"
+    precedence: 4
+    associativity: "left"
+  - symbol: "-"
+    precedence: 4
+    associativity: "left"
+  - symbol: "*"
+    precedence: 5
+    associativity: "left"
+  - symbol: "/"
+    precedence: 5
+    associativity: "left"
+  - symbol: "MOD"
+    precedence: 5
+    associativity: "left"
+  - symbol: "="
+    precedence: 3
+    associativity: "left"
+  - symbol: "<"
+    precedence: 3
+    associativity: "left"
+  - symbol: ">"
+    precedence: 3
+    associativity: "left"
+  - symbol: "<>"
+    precedence: 3
+    associativity: "left"
+
+parsing:
+  comment_style: "\\"
+  string_delimiters:
+    - "\""
+  multiline_comment_start: "("
+  multiline_comment_end: ")"
+
+syntax:
+  array_index_base: 0
+  array_index_one_based: false
+  function_keyword_required: true
+  parentheses_required: false
+  block_end_required: true
+  statement_separator: null

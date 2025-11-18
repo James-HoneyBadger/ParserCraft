@@ -1,0 +1,167 @@
+name: "LISP-Like Language"
+version: "1.0"
+description: "A LISP/Scheme-inspired functional language with S-expressions"
+
+keywords:
+  # Core forms
+  if: "if"
+  then: "then"
+  else: "else"
+  elif: "cond"
+  
+  # Function definition
+  function: "lambda"
+  define: "define"
+  let: "let"
+  
+  # Loops (though recursion is preferred)
+  while: "while"
+  for: "for"
+  
+  # Logic
+  and: "and"
+  or: "or"
+  not: "not"
+  
+  # Boolean values
+  true: "#t"
+  false: "#f"
+  null: "nil"
+  
+  # Special forms
+  quote: "quote"
+  eval: "eval"
+  apply: "apply"
+  begin: "begin"
+  
+  # Object/List operations
+  car: "car"
+  cdr: "cdr"
+  cons: "cons"
+  list: "list"
+  
+  # Imports
+  import: "require"
+  return: "return"
+  
+  # Type checking
+  is: "eq?"
+  in: "member"
+  as: "as"
+
+functions:
+  print:
+    name: "display"
+    min_args: 1
+    max_args: 1
+    description: "Print output"
+  
+  input:
+    name: "read"
+    min_args: 0
+    max_args: 0
+    description: "Read input"
+  
+  len:
+    name: "length"
+    min_args: 1
+    max_args: 1
+    description: "Get list length"
+  
+  map:
+    name: "map"
+    min_args: 2
+    max_args: 2
+    description: "Map function over list"
+  
+  filter:
+    name: "filter"
+    min_args: 2
+    max_args: 2
+    description: "Filter list by predicate"
+  
+  reduce:
+    name: "fold"
+    min_args: 3
+    max_args: 3
+    description: "Reduce list with function"
+  
+  append:
+    name: "append"
+    min_args: 2
+    max_args: -1
+    description: "Append lists"
+  
+  reverse:
+    name: "reverse"
+    min_args: 1
+    max_args: 1
+    description: "Reverse a list"
+  
+  sort:
+    name: "sort"
+    min_args: 1
+    max_args: 2
+    description: "Sort a list"
+  
+  int:
+    name: "number->integer"
+    min_args: 1
+    max_args: 1
+    description: "Convert to integer"
+  
+  str:
+    name: "number->string"
+    min_args: 1
+    max_args: 1
+    description: "Convert to string"
+  
+  type:
+    name: "type-of"
+    min_args: 1
+    max_args: 1
+    description: "Get type of value"
+
+operators:
+  - symbol: "+"
+    precedence: 4
+    associativity: "left"
+  - symbol: "-"
+    precedence: 4
+    associativity: "left"
+  - symbol: "*"
+    precedence: 5
+    associativity: "left"
+  - symbol: "/"
+    precedence: 5
+    associativity: "left"
+  - symbol: "="
+    precedence: 2
+    associativity: "left"
+  - symbol: "<"
+    precedence: 3
+    associativity: "left"
+  - symbol: ">"
+    precedence: 3
+    associativity: "left"
+  - symbol: "<="
+    precedence: 3
+    associativity: "left"
+  - symbol: ">="
+    precedence: 3
+    associativity: "left"
+
+parsing:
+  comment_style: ";"
+  string_delimiters:
+    - "\""
+  multiline_comment_start: "#|"
+  multiline_comment_end: "|#"
+
+syntax:
+  array_index_base: 0
+  array_index_one_based: false
+  function_keyword_required: false
+  parentheses_required: true
+  block_end_required: false
+  statement_separator: null

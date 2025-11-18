@@ -1,0 +1,30 @@
+# TeachScript Example: Lists and String Operations
+# Working with collections and text
+
+say("=== List Operations ===")
+remember numbers = [1, 2, 3, 4, 5]
+say("Original list:", numbers)
+say("Length:", length_of(numbers))
+say("Biggest:", biggest(numbers))
+say("Smallest:", smallest(numbers))
+say("Total:", total(numbers))
+
+numbers.add_to(6)
+say("After adding 6:", numbers)
+
+remember last = numbers.remove_from()
+say("Removed:", last)
+say("Now:", numbers)
+
+say("\n=== String Operations ===")
+remember message = "TeachScript is Fun!"
+say("Original:", message)
+say("Length:", length_of(message))
+say("Uppercase:", message.upper())
+say("Lowercase:", message.lower())
+
+say("\n=== List Sorting ===")
+remember items = [5, 2, 8, 1, 9, 3]
+say("Original:", items)
+say("Sorted:", arrange(items))
+say("Reversed:", backwards(items))

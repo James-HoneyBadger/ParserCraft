@@ -1,0 +1,43 @@
+# TeachScript Example: Interactive Calculator
+# A simple calculator program that asks for user input
+
+say("=== TeachScript Calculator ===")
+say("This calculator can add, subtract, multiply, and divide!")
+say()
+
+# Get first number
+remember num1_text = ask("Enter first number: ")
+remember num1 = make_decimal(num1_text)
+
+# Get operation
+remember operation = ask("Enter operation (+, -, *, /): ")
+
+# Get second number
+remember num2_text = ask("Enter second number: ")
+remember num2 = make_decimal(num2_text)
+
+# Calculate result
+remember result = nothing
+
+when operation equals "+":
+    result = num1 + num2
+or_when operation equals "-":
+    result = num1 - num2
+or_when operation equals "*":
+    result = num1 * num2
+or_when operation equals "/":
+    when num2 equals 0:
+        say("Error: Cannot divide by zero!")
+        result = "undefined"
+    otherwise:
+        result = num1 / num2
+otherwise:
+    say("Error: Unknown operation!")
+    result = "error"
+
+# Display result
+when result equals "undefined" or_else result equals "error":
+    say("Calculation failed.")
+otherwise:
+    say()
+    say("Result:", num1, operation, num2, "=", result)

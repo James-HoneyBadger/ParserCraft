@@ -1,0 +1,105 @@
+metadata:
+  name: "Spanish Language"
+  version: "1.0"
+  description: "Spanish keywords for education"
+  author: "HB_LCS"
+
+keywords:
+  const:
+    original: "const"
+    custom: "const"
+    category: "declaration"
+  function:
+    original: "function"
+    custom: "función"
+    category: "declaration"
+  if:
+    original: "if"
+    custom: "si"
+    category: "control_flow"
+  elif:
+    original: "elif"
+    custom: "sinosi"
+    category: "control_flow"
+  else:
+    original: "else"
+    custom: "sino"
+    category: "control_flow"
+  while:
+    original: "while"
+    custom: "mientras"
+    category: "control_flow"
+  for:
+    original: "for"
+    custom: "para"
+    category: "control_flow"
+  return:
+    original: "return"
+    custom: "devolver"
+    category: "control_flow"
+  class:
+    original: "class"
+    custom: "clase"
+    category: "declaration"
+  import:
+    original: "import"
+    custom: "importar"
+    category: "module"
+
+builtin_functions:
+  print:
+    name: "imprimir"
+    arity: -1
+    enabled: true
+    description: "Imprimir en consola"
+  len:
+    name: "longitud"
+    arity: 1
+    enabled: true
+    description: "Obtener longitud"
+  range:
+    name: "rango"
+    arity: -1
+    enabled: true
+    description: "Generar rango"
+  input:
+    name: "entrada"
+    arity: -1
+    enabled: true
+    description: "Obtener entrada del usuario"
+  int:
+    name: "entero"
+    arity: 1
+    enabled: true
+    description: "Convertir a entero"
+  str:
+    name: "texto"
+    arity: 1
+    enabled: true
+    description: "Convertir a texto"
+  float:
+    name: "decimal"
+    arity: 1
+    enabled: true
+    description: "Convertir a decimal"
+
+syntax_options:
+  array_start_index: 0
+  allow_fractional_indexing: false
+  single_line_comment: "//"
+  multi_line_comment_start: "/*"
+  multi_line_comment_end: "*/"
+  statement_terminator: "!"
+  require_semicolons: false
+  enable_satirical_keywords: false
+  three_valued_logic: false
+  probabilistic_variables: false
+  temporal_variables: false
+  enable_quantum_features: false
+  enable_time_travel: false
+  enable_gaslighting: false
+
+operators: []
+debug_mode: false
+strict_mode: true
+compatibility_mode: "strict"

@@ -1,0 +1,115 @@
+metadata:
+  name: "Python-Like Language"
+  version: "1.0"
+  description: "Python-style syntax variant"
+  author: "HB_LCS"
+
+keywords:
+  const:
+    original: "const"
+    custom: "const"
+    category: "declaration"
+  function:
+    original: "function"
+    custom: "def"
+    category: "declaration"
+  if:
+    original: "if"
+    custom: "if"
+    category: "control_flow"
+  elif:
+    original: "elif"
+    custom: "elif"
+    category: "control_flow"
+  else:
+    original: "else"
+    custom: "else"
+    category: "control_flow"
+  while:
+    original: "while"
+    custom: "while"
+    category: "control_flow"
+  for:
+    original: "for"
+    custom: "for"
+    category: "control_flow"
+  return:
+    original: "return"
+    custom: "return"
+    category: "control_flow"
+  class:
+    original: "class"
+    custom: "class"
+    category: "declaration"
+  import:
+    original: "import"
+    custom: "import"
+    category: "module"
+
+builtin_functions:
+  print:
+    name: "print"
+    arity: -1
+    enabled: true
+    description: "Print to console"
+  len:
+    name: "len"
+    arity: 1
+    enabled: true
+    description: "Get length"
+  range:
+    name: "range"
+    arity: -1
+    enabled: true
+    description: "Generate range"
+  input:
+    name: "input"
+    arity: -1
+    enabled: true
+    description: "Get user input"
+  int:
+    name: "int"
+    arity: 1
+    enabled: true
+    description: "Convert to integer"
+  str:
+    name: "str"
+    arity: 1
+    enabled: true
+    description: "Convert to string"
+  float:
+    name: "float"
+    arity: 1
+    enabled: true
+    description: "Convert to float"
+  list:
+    name: "list"
+    arity: -1
+    enabled: true
+    description: "Create list"
+  dict:
+    name: "dict"
+    arity: 0
+    enabled: true
+    description: "Create dictionary"
+
+syntax_options:
+  array_start_index: 0
+  allow_fractional_indexing: false
+  single_line_comment: "#"
+  multi_line_comment_start: '"""'
+  multi_line_comment_end: '"""'
+  statement_terminator: "!"
+  require_semicolons: false
+  enable_satirical_keywords: false
+  three_valued_logic: false
+  probabilistic_variables: false
+  temporal_variables: false
+  enable_quantum_features: false
+  enable_time_travel: false
+  enable_gaslighting: false
+
+operators: []
+debug_mode: false
+strict_mode: true
+compatibility_mode: "strict"

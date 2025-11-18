@@ -1,0 +1,43 @@
+# TeachScript Example: Prime Number Checker
+# Demonstrates algorithms and nested loops
+
+teach is_prime(number):
+    """Check if a number is prime"""
+    when number < 2:
+        give_back no
+    
+    when number equals 2:
+        give_back yes
+    
+    when number % 2 equals 0:
+        give_back no
+    
+    # Check odd divisors up to square root
+    remember divisor = 3
+    repeat_while divisor * divisor <= number:
+        when number % divisor equals 0:
+            give_back no
+        divisor += 2
+    
+    give_back yes
+
+say("=== Prime Number Checker ===")
+say("Finding prime numbers from 1 to 50:")
+say()
+
+remember primes = []
+repeat_for num inside numbers_from(1, 51):
+    when is_prime(num):
+        primes.add_to(num)
+
+say("Prime numbers:", primes)
+say("Count:", length_of(primes), "primes found")
+
+# Test specific numbers
+say("\n=== Testing Specific Numbers ===")
+remember test_numbers = [17, 18, 29, 30, 97, 100]
+repeat_for num inside test_numbers:
+    when is_prime(num):
+        say(num, "is prime")
+    otherwise:
+        say(num, "is not prime")

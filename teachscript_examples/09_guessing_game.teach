@@ -1,0 +1,25 @@
+# TeachScript Example: Guessing Game
+# Interactive number guessing game
+
+say("=== Number Guessing Game ===")
+say("I'm thinking of a number between 1 and 100!")
+say()
+
+# Secret number (in real use, would use random)
+remember secret = 42
+remember guesses = 0
+remember found = no
+
+repeat_while opposite found:
+    remember guess_text = ask("Enter your guess: ")
+    remember guess = make_number(guess_text)
+    guesses += 1
+    
+    when guess < secret:
+        say("Too low! Try again.")
+    or_when guess > secret:
+        say("Too high! Try again.")
+    otherwise:
+        say("Correct! You found it!")
+        say("It took you", guesses, "guesses.")
+        found = yes

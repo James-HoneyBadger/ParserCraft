@@ -11,9 +11,13 @@ import sys
 def main():
     """Launch the Honey Badger LCS IDE."""
     try:
-        from hb_lcs.ide import main as ide_main
+        # Prefer importing the module and constructing the IDE directly
+        import tkinter as tk
+        from hb_lcs.ide import AdvancedIDE
 
-        ide_main()
+        root = tk.Tk()
+        AdvancedIDE(root)  # noqa: F841
+        root.mainloop()
     except ImportError as e:
         print(f"Error: Failed to import IDE: {e}")
         print("\nMake sure hb_lcs is properly installed:")

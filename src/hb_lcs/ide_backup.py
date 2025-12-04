@@ -6,16 +6,14 @@ A tkinter-based IDE adapted from Time_Warp for editing and testing
 custom language configurations.
 """
 
-import threading
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, simpledialog
 import os
 import json
 from typing import Optional, cast
-from pathlib import Path
 
 from hb_lcs.language_config import LanguageConfig
-from hb_lcs.language_runtime import LanguageRuntime, print_language_info
+from hb_lcs.language_runtime import LanguageRuntime
 
 
 class HBLCS_IDE(ttk.Frame):
@@ -77,7 +75,9 @@ class HBLCS_IDE(ttk.Frame):
         # File menu
         file_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="File", menu=file_menu)
-        file_menu.add_command(label="New", command=self._new_file, accelerator="Ctrl+N")
+        file_menu.add_command(
+            label="New", command=self._new_file, accelerator="Ctrl+N"
+        )
         file_menu.add_command(
             label="Open...", command=self._open_file, accelerator="Ctrl+O"
         )
@@ -129,10 +129,14 @@ class HBLCS_IDE(ttk.Frame):
         )
         edit_menu.add_separator()
         edit_menu.add_checkbutton(
-            label="Word Wrap", command=self._toggle_wrap, variable=self.wrap_var
+            label="Word Wrap",
+            command=self._toggle_wrap,
+            variable=self.wrap_var,
         )
         edit_menu.add_separator()
-        edit_menu.add_command(label="Preferences...", command=self._open_preferences)
+        edit_menu.add_command(
+            label="Preferences...", command=self._open_preferences
+        )
 
         # Config menu
         config_menu = tk.Menu(menubar, tearoff=0)
@@ -142,19 +146,26 @@ class HBLCS_IDE(ttk.Frame):
             command=self._load_config,
             accelerator="F5",
         )
-        config_menu.add_command(label="Reload Current", command=self._reload_config)
-        config_menu.add_command(label="Unload Config", command=self._unload_config)
+        config_menu.add_command(
+            label="Reload Current", command=self._reload_config
+        )
+        config_menu.add_command(
+            label="Unload Config", command=self._unload_config
+        )
         config_menu.add_separator()
         config_menu.add_command(
             label="Show Config Info", command=self._show_config_info
         )
-        config_menu.add_command(label="Validate Config", command=self._validate_config)
+        config_menu.add_command(
+            label="Validate Config", command=self._validate_config
+        )
 
         # Examples menu
         examples_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Examples", menu=examples_menu)
         examples_menu.add_command(
-            label="Python-Like", command=lambda: self._load_example("python_like.yaml")
+            label="Python-Like",
+            command=lambda: self._load_example("python_like.yaml"),
         )
         examples_menu.add_command(
             label="Minimal", command=lambda: self._load_example("minimal.json")
@@ -194,13 +205,21 @@ class HBLCS_IDE(ttk.Frame):
         # Toolbar
         toolbar = ttk.Frame(self)
         toolbar.pack(side="top", fill="x", padx=4, pady=2)
-        ttk.Button(toolbar, text="New", command=self._new_file).pack(side="left")
-        ttk.Button(toolbar, text="Open", command=self._open_file).pack(side="left")
-        ttk.Button(toolbar, text="Save", command=self._save_file).pack(side="left")
-        ttk.Separator(toolbar, orient="vertical").pack(side="left", fill="y", padx=6)
-        ttk.Button(toolbar, text="Load Config", command=self._load_config).pack(
+        ttk.Button(toolbar, text="New", command=self._new_file).pack(
             side="left"
         )
+        ttk.Button(toolbar, text="Open", command=self._open_file).pack(
+            side="left"
+        )
+        ttk.Button(toolbar, text="Save", command=self._save_file).pack(
+            side="left"
+        )
+        ttk.Separator(toolbar, orient="vertical").pack(
+            side="left", fill="y", padx=6
+        )
+        ttk.Button(
+            toolbar, text="Load Config", command=self._load_config
+        ).pack(side="left")
         ttk.Button(toolbar, text="Info", command=self._show_config_info).pack(
             side="left"
         )
@@ -228,7 +247,9 @@ class HBLCS_IDE(ttk.Frame):
         )
         self.line_numbers.pack(side="left", fill="y")
 
-        self.editor = tk.Text(editor_frame, wrap="none", undo=True, font="TkFixedFont")
+        self.editor = tk.Text(
+            editor_frame, wrap="none", undo=True, font="TkFixedFont"
+        )
         self.editor.pack(side="left", fill="both", expand=True)
 
         # Scrollbars for editor
@@ -311,7 +332,9 @@ class HBLCS_IDE(ttk.Frame):
                 self.line_num_frame.pack_forget()
             except tk.TclError:
                 pass
-        self.settings["show_line_numbers"] = bool(self.show_line_numbers_var.get())
+        self.settings["show_line_numbers"] = bool(
+            self.show_line_numbers_var.get()
+        )
         self._save_settings()
 
     def _set_theme(self, name: str) -> None:
@@ -437,7 +460,9 @@ class HBLCS_IDE(ttk.Frame):
     def _reload_config(self) -> None:
         if self.settings.get("last_config"):
             try:
-                self.current_config = LanguageConfig.load(self.settings["last_config"])
+                self.current_config = LanguageConfig.load(
+                    self.settings["last_config"]
+                )
                 LanguageRuntime.load_config(self.current_config)
                 self._display_config_info()
                 self.status_label.configure(text="Config reloaded")
@@ -492,7 +517,9 @@ class HBLCS_IDE(ttk.Frame):
                 f"Found {len(errors)} validation errors:\n\n{error_text}",
             )
         else:
-            messagebox.showinfo("Validation Success", "✓ Configuration is valid!")
+            messagebox.showinfo(
+                "Validation Success", "✓ Configuration is valid!"
+            )
 
     def _load_example(self, filename: str) -> None:
         """Load an example configuration."""
@@ -500,7 +527,9 @@ class HBLCS_IDE(ttk.Frame):
         path = os.path.join(examples_dir, filename)
 
         if not os.path.isfile(path):
-            messagebox.showerror("Example not found", f"Could not find: {path}")
+            messagebox.showerror(
+                "Example not found", f"Could not find: {path}"
+            )
             return
 
         try:
@@ -640,11 +669,19 @@ class HBLCS_IDE(ttk.Frame):
         con_size = int(str(self.settings.get("console_font_size", 11)))
 
         if theme == "dark":
-            self.editor.configure(bg="#2b2b2b", fg="#f8f8f2", insertbackground="white")
-            self.console.configure(bg="#2b2b2b", fg="#f8f8f2", insertbackground="white")
+            self.editor.configure(
+                bg="#2b2b2b", fg="#f8f8f2", insertbackground="white"
+            )
+            self.console.configure(
+                bg="#2b2b2b", fg="#f8f8f2", insertbackground="white"
+            )
         else:
-            self.editor.configure(bg="white", fg="black", insertbackground="black")
-            self.console.configure(bg="white", fg="black", insertbackground="black")
+            self.editor.configure(
+                bg="white", fg="black", insertbackground="black"
+            )
+            self.console.configure(
+                bg="white", fg="black", insertbackground="black"
+            )
 
         self.editor.configure(font=("TkFixedFont", ed_size))
         self.console.configure(font=("TkFixedFont", con_size))
@@ -663,7 +700,9 @@ class HBLCS_IDE(ttk.Frame):
         win.title("Preferences")
         win.resizable(False, False)
 
-        ttk.Label(win, text="Theme:").grid(row=0, column=0, padx=8, pady=6, sticky="e")
+        ttk.Label(win, text="Theme:").grid(
+            row=0, column=0, padx=8, pady=6, sticky="e"
+        )
         theme_val = str(self.settings.get("theme", "light"))
         theme_var = tk.StringVar(value=theme_val)
         ttk.OptionMenu(win, theme_var, theme_var.get(), "light", "dark").grid(

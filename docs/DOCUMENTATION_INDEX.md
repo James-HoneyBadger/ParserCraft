@@ -1,153 +1,264 @@
-# Honey Badger Language Construction Set - Documentation Index
+# Documentation Index & Guide Selection
 
-**Complete Documentation**  
-Version 1.0 | November 2025
+**Honey Badger Language Construction Set v4.0**  
+Quick Reference for Finding the Right Documentation  
+December 3, 2025
 
-## 📚 Documentation Overview
+## 📚 Four Comprehensive Guides
 
-The Honey Badger Language Construction Set includes comprehensive documentation covering all aspects of language construction, from beginner tutorials to advanced technical references.
+We've created four complete guides to help you get the most out of HB_LCS:
 
----
+### 1️⃣ **[INSTALL_GUIDE.md](INSTALL_GUIDE.md)** - Setup & Installation
+**For**: Everyone starting with HB_LCS  
+**Length**: ~3,000 words | 20-30 minutes to read  
+**Topics**:
+- System requirements and verification
+- Step-by-step installation (5 methods)
+- Virtual environment setup
+- Troubleshooting installation issues
+- Post-installation verification
+- Configuration and customization
 
-## 🎯 Quick Start
-
-**Brand new to Honey Badger LCS?** Start here:
-
-1. **[User Guide](USER_GUIDE.md)** - First 15 pages
-   - What is HB_LCS?
-   - Installation
-   - Quick start (5 minutes)
-   - Using the IDE
-
-2. **[Examples](examples/)** - Hands-on learning
-   - Load `python_like.yaml` in IDE
-   - Try the demo script: `python3 demo_language_construction.py`
-
-3. **[Tutorial 1](LANGUAGE_DEVELOPMENT_GUIDE.md#tutorial-1-your-first-language)** - Build your first language
-   - Step-by-step walkthrough
-   - 30 minutes
+**Start here if you**:
+- Just downloaded HB_LCS
+- Need to install on a new computer
+- Are having installation problems
+- Want to verify your setup works
 
 ---
 
-## 📖 Complete Documentation
+### 2️⃣ **[USER_GUIDE.md](USER_GUIDE.md)** - How to Use the System
+**For**: Users creating and working with languages  
+**Length**: ~5,000 words | 30-45 minutes to read  
+**Topics**:
+- Getting started (5-10 minutes)
+- Graphical IDE features and menus
+- Command-line tool usage
+- Creating custom languages
+- Working with presets
+- Common tasks (10 practical examples)
+- Advanced features
+- Troubleshooting and tips
 
-### For Users
-
-#### [USER_GUIDE.md](USER_GUIDE.md) (35 pages)
-**Target Audience**: All users, beginners to intermediate
-
-**Contents**:
-- Introduction (What, Why, Who)
-- Getting Started & Installation
-- Using the IDE (complete guide)
-- Command-Line Tools (10 commands)
-- Creating Configurations
-- Working with Presets
-- Common Tasks & Workflows
-- Troubleshooting
-- Keyboard shortcuts reference
-- Quick reference card
-
-**When to use**: Daily reference, learning the tools
+**Start here if you**:
+- Want to create your first language
+- Need to use the IDE or CLI
+- Looking for how-to instructions
+- Want practical examples
 
 ---
 
-### For Developers
+### 3️⃣ **[TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md)** - Complete API Documentation
+**For**: Developers and advanced users  
+**Length**: ~4,000 words | 45-60 minutes to read  
+**Topics**:
+- Complete system architecture
+- Core module documentation
+- Full API reference with code examples
+- Configuration format specification (JSON/YAML)
+- Runtime system details
+- Data structures
+- Extension development guide
+- Performance considerations
+- Security best practices
 
-#### [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md) (45 pages)
-**Target Audience**: Developers, advanced users, integrators
-
-**Contents**:
-- Architecture Overview
-- Core Modules (detailed)
-- Complete API Reference
-- Data Structures & Types
-- Configuration Format (JSON/YAML)
-- Runtime System
-- Extension Development
-- Performance Considerations
-- Error Codes Reference
-- Version History
-
-**When to use**: Building on HB_LCS, integration, optimization
-
----
-
-### For Language Designers
-
-#### [LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md) (50 pages)
-**Target Audience**: Language designers, educators, researchers
-
-**Contents**:
-- Introduction to Language Design
-- **Tutorial 1**: Your First Language (SimpleLang)
-- **Tutorial 2**: Domain-Specific Language (MathLang)
-- **Tutorial 3**: Teaching Language (LearnCode)
-- **Tutorial 4**: Advanced Features (PowerLang)
-- Design Patterns
-- Testing Your Language
-- Best Practices
-- Language Design Checklist
-
-**When to use**: Creating new languages, teaching, research
+**Start here if you**:
+- Need to understand the API
+- Want to extend the system
+- Are building on top of HB_LCS
+- Need detailed specifications
+- Want to optimize performance
 
 ---
 
-### For Theorists
+### 4️⃣ **[LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md)** - Create Programming Languages
+**For**: Educators, language designers, researchers  
+**Length**: ~5,000 words | 45-60 minutes to read  
+**Topics**:
+- Introduction to language design
+- Design fundamentals (keywords, functions, syntax)
+- Design principles (clarity, consistency, etc.)
+- 4 step-by-step tutorials
+- Design patterns
+- Testing your language
+- Best practices (8 practical guidelines)
+- 3 real-world case studies
+- Advanced topics (Turing completeness, grammar, etc.)
 
-#### [TURING_COMPLETE_GUIDE.md](TURING_COMPLETE_GUIDE.md) (30 pages)
-**Target Audience**: Computer science students, researchers
-
-**Contents**:
-- What Makes Languages Turing-Complete
-- Six Programming Paradigms
-- Computational Equivalence
-- Church-Turing Thesis
-- Creating Turing-Complete Languages
-- Testing Turing-Completeness
-- Theoretical Foundations
-- References
-
-**When to use**: Understanding computational theory, research
+**Start here if you**:
+- Are designing a new language
+- Want to understand language design
+- Need pedagogical guidance
+- Are creating educational languages
+- Want to learn from examples
 
 ---
 
-## 🗂️ Documentation by Topic
+## 🎯 Quick Navigation by Task
 
-### Installation & Setup
+### "I just got HB_LCS and want to try it"
+1. Read: [INSTALL_GUIDE.md](INSTALL_GUIDE.md) → Quick Install section
+2. Run: `hblcs-ide`
+3. Read: [USER_GUIDE.md](USER_GUIDE.md) → Getting Started section
+4. Try: Load a preset language and write code
 
-| Topic | Document | Section |
-|-------|----------|---------|
-| System Requirements | [User Guide](USER_GUIDE.md) | Introduction → System Requirements |
-| Installation Steps | [User Guide](USER_GUIDE.md) | Getting Started → Installation |
-| Quick Start | [User Guide](USER_GUIDE.md) | Getting Started → Quick Start |
-| Troubleshooting Setup | [User Guide](USER_GUIDE.md) | Troubleshooting |
+**Time needed**: 20-30 minutes
 
-### Using the IDE
+---
 
-| Topic | Document | Section |
-|-------|----------|---------|
-| Launching IDE | [User Guide](USER_GUIDE.md) | Using the IDE → Launching |
-| Interface Overview | [User Guide](USER_GUIDE.md) | Using the IDE → Interface |
-| Loading Configs | [User Guide](USER_GUIDE.md) | Using the IDE → Loading Configurations |
-| Editor Features | [User Guide](USER_GUIDE.md) | Using the IDE → Editor Features |
-| Keyboard Shortcuts | [User Guide](USER_GUIDE.md) | Using the IDE → Shortcuts Reference |
-| IDE Architecture | [Technical Reference](TECHNICAL_REFERENCE.md) | Core Modules → ide.py |
-| IDE Details | [IDE_README.md](IDE_README.md) | All sections |
+### "I want to create a custom language"
+1. Read: [LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md) → Design Principles
+2. Read: [USER_GUIDE.md](USER_GUIDE.md) → Creating Custom Languages
+3. Follow: Tutorial 1 or 2 from Language Development Guide
+4. Use: IDE or CLI to build your language
+5. Reference: [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md) for detailed specs
 
-### Command-Line Tools
+**Time needed**: 1-2 hours
 
-| Topic | Document | Section |
-|-------|----------|---------|
-| CLI Overview | [User Guide](USER_GUIDE.md) | Command-Line Tools |
-| Creating Configs | [User Guide](USER_GUIDE.md) | Command-Line → Creating |
-| Editing Configs | [User Guide](USER_GUIDE.md) | Command-Line → Editing |
-| Validation | [User Guide](USER_GUIDE.md) | Command-Line → Viewing Information |
-| CLI Reference | [Technical Reference](TECHNICAL_REFERENCE.md) | Core Modules → langconfig.py |
+---
 
-### Configuration Management
+### "I want to use the system programmatically"
+1. Read: [INSTALL_GUIDE.md](INSTALL_GUIDE.md) → Installation
+2. Read: [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md) → API Reference
+3. Review: Code examples in Technical Reference
+4. Study: language_config.py and language_runtime.py source
+5. Build: Your application using the APIs
 
-| Topic | Document | Section |
+**Time needed**: 2-3 hours
+
+---
+
+### "I'm creating a language for education"
+1. Read: [LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md) → Design Principles
+2. Follow: Tutorial 2 (Educational Language)
+3. Reference: [USER_GUIDE.md](USER_GUIDE.md) for tool usage
+4. Review: TeachScript example in demos/
+5. Iterate: Based on student feedback
+
+**Time needed**: 4+ hours (includes design and testing)
+
+---
+
+### "I'm creating a domain-specific language"
+1. Read: [LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md) → Design Principles
+2. Follow: Tutorial 3 (Domain-Specific Language)
+3. Reference: [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md) for detailed specs
+4. Use: CLI tools for bulk operations
+5. Test: Examples in your domain
+
+**Time needed**: 2-4 hours
+
+---
+
+### "I need to troubleshoot a problem"
+1. Check: [INSTALL_GUIDE.md](INSTALL_GUIDE.md) → Troubleshooting section
+2. Check: [USER_GUIDE.md](USER_GUIDE.md) → Troubleshooting section
+3. Try: Common solutions listed
+4. Read: [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md) for technical details
+
+**Time needed**: 15-30 minutes
+
+---
+
+## 📖 Reading Paths by Skill Level
+
+### Beginner (Just starting)
+
+**Path**: Installation → Using IDE → First Language
+1. [INSTALL_GUIDE.md](INSTALL_GUIDE.md) - Full guide
+2. [USER_GUIDE.md](USER_GUIDE.md) - Sections: Getting Started, Using the IDE
+3. Try loading a preset and writing code
+4. Read: [USER_GUIDE.md](USER_GUIDE.md) - Creating Custom Languages
+
+**Estimated time**: 1.5-2 hours
+
+**By end, you'll**:
+- Have working installation
+- Understand IDE interface
+- Know how to create basic language
+- Be able to run code
+
+---
+
+### Intermediate (Ready to build)
+
+**Path**: Language Design → Building Languages → Testing
+1. [LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md) - Design Principles
+2. [LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md) - Tutorial 1 or 2
+3. [USER_GUIDE.md](USER_GUIDE.md) - Creating Custom Languages
+4. [LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md) - Testing section
+5. Build your language, test thoroughly
+
+**Estimated time**: 3-5 hours
+
+**By end, you'll**:
+- Understand language design principles
+- Be able to design your own language
+- Know how to test and validate languages
+- Have created at least one working language
+
+---
+
+### Advanced (Building systems)
+
+**Path**: Architecture → API → Extensions → Performance
+1. [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md) - Architecture Overview
+2. [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md) - API Reference
+3. [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md) - Extension Development
+4. [LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md) - Advanced Topics
+5. Build extensions, optimize for use cases
+
+**Estimated time**: 4-6 hours
+
+**By end, you'll**:
+- Understand complete system architecture
+- Be able to extend the system
+- Know how to optimize for performance
+- Be able to build systems on top of HB_LCS
+
+---
+
+### Educator (Teaching with custom languages)
+
+**Path**: Design → Language Development → Testing → Curriculum
+1. [LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md) - Full guide
+2. [USER_GUIDE.md](USER_GUIDE.md) - Creating Custom Languages
+3. [LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md) - Testing section
+4. [LANGUAGE_DEVELOPMENT_GUIDE.md](LANGUAGE_DEVELOPMENT_GUIDE.md) - Case Study 1 (TeachScript)
+5. Design curriculum, test with students
+
+**Estimated time**: 5-8 hours
+
+**By end, you'll**:
+- Understand educational language design
+- Have created a teaching language
+- Have curriculum outline
+- Be ready to use with students
+
+---
+
+## 🔍 Finding Specific Topics
+
+| Topic | Location |
+|-------|----------|
+| **Installation** | INSTALL_GUIDE → Detailed Installation |
+| **Troubleshooting installation** | INSTALL_GUIDE → Troubleshooting |
+| **Using IDE** | USER_GUIDE → Using Graphical IDE |
+| **Using CLI** | USER_GUIDE → Using Command-Line Tool |
+| **Creating languages** | USER_GUIDE → Creating Custom Languages |
+| **Presets** | USER_GUIDE → Working with Presets |
+| **Common tasks** | USER_GUIDE → Common Tasks |
+| **Practical examples** | USER_GUIDE → Tips & Tricks |
+| **Language design** | LANGUAGE_DEVELOPMENT_GUIDE → Design Principles |
+| **Design tutorials** | LANGUAGE_DEVELOPMENT_GUIDE → Tutorials 1-4 |
+| **Testing languages** | LANGUAGE_DEVELOPMENT_GUIDE → Testing |
+| **Best practices** | LANGUAGE_DEVELOPMENT_GUIDE → Best Practices |
+| **API reference** | TECHNICAL_REFERENCE → API Reference |
+| **Architecture** | TECHNICAL_REFERENCE → Architecture |
+| **Configuration format** | TECHNICAL_REFERENCE → Configuration Format |
+| **Extension development** | TECHNICAL_REFERENCE → Extension Development |
+| **Performance tuning** | TECHNICAL_REFERENCE → Performance & Optimization |
+| **Security** | TECHNICAL_REFERENCE → Security Considerations |
 |-------|----------|---------|
 | Config Structure | [User Guide](USER_GUIDE.md) | Creating Configurations |
 | JSON Format | [Technical Reference](TECHNICAL_REFERENCE.md) | Configuration Format → JSON |

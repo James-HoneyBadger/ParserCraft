@@ -48,7 +48,9 @@ class LanguageRuntime:
 
     @classmethod
     def load_config(
-        cls, config: Optional[LanguageConfig] = None, config_file: Optional[str] = None
+        cls,
+        config: Optional[LanguageConfig] = None,
+        config_file: Optional[str] = None,
     ) -> None:
         """Load a language configuration.
 
@@ -104,6 +106,12 @@ class LanguageRuntime:
             for func in self._config.builtin_functions.values()
             if func.enabled
         }
+
+    @classmethod
+    def get_custom_keywords(cls) -> list[str]:
+        """Return the list of custom keywords currently configured."""
+        runtime = cls.get_instance()
+        return list(runtime._keyword_reverse_map.keys())
 
     @classmethod
     def translate_keyword(cls, keyword_text: str) -> str:
@@ -241,7 +249,7 @@ class LanguageRuntime:
             f"Version: {config.version}",
             f"Description: {config.description}",
             f"Keywords: {len(config.keyword_mappings)}",
-            f"Functions: {len([f for f in config.builtin_functions.values() if f.enabled])}",
+            f"Functions: {len([f for f in config.builtin_functions.values() if f.enabled])}",  # noqa: E501
             f"Operators: {len(config.operators)}",
         ]
 
@@ -363,7 +371,10 @@ if __name__ == "__main__":
 
     # Test keyword translation
     print("Translate 'si' ->", LanguageRuntime.translate_keyword("si"))
-    print("Translate 'mientras' ->", LanguageRuntime.translate_keyword("mientras"))
+    print(
+        "Translate 'mientras' ->",
+        LanguageRuntime.translate_keyword("mientras"),
+    )
 
     # Check features
     print("\nFeatures:")

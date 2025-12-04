@@ -1,472 +1,642 @@
-# Honey Badger Language Construction Set - User Guide
+# User Guide
 
-**Complete User Guide**  
-Version 1.0 | November 2025
+**Honey Badger Language Construction Set v4.0**  
+Complete User Manual & How-To Guide  
+December 3, 2025
 
 ## Table of Contents
 
 1. [Introduction](#introduction)
 2. [Getting Started](#getting-started)
-3. [Using the IDE](#using-the-ide)
-4. [Command-Line Tools](#command-line-tools)
-5. [Creating Configurations](#creating-configurations)
+3. [Using the Graphical IDE](#using-the-graphical-ide)
+4. [Using the Command-Line Tool](#using-the-command-line-tool)
+5. [Creating Custom Languages](#creating-custom-languages)
 6. [Working with Presets](#working-with-presets)
 7. [Common Tasks](#common-tasks)
-8. [Troubleshooting](#troubleshooting)
+8. [Advanced Features](#advanced-features)
+9. [Troubleshooting](#troubleshooting)
+10. [Tips & Tricks](#tips--tricks)
 
 ---
 
 ## Introduction
 
-### What is the Honey Badger Language Construction Set?
+### What is HB Language Construction Set?
 
-The Honey Badger Language Construction Set is a powerful toolkit for creating custom programming language variants. It allows you to:
+The **Honey Badger Language Construction Set** is a toolkit for creating custom programming language variants. It lets you:
 
-- **Rename keywords** to match your preferred terminology
-- **Customize syntax** for comments, operators, and indexing
-- **Manage built-in functions** by adding, removing, or modifying them
-- **Use presets** to start from familiar language templates
-- **Create domain-specific languages** for education or specialized applications
+- **Rename keywords** (`if` → `cuando`, `function` → `def`)
+- **Customize syntax** (comment style, operators, indexing)
+- **Add/remove functions** (enable/disable built-ins)
+- **Use presets** (Python-like, JavaScript-like, minimal)
+- **Edit visually** (graphical IDE)
+- **Use command-line** (batch operations)
+- **Deploy** (web, mobile, cloud)
 
 ### Who Should Use This?
 
-- **Educators** creating simplified programming languages for teaching
-- **Language designers** prototyping new language ideas
-- **Developers** building domain-specific languages (DSLs)
-- **Students** learning about programming language design
-- **Researchers** studying language syntax and semantics
+✅ **Educators** - Teach programming in native language  
+✅ **Language designers** - Prototype language ideas  
+✅ **Researchers** - Study language syntax  
+✅ **Developers** - Create domain-specific languages  
+✅ **Students** - Learn language design  
 
 ### System Requirements
 
-- **Python 3.7+** (Python 3.8 or higher recommended)
-- **Operating System**: Linux, macOS, or Windows
-- **Optional**: PyYAML for YAML configuration support
-- **GUI**: tkinter (usually included with Python)
+- **Python 3.8+** (3.10+ recommended)
+- **Operating System**: Windows, macOS, or Linux
+- **GUI library**: Tkinter (usually included)
+- **Optional**: PyYAML for YAML support
 
 ---
 
 ## Getting Started
 
-### Installation
-
-1. **Extract or clone the project:**
-   ```bash
-   cd /path/to/HB_LCS
-   ```
-
-2. **Verify Python installation:**
-   ```bash
-   python3 --version
-   ```
-
-3. **Optional - Install YAML support:**
-   ```bash
-   pip install pyyaml
-   # Or using system package manager:
-   # Ubuntu/Debian: sudo apt install python3-yaml
-   # Arch: sudo pacman -S python-yaml
-   # macOS: brew install pyyaml
-   ```
-
-4. **Test the installation:**
-   ```bash
-   python3 demo_language_construction.py
-   ```
-
-### Quick Start (5 Minutes)
-
-**Option 1: Using the IDE (Recommended for beginners)**
+### Installation (2 minutes)
 
 ```bash
-# Launch the graphical IDE
-python3 ide.py
+# 1. Get the code
+git clone https://github.com/James-HoneyBadger/HB_Language_Construction.git
+cd HB_Language_Construction
+
+# 2. Create virtual environment
+python3 -m venv venv
+source venv/bin/activate  # Linux/macOS
+# or: venv\Scripts\activate  # Windows
+
+# 3. Install
+pip install -e .
+
+# 4. Verify
+hblcs --help
+
+# 5. Launch IDE
+hblcs-ide
 ```
 
-Then:
-1. Click **Examples** → **Python-Like** to load a preset
-2. View the configuration in the right panel
-3. Edit code in the left panel
-4. Explore the menus
+See [INSTALL_GUIDE.md](INSTALL_GUIDE.md) for detailed installation help.
 
-**Option 2: Using the Command Line**
+### Your First Language (5 minutes)
 
 ```bash
-# Create a new configuration from a preset
-python3 langconfig.py create --preset python_like my_language.yaml
+# Create a Spanish-style language
+hblcs create --preset python_like --output spanish.yaml
 
-# View the configuration
-python3 langconfig.py info my_language.yaml
+# Edit it (opens in your editor)
+hblcs update spanish.yaml \
+    --set keywords.if.custom=si \
+    --set keywords.while.custom=mientras \
+    --output spanish.yaml
 
-# Customize it
-python3 langconfig.py edit my_language.yaml rename-keyword if cuando
+# Validate it
+hblcs validate spanish.yaml
+
+# View it
+hblcs info spanish.yaml
 ```
 
-**Option 3: Using Python API**
+### Your First IDE Session (10 minutes)
+
+1. **Launch IDE**: `hblcs-ide`
+2. **Menu → File → Load Configuration** → Select preset
+3. **Menu → Edit → Editor Font Size** → Adjust as needed
+4. **Type code** in the editor using custom keywords
+5. **Menu → Tools → Syntax Check** → Verify code
+6. **Menu → File → Save Configuration** → Save your changes
+
+---
+
+## Using the Graphical IDE
+
+### Starting the IDE
+
+```bash
+# Standard launch
+hblcs-ide
+
+# Or from source
+python src/hb_lcs/launch_ide.py
+```
+
+The IDE window shows:
+
+```
+┌─────────────────────────────────────────────────────┐
+│ Menu Bar (File, Edit, Language, Tools, Help)        │
+├─────────────────────────────────────────────────────┤
+│ Toolbar (Quick buttons)                             │
+├──────────────────┬──────────────────────────────────┤
+│  Config Panel    │     Editor Panel                 │
+│  (Keywords,      │     (Code editor)                │
+│   Functions)     │     (Line numbers)               │
+├──────────────────┼──────────────────────────────────┤
+│  Configuration   │     Console/Output               │
+│  Details         │     (Execution results)          │
+├──────────────────┴──────────────────────────────────┤
+│ Status Bar (File info, language, line count)        │
+└─────────────────────────────────────────────────────┘
+```
+
+### Main Menu Options
+
+#### File Menu
+
+| Option | Keyboard | Action |
+|--------|----------|--------|
+| New | Ctrl+N | Create new file |
+| Open | Ctrl+O | Open code file |
+| Save | Ctrl+S | Save current file |
+| Save As | Ctrl+Shift+S | Save with new name |
+| Load Language Config | Ctrl+L | Load language definition |
+| Save Language Config | Ctrl+Alt+S | Save language definition |
+| Import Config | - | Import configuration |
+| Export Config | - | Export as JSON/YAML |
+| Recent Files | - | Open recently used file |
+| Exit | Alt+F4 | Close IDE |
+
+#### Edit Menu
+
+| Option | Keyboard | Action |
+|--------|----------|--------|
+| Undo | Ctrl+Z | Undo last change |
+| Redo | Ctrl+Y | Redo last change |
+| Cut | Ctrl+X | Cut selection |
+| Copy | Ctrl+C | Copy selection |
+| Paste | Ctrl+V | Paste clipboard |
+| Select All | Ctrl+A | Select all text |
+| Find | Ctrl+F | Find in text |
+| Replace | Ctrl+H | Find and replace |
+| Preferences | - | IDE settings |
+
+#### Language Menu
+
+| Option | Action |
+|--------|--------|
+| Python-Like | Load Python preset |
+| JavaScript-Like | Load JavaScript preset |
+| Minimal | Load minimal preset |
+| Spanish | Load Spanish preset |
+| Custom... | Load custom config |
+
+#### Tools Menu
+
+| Option | Action |
+|--------|--------|
+| Run Code | Execute code in editor |
+| Syntax Check | Validate code syntax |
+| Validate Config | Validate language definition |
+| Generate Template | AI code template suggestion |
+| Lint Code | Check code style |
+| Test Code | Run code tests |
+
+#### Help Menu
+
+| Option | Action |
+|--------|--------|
+| User Guide | Open this guide |
+| Keyboard Shortcuts | Show keyboard shortcuts |
+| About | About dialog |
+
+### Editor Features
+
+#### Syntax Highlighting
+
+Different colors for:
+- **Keywords** (orange)
+- **Strings** (green)
+- **Numbers** (blue)
+- **Comments** (gray)
+- **Functions** (purple)
+
+Toggle: **Edit → Preferences → Syntax Highlighting**
+
+#### Line Numbers
+
+Shows line numbers on left side.
+
+Toggle: **Edit → Preferences → Show Line Numbers**
+
+#### Text Wrapping
+
+Wrap long lines.
+
+Toggle: **View → Word Wrap**
+
+#### Code Completion
+
+Auto-complete keywords and function names.
+
+Toggle: **Edit → Preferences → Code Completion**
+
+### Configuration Panel
+
+Left side shows language configuration:
+
+**Keywords Section**
+- Lists all available keywords
+- Shows original → custom mapping
+- Click to edit mapping
+
+**Functions Section**
+- Lists all available functions
+- Shows function arity (argument count)
+- Click to enable/disable
+
+**Syntax Options Section**
+- Array indexing (0-based or 1-based)
+- Comment style
+- Operator precedence
+
+### Running Code
+
+1. **Write code** in the editor using custom keywords
+2. **Click "Run"** button or press Ctrl+Enter
+3. **See output** in the console panel
+4. **Check errors** in the error panel
+
+Example:
 
 ```python
-from language_config import LanguageConfig
-
-# Create a configuration
-config = LanguageConfig.from_preset("python_like")
-
-# Customize it
-config.rename_keyword("if", "cuando")  # Spanish for "when"
-config.rename_keyword("while", "mientras")  # Spanish for "while"
-
-# Save it
-config.save("spanish_python.yaml")
+# Using Python-like preset
+x = 10
+if x > 5:
+    print("x is big!")
 ```
+
+Example with Spanish preset:
+
+```python
+# Using Spanish preset
+x = 10
+si x > 5:
+    print("¡x es grande!")
+```
+
+### Saving Your Work
+
+#### Save Code
+
+```
+File → Save (Ctrl+S)
+```
+
+Saves the code file (`.py` by default).
+
+#### Save Configuration
+
+```
+File → Save Language Config (Ctrl+Alt+S)
+```
+
+Saves the language definition (`.json` or `.yaml`).
+
+### IDE Preferences
+
+**Access**: Edit → Preferences
+
+Options include:
+
+| Setting | Options | Default |
+|---------|---------|---------|
+| Theme | Light/Dark | Light |
+| Editor Font Size | 8-20 | 11 |
+| Console Font Size | 8-16 | 10 |
+| Show Line Numbers | On/Off | On |
+| Show Minimap | On/Off | Off |
+| Auto-Save | On/Off | Off |
+| Syntax Highlighting | On/Off | On |
+| Code Completion | On/Off | On |
 
 ---
 
-## Using the IDE
+## Using the Command-Line Tool
 
-### Launching the IDE
+### Basic Commands
 
-```bash
-# Method 1: Direct launch
-python3 ide.py
-
-# Method 2: Using launcher
-python3 launch_ide.py
-
-# Method 3: Make executable (Linux/macOS)
-chmod +x ide.py
-./ide.py
-```
-
-### IDE Interface Overview
-
-```
-┌─────────────────────────────────────────────────────────┐
-│ File  Edit  Config  Examples  View  Help                │ Menu Bar
-├─────────────────────────────────────────────────────────┤
-│ [New] [Open] [Save] │ [Load Config] [Info]              │ Toolbar
-├──────────────────────────────┬──────────────────────────┤
-│                              │                          │
-│  Code Editor                 │  Configuration Info      │
-│  (with line numbers)         │  (read-only display)     │
-│                              │                          │
-│                              │                          │
-│                              │                          │
-├──────────────────────────────┴──────────────────────────┤
-│ Ready                        │ Line 1, Col 1            │ Status Bar
-└─────────────────────────────────────────────────────────┘
-```
-
-### Working with Files
-
-**Create a New File:**
-- Menu: `File` → `New`
-- Keyboard: `Ctrl+N`
-- Toolbar: Click **New**
-
-**Open an Existing File:**
-- Menu: `File` → `Open...`
-- Keyboard: `Ctrl+O`
-- Toolbar: Click **Open**
-
-**Save Your Work:**
-- Menu: `File` → `Save` (or `Save As...`)
-- Keyboard: `Ctrl+S` (or `Ctrl+Shift+S` for Save As)
-- Toolbar: Click **Save**
-
-### Loading Language Configurations
-
-**Method 1: Load from File**
-1. Menu: `Config` → `Load Config...`
-2. Keyboard: Press `F5`
-3. Select a `.yaml` or `.json` file
-4. View details in the right panel
-
-**Method 2: Load from Examples**
-- Menu: `Examples` → Select a preset
-- Available: Python-Like, Minimal, Spanish
-
-**Method 3: Toolbar**
-- Click the **Load Config** button
-- Navigate to configuration file
-
-### Validating Configurations
-
-To check if a configuration is valid:
-
-1. Load the configuration (`F5`)
-2. Menu: `Config` → `Validate Config`
-3. See results in a popup dialog
-
-✓ Valid configurations show "Configuration is valid!"  
-✗ Invalid configurations list specific errors
-
-### Using Editor Features
-
-**Find Text:**
-- `Ctrl+F` - Opens Find dialog
-- Enter search text
-- Click "Find Next"
-
-**Replace Text:**
-- `Ctrl+H` - Opens Replace dialog
-- Enter find and replace text
-- Click "Replace All"
-
-**Go to Specific Line:**
-- `Ctrl+L` - Opens Go to Line dialog
-- Enter line number
-- Jumps to that line
-
-**Toggle Word Wrap:**
-- Menu: `Edit` → Check/uncheck `Word Wrap`
-- Wraps long lines for easier reading
-
-**Toggle Line Numbers:**
-- Menu: `View` → Check/uncheck `Show Line Numbers`
-- Shows/hides line number gutter
-
-### Customizing the IDE
-
-**Change Theme:**
-1. Menu: `View` → `Theme` → Select `Light` or `Dark`
-2. Or use Preferences dialog
-
-**Adjust Font Sizes:**
-1. Menu: `Edit` → `Preferences...`
-2. Adjust "Editor font size" (8-32)
-3. Adjust "Console font size" (8-32)
-4. Click "Save"
-
-**Preferences Dialog Options:**
-- **Theme**: Light or Dark
-- **Editor font size**: Size of code editor text
-- **Console font size**: Size of configuration display
-
-### Keyboard Shortcuts Reference
-
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl+N` | New file |
-| `Ctrl+O` | Open file |
-| `Ctrl+S` | Save file |
-| `Ctrl+Shift+S` | Save As |
-| `F5` | Load configuration |
-| `Ctrl+F` | Find |
-| `Ctrl+H` | Replace |
-| `Ctrl+L` | Go to Line |
-| `Ctrl+Z` | Undo |
-| `Ctrl+Y` | Redo |
-| `Ctrl+X` | Cut |
-| `Ctrl+C` | Copy |
-| `Ctrl+V` | Paste |
-| `Ctrl+A` | Select All |
-
----
-
-## Command-Line Tools
-
-### Overview of langconfig.py
-
-The `langconfig.py` tool provides 10 commands for managing language configurations:
+#### Get Help
 
 ```bash
-python3 langconfig.py <command> [options] <config-file>
+# Show general help
+hblcs --help
+
+# Show specific command help
+hblcs create --help
+
+# Show version
+hblcs --version
+
+# List commands
+hblcs list-commands
 ```
 
-### Available Commands
+#### List Available Presets
 
-1. `create` - Create new configuration
-2. `edit` - Modify existing configuration
-3. `validate` - Check configuration validity
-4. `info` - Display configuration details
-5. `export` - Export to different format
-6. `list-presets` - Show available presets
-7. `convert` - Convert between JSON/YAML
-8. `diff` - Compare two configurations
-9. `update` - Batch update configurations
-10. `delete` - Remove configuration files
+```bash
+hblcs list-presets
+
+# Output:
+# Available presets:
+# - python_like (Python-style syntax)
+# - javascript_like (JavaScript-style syntax)
+# - minimal (Teaching mode with 6 keywords)
+# - spanish (Spanish keywords)
+# - french (French keywords)
+```
 
 ### Creating Configurations
 
-**From Scratch:**
+#### From Preset
+
 ```bash
-python3 langconfig.py create my_language.yaml
+# Create from preset
+hblcs create --preset python_like --output my_lang.yaml
+
+# Available presets:
+# - python_like
+# - javascript_like
+# - minimal
+# - spanish
+# - french
 ```
 
-**From Preset:**
+#### Interactive Mode
+
 ```bash
-python3 langconfig.py create --preset python_like my_language.yaml
-python3 langconfig.py create --preset minimal teaching_mode.json
-python3 langconfig.py create --preset javascript_like web_lang.yaml
+# Step-by-step guided creation
+hblcs create --interactive
+
+# Prompts you for:
+# 1. Language name
+# 2. Version
+# 3. Author
+# 4. Base preset
+# 5. Keywords to customize
+# 6. Functions to include
 ```
 
-**Available Presets:**
-- `python_like` - Python-style syntax
-- `javascript_like` - JavaScript-style syntax
-- `minimal` - Bare minimum features
-- `teaching_mode` - Simplified for education
+#### Default
 
-### Editing Configurations
-
-**Rename a Keyword:**
 ```bash
-python3 langconfig.py edit my_language.yaml rename-keyword if cuando
-python3 langconfig.py edit my_language.yaml rename-keyword while mientras
+# Create minimal configuration
+hblcs create --output basic.json
 ```
 
-**Add a Function:**
+### Validating Configurations
+
 ```bash
-# Syntax: add-function <original> <custom> <min_args> <max_args>
-python3 langconfig.py edit my_language.yaml add-function sqrt raiz 1 1
-python3 langconfig.py edit my_language.yaml add-function print imprimir 0 -1
+# Check for errors
+hblcs validate my_lang.yaml
+
+# Output (if valid):
+# ✓ Configuration is valid
+
+# Output (if invalid):
+# ✗ Configuration has errors:
+#   - Error 1
+#   - Error 2
 ```
 
-**Remove a Function:**
+### Inspecting Configurations
+
 ```bash
-python3 langconfig.py edit my_language.yaml remove-function eval
+# Show detailed information
+hblcs info my_lang.yaml
+
+# Output example:
+# Language: My Language v1.0
+# Author: Your Name
+# Keywords: 30
+# Functions: 15
+# Array indexing: 0-based
+# Comment style: #
 ```
 
-**Set Array Indexing:**
-```bash
-# 0-based indexing
-python3 langconfig.py edit my_language.yaml set-indexing 0
+### Modifying Configurations
 
-# 1-based indexing
-python3 langconfig.py edit my_language.yaml set-indexing 1
+#### Set Values
+
+```bash
+# Change single value
+hblcs update my_lang.yaml \
+    --set metadata.author "New Author" \
+    --output my_lang_updated.yaml
+
+# Set multiple values
+hblcs update my_lang.yaml \
+    --set metadata.version "2.0" \
+    --set metadata.author "Author Name" \
+    --output my_lang_updated.yaml
+
+# Change keyword mapping
+hblcs update my_lang.yaml \
+    --set keywords.if.custom "cuando" \
+    --output my_lang_updated.yaml
 ```
 
-**Set Comment Style:**
+#### Merge Configurations
+
 ```bash
-python3 langconfig.py edit my_language.yaml set-comment "#"
-python3 langconfig.py edit my_language.yaml set-comment "//"
-python3 langconfig.py edit my_language.yaml set-comment "--"
+# Combine two configurations
+hblcs update base.yaml \
+    --merge additions.yaml \
+    --output merged.yaml
 ```
 
-### Viewing Information
+#### Delete Elements
 
-**Display Full Configuration:**
 ```bash
-python3 langconfig.py info my_language.yaml
-```
+# Remove keyword
+hblcs delete my_lang.yaml \
+    --keyword deprecated_kw \
+    --output cleaned.yaml
 
-**Validate Configuration:**
-```bash
-python3 langconfig.py validate my_language.yaml
-```
+# Remove function
+hblcs delete my_lang.yaml \
+    --function unused_func \
+    --output cleaned.yaml
 
-**List Available Presets:**
-```bash
-python3 langconfig.py list-presets
+# Remove multiple items
+hblcs delete my_lang.yaml \
+    --keyword kw1 \
+    --keyword kw2 \
+    --function func1 \
+    --output cleaned.yaml
 ```
 
 ### Converting Formats
 
-**Convert YAML to JSON:**
+#### JSON ↔ YAML
+
 ```bash
-python3 langconfig.py convert my_language.yaml my_language.json
+# Convert JSON to YAML
+hblcs convert config.json --to yaml --output config.yaml
+
+# Convert YAML to JSON
+hblcs convert config.yaml --to json --output config.json
 ```
 
-**Convert JSON to YAML:**
+#### Comparing Configurations
+
 ```bash
-python3 langconfig.py convert my_language.json my_language.yaml
+# Show differences between two configs
+hblcs diff config1.yaml config2.yaml
+
+# Output:
+# Differences between config1.yaml and config2.yaml:
+# Keywords:
+#   - if: cuando → si
+# Functions:
+#   - print added
+#   - deprecated_func removed
 ```
 
-### Comparing Configurations
+#### Exporting Documentation
 
-**Show Differences:**
 ```bash
-python3 langconfig.py diff config1.yaml config2.yaml
-```
+# Export as markdown
+hblcs export config.yaml --format markdown --output config.md
 
-Output shows:
-- Keywords only in first config
-- Keywords only in second config
-- Keywords with different mappings
-- Function differences
-
-### Batch Operations
-
-**Update Multiple Configurations:**
-```bash
-python3 langconfig.py update '*.yaml' rename-keyword if cuando
-```
-
-**Delete Configurations:**
-```bash
-python3 langconfig.py delete old_config.yaml
+# Export as HTML
+hblcs export config.yaml --format html --output config.html
 ```
 
 ---
 
-## Creating Configurations
+## Creating Custom Languages
 
-### Understanding Configuration Structure
+### Basic Workflow
 
-A language configuration consists of:
-
-1. **Metadata**: Name, version, description
-2. **Keywords**: Original → Custom mappings
-3. **Functions**: Built-in function definitions
-4. **Operators**: Operator symbols and precedence
-5. **Parsing**: Comment styles, string delimiters
-6. **Syntax**: Array indexing, statement separators
-
-### Step-by-Step: Create a Spanish Language Variant
-
-**Step 1: Start from a preset**
-```python
-from language_config import LanguageConfig
-
-config = LanguageConfig.from_preset("python_like")
-config.name = "Spanish Python"
-config.version = "1.0"
+```
+1. Create base from preset
+2. Customize keywords
+3. Customize functions
+4. Adjust syntax options
+5. Test & validate
+6. Save & use
 ```
 
-**Step 2: Rename control flow keywords**
-```python
-config.rename_keyword("if", "si")
-config.rename_keyword("else", "sino")
-config.rename_keyword("elif", "sinoSi")
-config.rename_keyword("while", "mientras")
-config.rename_keyword("for", "para")
+### Example 1: Educational Language
+
+**Goal**: Create a simplified language for beginners
+
+```bash
+# 1. Start with minimal preset
+hblcs create --preset minimal --output beginner.yaml
+
+# 2. Customize keywords (make them simpler)
+hblcs update beginner.yaml \
+    --set keywords.if.custom=check \
+    --set keywords.while.custom=repeat \
+    --output beginner.yaml
+
+# 3. Validate
+hblcs validate beginner.yaml
+
+# 4. Use in IDE
+hblcs-ide
+# File → Load Configuration → beginner.yaml
 ```
 
-**Step 3: Rename function keywords**
+Result:
 ```python
-config.rename_keyword("function", "funcion")
-config.rename_keyword("return", "retornar")
-config.rename_keyword("class", "clase")
+# Simplified beginner syntax
+x = 5
+check x > 0:
+    print("x is positive")
+
+repeat i in range(3):
+    print("Count:", i)
 ```
 
-**Step 4: Rename built-in functions**
-```python
-config.add_function("print", "imprimir", max_args=-1)
-config.add_function("input", "entrada", max_args=1)
-config.add_function("len", "longitud", min_args=1, max_args=1)
+### Example 2: Spanish Language
+
+**Goal**: Create Spanish keyword language
+
+```bash
+# 1. Start with Python preset
+hblcs create --preset python_like --output spanish.yaml
+
+# 2. Rename keywords to Spanish
+hblcs update spanish.yaml \
+    --set keywords.if.custom=si \
+    --set keywords.while.custom=mientras \
+    --set keywords.for.custom=para \
+    --set keywords.function.custom=función \
+    --set keywords.return.custom=regresa \
+    --set keywords.class.custom=clase \
+    --output spanish.yaml
+
+# 3. Rename functions to Spanish
+hblcs update spanish.yaml \
+    --set builtin_functions.print.name=escribir \
+    --output spanish.yaml
+
+# 4. Validate
+hblcs validate spanish.yaml
+
+# 5. Use
+hblcs-ide
 ```
 
-**Step 5: Validate and save**
+Result:
 ```python
-errors = config.validate()
-if not errors:
-    config.save("spanish_python.yaml")
-    print("✓ Configuration created successfully!")
-else:
-    print("Errors:", errors)
+# Spanish syntax
+x = 10
+si x > 5:
+    escribir("x es grande")
+
+para i en rango(3):
+    escribir(i)
+
+función saludar(nombre):
+    escribir("Hola, " + nombre)
+
+saludar("mundo")
 ```
 
-### Configuration Best Practices
+### Example 3: Domain-Specific Language
 
-**DO:**
-- ✓ Use descriptive names for your language
-- ✓ Keep keyword names consistent with your theme
-- ✓ Validate before saving
-- ✓ Document your configuration choices
-- ✓ Test with example code
+**Goal**: Create a language for data processing
 
-**DON'T:**
-- ✗ Mix different language styles inconsistently
-- ✗ Use special characters in keyword names
-- ✗ Forget to specify min/max args for functions
-- ✗ Create circular keyword mappings
+```bash
+# 1. Start minimal
+hblcs create --preset minimal --output data_lang.yaml
+
+# 2. Customize for data processing
+hblcs update data_lang.yaml \
+    --set keywords.if.custom=filter \
+    --set keywords.for.custom=transform \
+    --set keywords.function.custom=operation \
+    --output data_lang.yaml
+
+# 3. Add data-specific functions
+# (Manual edit needed for full customization)
+nano data_lang.yaml
+
+# Add to builtin_functions:
+# "sum": { "name": "sum", "arity": -1 }
+# "avg": { "name": "avg", "arity": -1 }
+# "max": { "name": "max", "arity": -1 }
+# "min": { "name": "min", "arity": -1 }
+
+# 4. Validate & use
+hblcs validate data_lang.yaml
+hblcs-ide
+```
+
+Result:
+```python
+# Data processing syntax
+data = [1, 2, 3, 4, 5]
+
+total = sum(data)
+average = avg(data)
+maximum = max(data)
+
+transform value in data:
+    if value > 2:
+        print(value)
+```
 
 ---
 
@@ -474,322 +644,571 @@ else:
 
 ### Available Presets
 
-**python_like** - Python-style syntax
-- Keywords: `def`, `class`, `if`, `elif`, `else`, `while`, `for`
-- Functions: `print`, `len`, `range`, `input`, `int`, `str`, `float`
-- Comment: `#`
-- Indexing: 0-based
+#### python_like
+Python-style syntax, familiar to Python developers.
 
-**javascript_like** - JavaScript-style syntax
-- Keywords: `function`, `class`, `if`, `else`, `while`, `for`
-- Functions: `console.log`, `parseInt`, `parseFloat`
-- Comment: `//`
-- Indexing: 0-based
-
-**minimal** - Bare minimum
-- Essential keywords only
-- Basic functions
-- Simplified syntax
-
-**teaching_mode** - Educational
-- Clear, verbose keyword names
-- Limited feature set
-- Beginner-friendly
-
-### Loading Presets
-
-**In Python:**
 ```python
-from language_config import LanguageConfig
+# Keywords
+if, while, for, def, return, class, import, from, import
 
-config = LanguageConfig.from_preset("python_like")
+# Comment style: #
+# Statement end: newline
+# Array indexing: 0-based
+
+x = 5
+if x > 0:
+    print("positive")
 ```
 
-**Via CLI:**
+#### javascript_like
+JavaScript-style syntax, familiar to JavaScript developers.
+
+```python
+# Keywords
+if, while, for, function, return, class, const, let, var
+
+# Comment style: //
+# Statement end: semicolon (optional)
+# Array indexing: 0-based
+
+let x = 5;
+if (x > 0) {
+    console.log("positive");
+}
+```
+
+#### minimal
+Teaching mode with only 6 essential keywords.
+
+```python
+# Keywords: if, while, function, return, and, or
+
+# Perfect for beginners
+x = 5
+if x > 0:
+    print("positive")
+```
+
+#### spanish
+Spanish language keywords.
+
+```python
+# Keywords in Spanish
+si, mientras, para, función, regresa, clase
+
+x = 5
+si x > 0:
+    print("positivo")
+```
+
+#### french
+French language keywords.
+
+```python
+# Keywords in French
+si, tandis, pour, fonction, retour, classe
+
+x = 5
+si x > 0:
+    afficher("positif")
+```
+
+### Loading a Preset
+
+#### In CLI
+
 ```bash
-python3 langconfig.py create --preset python_like my_config.yaml
+hblcs create --preset python_like --output my_lang.yaml
 ```
 
-**In IDE:**
-- Menu: `Examples` → Select preset
+#### In IDE
 
-### Customizing Presets
+1. **File → Load Configuration**
+2. **Select preset** from list
+3. Or **Browse** for custom config file
 
-Start from a preset and modify:
+#### In Python
 
 ```python
-# Load preset
+from hb_lcs.language_config import LanguageConfig
+
 config = LanguageConfig.from_preset("python_like")
+```
 
-# Customize
-config.name = "My Custom Language"
-config.rename_keyword("function", "procedure")
-config.set_comment_style("//")
+### Customizing a Preset
 
-# Save as new configuration
-config.save("my_custom.yaml")
+```bash
+# 1. Load preset
+hblcs create --preset python_like --output custom.yaml
+
+# 2. Customize it
+hblcs update custom.yaml \
+    --set keywords.if.custom=cuando \
+    --output custom.yaml
+
+# 3. Use it
+hblcs-ide
+# File → Load Configuration → custom.yaml
 ```
 
 ---
 
 ## Common Tasks
 
-### Task 1: Create a Teaching Language for Kids
+### Task 1: Rename a Single Keyword
 
+**Goal**: Change `if` to `when`
+
+```bash
+hblcs update my_lang.yaml \
+    --set keywords.if.custom=when \
+    --output my_lang.yaml
+```
+
+### Task 2: Add Comments to Your Language
+
+**Goal**: Use `//` for comments
+
+```bash
+hblcs update my_lang.yaml \
+    --set syntax_options.single_line_comment="//" \
+    --output my_lang.yaml
+```
+
+### Task 3: Make Language Use 1-Based Indexing
+
+**Goal**: Make arrays start at 1 instead of 0
+
+```bash
+hblcs update my_lang.yaml \
+    --set syntax_options.array_start_index=1 \
+    --output my_lang.yaml
+```
+
+In code:
 ```python
-from language_config import LanguageConfig
-
-# Start with teaching mode preset
-config = LanguageConfig.from_preset("teaching_mode")
-
-# Use very clear English keywords
-config.rename_keyword("if", "when")
-config.rename_keyword("while", "repeat_while")
-config.rename_keyword("function", "make_function")
-config.rename_keyword("return", "give_back")
-
-# Simple, clear function names
-config.add_function("print", "say", max_args=-1)
-config.add_function("input", "ask", max_args=1)
-config.add_function("len", "count", min_args=1, max_args=1)
-
-# Save
-config.save("kids_language.yaml")
+arr = [10, 20, 30]
+print(arr[1])  # Prints 10 (first element)
 ```
 
-### Task 2: Create a Non-English Language
+### Task 4: Disable Semicolons
 
-```python
-# German language variant
-config = LanguageConfig.from_preset("python_like")
-
-config.rename_keyword("if", "wenn")
-config.rename_keyword("else", "sonst")
-config.rename_keyword("while", "während")
-config.rename_keyword("for", "für")
-config.rename_keyword("function", "funktion")
-
-config.save("german_python.yaml")
-```
-
-### Task 3: Validate Multiple Configurations
+**Goal**: Make semicolons optional
 
 ```bash
-# Validate all YAML files
-for file in examples/*.yaml; do
-    echo "Validating $file..."
-    python3 langconfig.py validate "$file"
-done
+hblcs update my_lang.yaml \
+    --set syntax_options.require_semicolons=false \
+    --output my_lang.yaml
 ```
 
-### Task 4: Convert All Configs to JSON
+### Task 5: Compare Two Languages
+
+**Goal**: See what's different between two configs
 
 ```bash
-# Convert all YAML to JSON
-for file in *.yaml; do
-    json_file="${file%.yaml}.json"
-    python3 langconfig.py convert "$file" "$json_file"
-done
+hblcs diff language1.yaml language2.yaml
 ```
 
-### Task 5: Compare Your Config with Python
+### Task 6: Backup Your Language
+
+**Goal**: Create a copy before major changes
 
 ```bash
-python3 langconfig.py diff my_language.yaml examples/python_like.yaml
+# Backup
+cp my_lang.yaml my_lang.backup.yaml
+
+# Make changes
+hblcs update my_lang.yaml --set ...
+
+# If something goes wrong, restore
+cp my_lang.backup.yaml my_lang.yaml
+```
+
+### Task 7: Export Language Documentation
+
+**Goal**: Create user documentation for your language
+
+```bash
+# Export as markdown
+hblcs export my_lang.yaml --format markdown --output my_lang.md
+
+# Export as HTML
+hblcs export my_lang.yaml --format html --output my_lang.html
+```
+
+### Task 8: Share Your Language
+
+**Goal**: Share config with others
+
+```bash
+# Convert to JSON for better compatibility
+hblcs convert my_lang.yaml --to json --output my_lang.json
+
+# Share the file
+# Recipients can use it with:
+hblcs validate my_lang.json
+hblcs info my_lang.json
+
+# Or in IDE
+hblcs-ide
+# File → Load Configuration → my_lang.json
+```
+
+---
+
+## Advanced Features
+
+### Feature: Code Completion
+
+Auto-complete suggestions for keywords and functions.
+
+Toggle: **Edit → Preferences → Code Completion**
+
+Usage:
+1. Start typing keyword
+2. See suggestions
+3. Press Tab to complete
+4. Or press Escape to cancel
+
+### Feature: Real-Time Validation
+
+Check code syntax as you type.
+
+Toggle: **Tools → Real-time Validation**
+
+Shows:
+- ✓ Green line = valid
+- ✗ Red line = error
+- ⚠ Yellow line = warning
+
+### Feature: Live Preview
+
+See code output in real-time.
+
+Toggle: **View → Live Preview**
+
+Updates output every time you run code.
+
+### Feature: Search & Replace
+
+Find and replace text in editor.
+
+```
+Keyboard: Ctrl+H
+Or: Edit → Find and Replace
+```
+
+Features:
+- Regular expression support
+- Case-sensitive/insensitive
+- Whole word matching
+- Replace one/all
+
+### Feature: Syntax Themes
+
+Change editor appearance.
+
+Options:
+- **Light** - Light background (default)
+- **Dark** - Dark background
+
+Toggle: **Edit → Preferences → Theme**
+
+### Feature: Configuration Merging
+
+Combine multiple configurations.
+
+```bash
+hblcs update base.yaml \
+    --merge additions.yaml \
+    --output merged.yaml
+```
+
+Useful for:
+- Extending existing languages
+- Combining features from multiple configs
+- Iterative language development
+
+### Feature: Batch Operations
+
+Modify multiple items at once.
+
+```bash
+# Multiple keyword changes
+hblcs update my_lang.yaml \
+    --set keywords.if.custom=cuando \
+    --set keywords.while.custom=mientras \
+    --set keywords.for.custom=para \
+    --output my_lang.yaml
 ```
 
 ---
 
 ## Troubleshooting
 
-### Common Issues and Solutions
+### IDE Won't Start
 
-**Issue: "YAML support not available"**
-```
-Solution: Install PyYAML
-  pip install pyyaml
-  # Or use system package manager
-```
+**Problem**: `hblcs-ide` command not found
 
-**Issue: "Keyword 'xyz' not found"**
-```
-Solution: Check the original keyword exists
-  python3 langconfig.py info your_config.yaml
-  # View all available keywords
-```
-
-**Issue: IDE won't start**
-```
-Solution: Verify tkinter is installed
-  python3 -m tkinter
-  # Should open a test window
-  
-  If missing on Ubuntu/Debian:
-    sudo apt install python3-tk
-```
-
-**Issue: Configuration won't load**
-```
-Solution: Validate the configuration
-  python3 langconfig.py validate your_config.yaml
-  # Shows specific errors
-```
-
-**Issue: Changes not saving**
-```
-Solution: Check file permissions
-  ls -l your_config.yaml
-  chmod 644 your_config.yaml
-```
-
-### Getting Help
-
-**View Command Help:**
+**Solution**:
 ```bash
-python3 langconfig.py --help
-python3 langconfig.py create --help
-python3 langconfig.py edit --help
+# Check if installed
+pip show hb_lcs
+
+# If not installed
+pip install -e .
+
+# Or launch from source
+python src/hb_lcs/launch_ide.py
 ```
 
-**Check Version:**
+### Can't Load Configuration
+
+**Problem**: "Configuration error: Invalid file"
+
+**Solution**:
 ```bash
-python3 langconfig.py --version
-```
-
-**IDE Help:**
-- Menu: `Help` → `About`
-- Shows version and feature information
-
-### Error Messages
-
-**"Configuration validation failed"**
-- Run `validate` command to see specific errors
-- Common causes: Missing required fields, invalid values
-
-**"Function 'xyz' already exists"**
-- Use different name or remove existing function first
-- Use `remove-function` before `add-function`
-
-**"Invalid array index base"**
-- Must be 0 or 1
-- Use `set-indexing 0` or `set-indexing 1`
-
-### Best Practices for Stability
-
-1. **Always validate** before using a configuration
-2. **Keep backups** of working configurations
-3. **Use version control** (git) for configuration files
-4. **Test incrementally** - make small changes and test
-5. **Document changes** in configuration descriptions
-
----
-
-## Appendix A: File Locations
-
-**Configuration Storage:**
-- User configs: Anywhere you choose
-- Examples: `examples/` directory
-- IDE settings: `~/.hb_lcs/settings.json`
-
-**Project Structure:**
-```
-HB_LCS/
-├── language_config.py      # Core library
-├── language_runtime.py     # Runtime system
-├── langconfig.py          # CLI tool
-├── ide.py                 # GUI application
-├── launch_ide.py          # IDE launcher
-├── examples/              # Sample configurations
-│   ├── python_like.yaml
-│   ├── minimal.json
-│   └── spanish.yaml
-└── docs/                  # Documentation
-```
-
-## Appendix B: Keyboard Shortcuts Quick Reference
-
-**File Operations:**
-- `Ctrl+N` - New
-- `Ctrl+O` - Open
-- `Ctrl+S` - Save
-- `Ctrl+Shift+S` - Save As
-
-**Editing:**
-- `Ctrl+Z` - Undo
-- `Ctrl+Y` - Redo
-- `Ctrl+X/C/V` - Cut/Copy/Paste
-- `Ctrl+A` - Select All
-
-**Search:**
-- `Ctrl+F` - Find
-- `Ctrl+H` - Replace
-- `Ctrl+L` - Go to Line
-
-**Configuration:**
-- `F5` - Load Config
-
-## Appendix C: Example Workflows
-
-**Workflow 1: Quick Language Variant**
-1. Launch IDE (`python3 ide.py`)
-2. Load preset (`Examples` → `Python-Like`)
-3. Note desired changes
-4. Use CLI to customize
-5. Reload in IDE to verify
-
-**Workflow 2: Iterative Development**
-1. Create from preset
-2. Make small change
-3. Validate
-4. Test with example code
-5. Repeat steps 2-4
-
-**Workflow 3: Team Collaboration**
-1. Share configuration files via git
-2. Each team member validates locally
-3. Use `diff` to review changes
-4. Merge approved configurations
-
----
-
-## Quick Reference Card
-
-**Most Used Commands:**
-```bash
-# Create new config from preset
-python3 langconfig.py create --preset python_like myconfig.yaml
-
-# Rename a keyword
-python3 langconfig.py edit myconfig.yaml rename-keyword if cuando
-
 # Validate configuration
-python3 langconfig.py validate myconfig.yaml
+hblcs validate my_config.yaml
 
-# View configuration
-python3 langconfig.py info myconfig.yaml
+# Check error details
+hblcs validate my_config.yaml --verbose
 
-# Launch IDE
-python3 ide.py
+# Fix issues
+hblcs info my_config.yaml
 ```
 
-**Most Used Python API:**
-```python
-from language_config import LanguageConfig
+### Code Won't Run
 
-# Load/Create
-config = LanguageConfig.from_preset("python_like")
+**Problem**: "Syntax error" when running code
 
-# Modify
-config.rename_keyword("if", "cuando")
-config.add_function("sqrt", "raiz", 1, 1)
+**Solution**:
+1. Check you're using correct custom keywords
+2. Run `Tools → Syntax Check` to find errors
+3. Verify configuration is loaded correctly
+4. Look at example code for syntax
 
-# Save
-config.save("myconfig.yaml")
+### Configuration File Corrupted
+
+**Problem**: "Error parsing configuration file"
+
+**Solution**:
+```bash
+# Convert to JSON (often more forgiving)
+hblcs convert my_lang.yaml --to json --output my_lang.json
+
+# Validate JSON version
+hblcs validate my_lang.json
+
+# If it works, use JSON version
+# If not, check file manually
+cat my_lang.json | grep -i error
+```
+
+### Performance Issues
+
+**Problem**: IDE is slow
+
+**Solution**:
+1. **Disable minimap**: Edit → Preferences → Show Minimap = Off
+2. **Disable syntax highlighting**: Edit → Preferences → Syntax Highlighting = Off
+3. **Disable code completion**: Edit → Preferences → Code Completion = Off
+4. **Use simpler config**: Load minimal preset instead of large config
+5. **Restart IDE**: Close and reopen
+
+### File Permission Issues
+
+**Problem**: "Permission denied" on Windows
+
+**Solution**:
+```powershell
+# Run as Administrator
+# Open PowerShell as admin, then:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# Or use Command Prompt instead
 ```
 
 ---
 
-**End of User Guide**
+## Tips & Tricks
 
-For technical details, see the [Technical Reference Manual](TECHNICAL_REFERENCE.md).  
-For language development, see the [Programming Language Development Guide](LANGUAGE_DEVELOPMENT_GUIDE.md).
+### Tip 1: Use Presets as Base
+
+Don't create from scratch. Start with a preset and customize:
+
+```bash
+hblcs create --preset python_like --output my_lang.yaml
+# Then modify my_lang.yaml
+```
+
+### Tip 2: Version Your Configs
+
+Track version numbers:
+
+```bash
+# Version 1.0
+hblcs create --output mylang_v1.0.yaml
+
+# Version 2.0 (with new features)
+hblcs create --output mylang_v2.0.yaml
+
+# Keep both for backward compatibility
+```
+
+### Tip 3: Use Meaningful Names
+
+Choose keywords that clearly indicate their purpose:
+
+❌ Bad:
+```python
+x = abc()  # What does x do?
+```
+
+✅ Good:
+```python
+count = get_total_items()  # Clear purpose
+```
+
+### Tip 4: Document Your Language
+
+Add descriptions to keywords:
+
+```bash
+hblcs update my_lang.yaml \
+    --set keywords.if.description="Execute code if condition is true" \
+    --output my_lang.yaml
+
+# Export documentation
+hblcs export my_lang.yaml --format markdown --output README.md
+```
+
+### Tip 5: Use IDE Keyboard Shortcuts
+
+Learn common shortcuts for faster workflow:
+
+- **Ctrl+S** - Save
+- **Ctrl+O** - Open
+- **Ctrl+N** - New
+- **Ctrl+Z** - Undo
+- **Ctrl+Y** - Redo
+- **Ctrl+F** - Find
+- **Ctrl+H** - Replace
+
+### Tip 6: Backup Before Major Changes
+
+Always backup before big modifications:
+
+```bash
+cp my_lang.yaml my_lang.backup.yaml
+# Make changes
+# If problem: cp my_lang.backup.yaml my_lang.yaml
+```
+
+### Tip 7: Test Incrementally
+
+Test changes step by step:
+
+```bash
+# 1. Change one keyword
+hblcs update my_lang.yaml --set keywords.if.custom=cuando --output my_lang.yaml
+hblcs validate my_lang.yaml
+
+# 2. Load in IDE and test
+hblcs-ide
+
+# 3. If it works, change next keyword
+# 4. Repeat
+```
+
+### Tip 8: Share Language Configs
+
+Share your languages as JSON (wider compatibility):
+
+```bash
+# Convert to JSON
+hblcs convert my_lang.yaml --to json --output my_lang.json
+
+# Share my_lang.json
+# Recipients can use it immediately
+```
+
+### Tip 9: Use IDE for Learning
+
+Explore built-in examples:
+
+1. Launch IDE: `hblcs-ide`
+2. Load different presets
+3. Try their example code
+4. See how they work
+5. Create your own based on what you learn
+
+### Tip 10: Combine CLI and IDE
+
+Use them together effectively:
+
+```bash
+# Use CLI for bulk operations
+hblcs update my_lang.yaml --set keywords.if.custom=cuando --output my_lang.yaml
+
+# Use IDE for fine-tuning
+hblcs-ide
+# File → Load Configuration → my_lang.yaml
+# Make final adjustments in GUI
+# File → Save Configuration
+```
+
+---
+
+## Keyboard Shortcuts Reference
+
+| Action | Linux/Windows | macOS |
+|--------|---------------|-------|
+| New | Ctrl+N | Cmd+N |
+| Open | Ctrl+O | Cmd+O |
+| Save | Ctrl+S | Cmd+S |
+| Load Config | Ctrl+L | Cmd+L |
+| Undo | Ctrl+Z | Cmd+Z |
+| Redo | Ctrl+Y | Cmd+Shift+Z |
+| Cut | Ctrl+X | Cmd+X |
+| Copy | Ctrl+C | Cmd+C |
+| Paste | Ctrl+V | Cmd+V |
+| Select All | Ctrl+A | Cmd+A |
+| Find | Ctrl+F | Cmd+F |
+| Replace | Ctrl+H | Cmd+Option+F |
+| Run Code | Ctrl+Enter | Cmd+Enter |
+| Exit | Alt+F4 | Cmd+Q |
+
+---
+
+## Getting Help
+
+### Documentation
+- **[Installation Guide](INSTALL_GUIDE.md)** - Setup instructions
+- **[Technical Reference](TECHNICAL_REFERENCE.md)** - API docs
+- **[Language Development Guide](LANGUAGE_DEVELOPMENT_GUIDE.md)** - Creating languages
+- **[IDE Guide](IDE_README.md)** - IDE features
+
+### Online Resources
+- **GitHub**: https://github.com/James-HoneyBadger/HB_Language_Construction
+- **Issues**: GitHub Issues for bug reports
+- **Discussions**: GitHub Discussions for Q&A
+
+### Running Examples
+
+```bash
+# Run demo script
+python demos/demo_language_construction.py
+
+# Run TeachScript examples
+python demos/teachscript/run_teachscript.py demos/teachscript/examples/01_hello_world.teach
+
+# Run tests
+python -m pytest tests/ -v
+```
+
+---
+
+**User Guide v4.0**  
+December 3, 2025  
+Compatible with HB Language Construction Set v4.0

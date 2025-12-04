@@ -2,7 +2,8 @@
 """
 Honey Badger Language Construction Set - Advanced IDE
 
-A comprehensive graphical IDE for creating, editing, and testing custom programming languages.
+A comprehensive graphical IDE for creating, editing, and testing
+custom programming languages.
 Features include:
 - Interactive configuration editor
 - Syntax highlighting and code completion
@@ -14,20 +15,13 @@ Features include:
 - Advanced language construction features
 """
 
-import threading
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, simpledialog, scrolledtext
 import os
-import json
-import webbrowser
-from typing import Optional, Dict, List, Any, Tuple
-from pathlib import Path
-import re
-import subprocess
-from datetime import datetime
+from typing import Optional, List
 
 from .language_config import LanguageConfig, list_presets
-from .language_runtime import LanguageRuntime, print_language_info
+from .language_runtime import LanguageRuntime
 
 
 class AdvancedIDE(ttk.Frame):
@@ -37,7 +31,9 @@ class AdvancedIDE(ttk.Frame):
         super().__init__(master)
         self.pack(fill="both", expand=True)
         self.root = tk.Tk() if master is None else master.winfo_toplevel()
-        self.root.title("Honey Badger Language Construction Set - Advanced IDE v2.0")
+        self.root.title(
+            "Honey Badger Language Construction Set - Advanced IDE v2.0"
+        )
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
 
         # Initialize state
@@ -140,23 +136,33 @@ class AdvancedIDE(ttk.Frame):
         # New submenu
         new_menu = tk.Menu(file_menu, tearoff=0)
         file_menu.add_cascade(label="New", menu=new_menu)
-        new_menu.add_command(label="File", command=self._new_file, accelerator="Ctrl+N")
+        new_menu.add_command(
+            label="File", command=self._new_file, accelerator="Ctrl+N"
+        )
         new_menu.add_command(label="Project", command=self._new_project)
-        new_menu.add_command(label="Language Config", command=self._new_language_config)
+        new_menu.add_command(
+            label="Language Config", command=self._new_language_config
+        )
         new_menu.add_separator()
-        new_menu.add_command(label="From Template...", command=self._new_from_template)
+        new_menu.add_command(
+            label="From Template...", command=self._new_from_template
+        )
 
         file_menu.add_command(
             label="Open...", command=self._open_file, accelerator="Ctrl+O"
         )
-        file_menu.add_command(label="Open Recent", command=self._open_recent_menu)
+        file_menu.add_command(
+            label="Open Recent", command=self._open_recent_menu
+        )
 
         file_menu.add_separator()
         file_menu.add_command(
             label="Save", command=self._save_file, accelerator="Ctrl+S"
         )
         file_menu.add_command(
-            label="Save As...", command=self._save_file_as, accelerator="Ctrl+Shift+S"
+            label="Save As...",
+            command=self._save_file_as,
+            accelerator="Ctrl+Shift+S",
         )
         file_menu.add_command(
             label="Save All", command=self._save_all, accelerator="Ctrl+Alt+S"
@@ -188,7 +194,9 @@ class AdvancedIDE(ttk.Frame):
         )
 
         edit_menu.add_separator()
-        edit_menu.add_command(label="Cut", command=self._edit_cut, accelerator="Ctrl+X")
+        edit_menu.add_command(
+            label="Cut", command=self._edit_cut, accelerator="Ctrl+X"
+        )
         edit_menu.add_command(
             label="Copy", command=self._edit_copy, accelerator="Ctrl+C"
         )
@@ -201,10 +209,14 @@ class AdvancedIDE(ttk.Frame):
 
         edit_menu.add_separator()
         edit_menu.add_command(
-            label="Select All", command=self._edit_select_all, accelerator="Ctrl+A"
+            label="Select All",
+            command=self._edit_select_all,
+            accelerator="Ctrl+A",
         )
         edit_menu.add_command(
-            label="Select Line", command=self._edit_select_line, accelerator="Ctrl+L"
+            label="Select Line",
+            command=self._edit_select_line,
+            accelerator="Ctrl+L",
         )
 
         edit_menu.add_separator()
@@ -212,7 +224,9 @@ class AdvancedIDE(ttk.Frame):
             label="Find...", command=self._find_dialog, accelerator="Ctrl+F"
         )
         edit_menu.add_command(
-            label="Replace...", command=self._replace_dialog, accelerator="Ctrl+H"
+            label="Replace...",
+            command=self._replace_dialog,
+            accelerator="Ctrl+H",
         )
         edit_menu.add_command(
             label="Find in Files...",
@@ -222,10 +236,14 @@ class AdvancedIDE(ttk.Frame):
 
         edit_menu.add_separator()
         edit_menu.add_command(
-            label="Go to Line...", command=self._goto_line, accelerator="Ctrl+G"
+            label="Go to Line...",
+            command=self._goto_line,
+            accelerator="Ctrl+G",
         )
         edit_menu.add_command(
-            label="Go to Definition", command=self._goto_definition, accelerator="F12"
+            label="Go to Definition",
+            command=self._goto_definition,
+            accelerator="F12",
         )
 
         edit_menu.add_separator()
@@ -235,7 +253,9 @@ class AdvancedIDE(ttk.Frame):
             accelerator="Shift+Alt+F",
         )
         edit_menu.add_command(
-            label="Comment Line", command=self._toggle_comment, accelerator="Ctrl+/"
+            label="Comment Line",
+            command=self._toggle_comment,
+            accelerator="Ctrl+/",
         )
 
     def _create_view_menu(self, menubar: tk.Menu) -> None:
@@ -246,15 +266,21 @@ class AdvancedIDE(ttk.Frame):
         # Panels submenu
         panels_menu = tk.Menu(view_menu, tearoff=0)
         view_menu.add_cascade(label="Panels", menu=panels_menu)
-        panels_menu.add_checkbutton(label="Editor", command=self._toggle_editor_panel)
-        panels_menu.add_checkbutton(label="Console", command=self._toggle_console_panel)
+        panels_menu.add_checkbutton(
+            label="Editor", command=self._toggle_editor_panel
+        )
+        panels_menu.add_checkbutton(
+            label="Console", command=self._toggle_console_panel
+        )
         panels_menu.add_checkbutton(
             label="Config Editor", command=self._toggle_config_panel
         )
         panels_menu.add_checkbutton(
             label="Project Explorer", command=self._toggle_project_panel
         )
-        panels_menu.add_checkbutton(label="Minimap", command=self._toggle_minimap)
+        panels_menu.add_checkbutton(
+            label="Minimap", command=self._toggle_minimap
+        )
 
         view_menu.add_separator()
         view_menu.add_checkbutton(
@@ -263,7 +289,9 @@ class AdvancedIDE(ttk.Frame):
             variable=self.show_line_numbers_var,
         )
         view_menu.add_checkbutton(
-            label="Word Wrap", command=self._toggle_wrap, variable=self.wrap_var
+            label="Word Wrap",
+            command=self._toggle_wrap,
+            variable=self.wrap_var,
         )
         view_menu.add_checkbutton(
             label="Syntax Highlighting",
@@ -322,15 +350,23 @@ class AdvancedIDE(ttk.Frame):
             accelerator="Ctrl+Shift+N",
         )
         lang_menu.add_command(
-            label="Load Configuration...", command=self._load_config, accelerator="F5"
+            label="Load Configuration...",
+            command=self._load_config,
+            accelerator="F5",
         )
         lang_menu.add_command(
-            label="Reload Configuration", command=self._reload_config, accelerator="F6"
+            label="Reload Configuration",
+            command=self._reload_config,
+            accelerator="F6",
         )
-        lang_menu.add_command(label="Unload Configuration", command=self._unload_config)
+        lang_menu.add_command(
+            label="Unload Configuration", command=self._unload_config
+        )
 
         lang_menu.add_separator()
-        lang_menu.add_command(label="Save Configuration", command=self._save_config)
+        lang_menu.add_command(
+            label="Save Configuration", command=self._save_config
+        )
         lang_menu.add_command(
             label="Save Configuration As...", command=self._save_config_as
         )
@@ -366,14 +402,20 @@ class AdvancedIDE(ttk.Frame):
         features_menu.add_command(
             label="Add Keyword Mapping", command=self._add_keyword_mapping
         )
-        features_menu.add_command(label="Add Function", command=self._add_function)
+        features_menu.add_command(
+            label="Add Function", command=self._add_function
+        )
         features_menu.add_command(
             label="Configure Syntax", command=self._configure_syntax
         )
-        features_menu.add_command(label="Set Operators", command=self._set_operators)
+        features_menu.add_command(
+            label="Set Operators", command=self._set_operators
+        )
 
         lang_menu.add_separator()
-        lang_menu.add_command(label="Test Language", command=self._test_language)
+        lang_menu.add_command(
+            label="Test Language", command=self._test_language
+        )
         lang_menu.add_command(
             label="Run Code", command=self._run_code, accelerator="F9"
         )
@@ -383,12 +425,20 @@ class AdvancedIDE(ttk.Frame):
         project_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Project", menu=project_menu)
 
-        project_menu.add_command(label="New Project", command=self._new_project)
-        project_menu.add_command(label="Open Project...", command=self._open_project)
-        project_menu.add_command(label="Close Project", command=self._close_project)
+        project_menu.add_command(
+            label="New Project", command=self._new_project
+        )
+        project_menu.add_command(
+            label="Open Project...", command=self._open_project
+        )
+        project_menu.add_command(
+            label="Close Project", command=self._close_project
+        )
 
         project_menu.add_separator()
-        project_menu.add_command(label="Add File", command=self._add_file_to_project)
+        project_menu.add_command(
+            label="Add File", command=self._add_file_to_project
+        )
         project_menu.add_command(
             label="Add Folder", command=self._add_folder_to_project
         )
@@ -400,8 +450,12 @@ class AdvancedIDE(ttk.Frame):
         project_menu.add_command(
             label="Project Settings", command=self._project_settings
         )
-        project_menu.add_command(label="Build Project", command=self._build_project)
-        project_menu.add_command(label="Clean Project", command=self._clean_project)
+        project_menu.add_command(
+            label="Build Project", command=self._build_project
+        )
+        project_menu.add_command(
+            label="Clean Project", command=self._clean_project
+        )
 
         project_menu.add_separator()
         project_menu.add_command(label="Git Status", command=self._git_status)
@@ -425,7 +479,9 @@ class AdvancedIDE(ttk.Frame):
             label="Generate Documentation", command=self._generate_docs
         )
         tools_menu.add_command(
-            label="Run Tests", command=self._run_tests, accelerator="Ctrl+Shift+T"
+            label="Run Tests",
+            command=self._run_tests,
+            accelerator="Ctrl+Shift+T",
         )
         tools_menu.add_command(
             label="Debug Code", command=self._debug_code, accelerator="F10"
@@ -435,7 +491,9 @@ class AdvancedIDE(ttk.Frame):
         # Code analysis submenu
         analysis_menu = tk.Menu(tools_menu, tearoff=0)
         tools_menu.add_cascade(label="Code Analysis", menu=analysis_menu)
-        analysis_menu.add_command(label="Check Syntax", command=self._check_syntax)
+        analysis_menu.add_command(
+            label="Check Syntax", command=self._check_syntax
+        )
         analysis_menu.add_command(
             label="Find References", command=self._find_references
         )
@@ -454,14 +512,20 @@ class AdvancedIDE(ttk.Frame):
         menubar.add_cascade(label="Window", menu=window_menu)
 
         window_menu.add_command(label="New Window", command=self._new_window)
-        window_menu.add_command(label="Close Window", command=self._close_window)
+        window_menu.add_command(
+            label="Close Window", command=self._close_window
+        )
 
         window_menu.add_separator()
-        window_menu.add_command(label="Split Editor", command=self._split_editor)
+        window_menu.add_command(
+            label="Split Editor", command=self._split_editor
+        )
         window_menu.add_command(label="Close Split", command=self._close_split)
 
         window_menu.add_separator()
-        window_menu.add_command(label="Reset Layout", command=self._reset_layout)
+        window_menu.add_command(
+            label="Reset Layout", command=self._reset_layout
+        )
         window_menu.add_command(label="Save Layout", command=self._save_layout)
         window_menu.add_command(label="Load Layout", command=self._load_layout)
 
@@ -481,11 +545,15 @@ class AdvancedIDE(ttk.Frame):
         )
 
         help_menu.add_separator()
-        help_menu.add_command(label="Documentation", command=self._open_documentation)
+        help_menu.add_command(
+            label="Documentation", command=self._open_documentation
+        )
         help_menu.add_command(
             label="Language Reference", command=self._language_reference
         )
-        help_menu.add_command(label="API Reference", command=self._api_reference)
+        help_menu.add_command(
+            label="API Reference", command=self._api_reference
+        )
 
         help_menu.add_separator()
         # Tutorials submenu
@@ -504,7 +572,8 @@ class AdvancedIDE(ttk.Frame):
             command=lambda: self._tutorial("extensions"),
         )
         tutorials_menu.add_command(
-            label="Testing and Validation", command=lambda: self._tutorial("testing")
+            label="Testing and Validation",
+            command=lambda: self._tutorial("testing"),
         )
 
         # Examples submenu
@@ -515,13 +584,16 @@ class AdvancedIDE(ttk.Frame):
             command=lambda: self._example("keyword_rename"),
         )
         examples_menu.add_command(
-            label="Functional Language", command=lambda: self._example("functional")
+            label="Functional Language",
+            command=lambda: self._example("functional"),
         )
         examples_menu.add_command(
-            label="Object-Oriented Syntax", command=lambda: self._example("oop")
+            label="Object-Oriented Syntax",
+            command=lambda: self._example("oop"),
         )
         examples_menu.add_command(
-            label="Domain-Specific Language", command=lambda: self._example("dsl")
+            label="Domain-Specific Language",
+            command=lambda: self._example("dsl"),
         )
 
         help_menu.add_separator()
@@ -548,20 +620,24 @@ class AdvancedIDE(ttk.Frame):
             side="left", padx=2
         )
 
-        ttk.Separator(toolbar, orient="vertical").pack(side="left", fill="y", padx=6)
+        ttk.Separator(toolbar, orient="vertical").pack(
+            side="left", fill="y", padx=6
+        )
 
         # Language operations
-        ttk.Button(toolbar, text="Load Config", command=self._load_config).pack(
-            side="left", padx=2
-        )
-        ttk.Button(toolbar, text="Validate", command=self._validate_config).pack(
-            side="left", padx=2
-        )
+        ttk.Button(
+            toolbar, text="Load Config", command=self._load_config
+        ).pack(side="left", padx=2)
+        ttk.Button(
+            toolbar, text="Validate", command=self._validate_config
+        ).pack(side="left", padx=2)
         ttk.Button(toolbar, text="Run", command=self._run_code).pack(
             side="left", padx=2
         )
 
-        ttk.Separator(toolbar, orient="vertical").pack(side="left", fill="y", padx=6)
+        ttk.Separator(toolbar, orient="vertical").pack(
+            side="left", fill="y", padx=6
+        )
 
         # Edit operations
         ttk.Button(toolbar, text="Find", command=self._find_dialog).pack(
@@ -571,7 +647,9 @@ class AdvancedIDE(ttk.Frame):
             side="left", padx=2
         )
 
-        ttk.Separator(toolbar, orient="vertical").pack(side="left", fill="y", padx=6)
+        ttk.Separator(toolbar, orient="vertical").pack(
+            side="left", fill="y", padx=6
+        )
 
         # Help
         ttk.Button(toolbar, text="Help", command=self._show_welcome).pack(
@@ -699,7 +777,9 @@ class AdvancedIDE(ttk.Frame):
 
         self.keywords_listbox = tk.Listbox(keywords_container, height=8)
         keywords_scrollbar = ttk.Scrollbar(
-            keywords_container, orient="vertical", command=self.keywords_listbox.yview
+            keywords_container,
+            orient="vertical",
+            command=self.keywords_listbox.yview,
         )
         self.keywords_listbox.configure(yscrollcommand=keywords_scrollbar.set)
 
@@ -710,14 +790,16 @@ class AdvancedIDE(ttk.Frame):
         keyword_buttons = ttk.Frame(keywords_container)
         keyword_buttons.pack(side="right", fill="y", padx=5)
 
-        ttk.Button(keyword_buttons, text="Add", command=self._add_keyword_mapping).pack(
-            fill="x", pady=2
-        )
+        ttk.Button(
+            keyword_buttons, text="Add", command=self._add_keyword_mapping
+        ).pack(fill="x", pady=2)
         ttk.Button(
             keyword_buttons, text="Edit", command=self._edit_keyword_mapping
         ).pack(fill="x", pady=2)
         ttk.Button(
-            keyword_buttons, text="Remove", command=self._remove_keyword_mapping
+            keyword_buttons,
+            text="Remove",
+            command=self._remove_keyword_mapping,
         ).pack(fill="x", pady=2)
 
         # Functions section
@@ -753,14 +835,16 @@ class AdvancedIDE(ttk.Frame):
         console_toolbar = ttk.Frame(console_container)
         console_toolbar.pack(fill="x", pady=2)
 
-        ttk.Button(console_toolbar, text="Clear", command=self._clear_console).pack(
-            side="left", padx=2
-        )
-        ttk.Button(console_toolbar, text="Copy", command=self._copy_console).pack(
-            side="left", padx=2
-        )
         ttk.Button(
-            console_toolbar, text="Save Output", command=self._save_console_output
+            console_toolbar, text="Clear", command=self._clear_console
+        ).pack(side="left", padx=2)
+        ttk.Button(
+            console_toolbar, text="Copy", command=self._copy_console
+        ).pack(side="left", padx=2)
+        ttk.Button(
+            console_toolbar,
+            text="Save Output",
+            command=self._save_console_output,
         ).pack(side="left", padx=2)
 
     def _create_project_tab(self) -> None:
@@ -774,7 +858,9 @@ class AdvancedIDE(ttk.Frame):
         # Project tree
         self.project_tree = ttk.Treeview(project_container)
         project_tree_scrollbar = ttk.Scrollbar(
-            project_container, orient="vertical", command=self.project_tree.yview
+            project_container,
+            orient="vertical",
+            command=self.project_tree.yview,
         )
         self.project_tree.configure(yscrollcommand=project_tree_scrollbar.set)
 
@@ -788,9 +874,9 @@ class AdvancedIDE(ttk.Frame):
         ttk.Button(
             project_toolbar, text="Refresh", command=self._refresh_project_tree
         ).pack(side="left", padx=2)
-        ttk.Button(project_toolbar, text="Open", command=self._open_selected_file).pack(
-            side="left", padx=2
-        )
+        ttk.Button(
+            project_toolbar, text="Open", command=self._open_selected_file
+        ).pack(side="left", padx=2)
 
     def _create_status_bar(self) -> None:
         """Create the status bar."""
@@ -839,7 +925,8 @@ class AdvancedIDE(ttk.Frame):
             self.root.bind(shortcut, lambda e, cmd=command: cmd())
 
     # Implementation methods would continue here...
-    # This is a comprehensive framework - full implementation would be extensive
+    # This is a comprehensive framework - full implementation would  # noqa
+    # be extensive
 
     def _show_welcome(self) -> None:
         """Show welcome screen with tutorials."""
@@ -871,7 +958,7 @@ This advanced IDE helps you create custom programming languages with ease.
 
 ## Getting Started
 
-Click "Interactive Tutorial" to learn step-by-step how to create your first language!
+Click "Interactive Tutorial" to learn step-by-step how to create your first language!  # noqa: E501
 
 For more information, visit the Help menu.
         """
@@ -897,9 +984,9 @@ For more information, visit the Help menu.
             text="Quick Start Guide",
             command=lambda: [self._quick_start_guide(), welcome_win.destroy()],
         ).pack(side="left", padx=5)
-        ttk.Button(button_frame, text="Close", command=welcome_win.destroy).pack(
-            side="right", padx=5
-        )
+        ttk.Button(
+            button_frame, text="Close", command=welcome_win.destroy
+        ).pack(side="right", padx=5)
 
     def _start_tutorial(self) -> None:
         """Start the interactive tutorial."""
@@ -911,17 +998,17 @@ For more information, visit the Help menu.
         steps = [
             {
                 "title": "Step 1: Create a New Language Configuration",
-                "content": "Let's start by creating a new language configuration.\n\n1. Go to Language → New Configuration\n2. Give your language a name like 'MyFirstLanguage'\n3. Set version to '1.0'",
+                "content": "Let's start by creating a new language configuration.\n\n1. Go to Language → New Configuration\n2. Give your language a name like 'MyFirstLanguage'\n3. Set version to '1.0'",  # noqa: E501
                 "action": "Click 'Next' to continue",
             },
             {
                 "title": "Step 2: Customize Keywords",
-                "content": "Now let's customize some keywords to make your language unique.\n\n1. Switch to the 'Config Editor' tab\n2. In the Keywords section, click 'Add'\n3. Change 'if' to 'when' and 'else' to 'otherwise'",
+                "content": "Now let's customize some keywords to make your language unique.\n\n1. Switch to the 'Config Editor' tab\n2. In the Keywords section, click 'Add'\n3. Change 'if' to 'when' and 'else' to 'otherwise'",  # noqa: E501
                 "action": "Click 'Next' to continue",
             },
             {
                 "title": "Step 3: Test Your Language",
-                "content": "Let's test your new language!\n\n1. Switch to the 'Editor' tab\n2. Type: when True: print('Hello!')\n3. Click the 'Run' button or press F9",
+                "content": "Let's test your new language!\n\n1. Switch to the 'Editor' tab\n2. Type: when True: print('Hello!')\n3. Click the 'Run' button or press F9",  # noqa: E501
                 "action": "Click 'Finish' to complete the tutorial",
             },
         ]
@@ -938,11 +1025,16 @@ For more information, visit the Help menu.
             step = steps[step_idx]
 
             ttk.Label(
-                tutorial_win, text=step["title"], font=("TkDefaultFont", 14, "bold")
+                tutorial_win,
+                text=step["title"],
+                font=("TkDefaultFont", 14, "bold"),
             ).pack(pady=10)
 
             text_widget = scrolledtext.ScrolledText(
-                tutorial_win, wrap="word", height=10, font=("TkDefaultFont", 10)
+                tutorial_win,
+                wrap="word",
+                height=10,
+                font=("TkDefaultFont", 10),
             )
             text_widget.pack(fill="both", expand=True, padx=10, pady=5)
             text_widget.insert("1.0", step["content"])
@@ -960,7 +1052,9 @@ For more information, visit the Help menu.
 
             if step_idx < len(steps) - 1:
                 ttk.Button(
-                    button_frame, text="Next", command=lambda: show_step(step_idx + 1)
+                    button_frame,
+                    text="Next",
+                    command=lambda: show_step(step_idx + 1),
                 ).pack(side="right")
             else:
                 ttk.Button(
@@ -1023,7 +1117,9 @@ For more information, visit the Help menu.
         text_widget.insert("1.0", guide_text)
         text_widget.config(state="disabled")
 
-        ttk.Button(guide_win, text="Close", command=guide_win.destroy).pack(pady=5)
+        ttk.Button(guide_win, text="Close", command=guide_win.destroy).pack(
+            pady=5
+        )
 
     # Placeholder methods for comprehensive functionality
     def _new_language_config(self) -> None:
@@ -1078,16 +1174,20 @@ For more information, visit the Help menu.
                 self._update_title()
                 self._update_ui_state()
                 config_win.destroy()
-                messagebox.showinfo("Success", f"Created configuration '{name}'")
+                messagebox.showinfo(
+                    "Success", f"Created configuration '{name}'"
+                )
             except Exception as e:
-                messagebox.showerror("Error", f"Failed to create configuration: {e}")
+                messagebox.showerror(
+                    "Error", f"Failed to create configuration: {e}"
+                )
 
         ttk.Button(button_frame, text="Create", command=create_config).pack(
             side="left", padx=5
         )
-        ttk.Button(button_frame, text="Cancel", command=config_win.destroy).pack(
-            side="left", padx=5
-        )
+        ttk.Button(
+            button_frame, text="Cancel", command=config_win.destroy
+        ).pack(side="left", padx=5)
 
         config_win.columnconfigure(1, weight=1)
 
@@ -1099,12 +1199,16 @@ For more information, visit the Help menu.
             self._update_ui_state()
             messagebox.showinfo("Success", f"Loaded preset '{preset}'")
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to load preset '{preset}': {e}")
+            messagebox.showerror(
+                "Error", f"Failed to load preset '{preset}': {e}"
+            )
 
     def _add_keyword_mapping(self) -> None:
         """Add a new keyword mapping to the current configuration."""
         if not self.current_config:
-            messagebox.showwarning("Warning", "No language configuration loaded")
+            messagebox.showwarning(
+                "Warning", "No language configuration loaded"
+            )
             return
 
         keyword_win = tk.Toplevel(self.root)
@@ -1138,7 +1242,14 @@ For more information, visit the Help menu.
         category_combo = ttk.Combobox(
             keyword_win,
             textvariable=category_var,
-            values=["general", "control", "function", "operator", "type", "satirical"],
+            values=[
+                "general",
+                "control",
+                "function",
+                "operator",
+                "type",
+                "satirical",
+            ],
         )
         category_combo.grid(row=2, column=1, padx=5, pady=5, sticky="ew")
 
@@ -1169,7 +1280,10 @@ For more information, visit the Help menu.
                 self.current_config.rename_keyword(original, custom)
                 # Update the mapping with additional info
                 for mapping in self.current_config.keyword_mappings:
-                    if mapping.original == original and mapping.custom == custom:
+                    if (
+                        mapping.original == original
+                        and mapping.custom == custom
+                    ):
                         mapping.category = category
                         mapping.description = description
                         break
@@ -1180,25 +1294,33 @@ For more information, visit the Help menu.
                     "Success", f"Added keyword mapping: {original} → {custom}"
                 )
             except Exception as e:
-                messagebox.showerror("Error", f"Failed to add keyword mapping: {e}")
+                messagebox.showerror(
+                    "Error", f"Failed to add keyword mapping: {e}"
+                )
 
         ttk.Button(button_frame, text="Add", command=add_keyword).pack(
             side="left", padx=5
         )
-        ttk.Button(button_frame, text="Cancel", command=keyword_win.destroy).pack(
-            side="left", padx=5
-        )
+        ttk.Button(
+            button_frame, text="Cancel", command=keyword_win.destroy
+        ).pack(side="left", padx=5)
 
         keyword_win.columnconfigure(1, weight=1)
 
     def _edit_keyword_mapping(self) -> None:
-        messagebox.showinfo("Edit Keyword", "Keyword editing not yet implemented")
+        messagebox.showinfo(
+            "Edit Keyword", "Keyword editing not yet implemented"
+        )
 
     def _remove_keyword_mapping(self) -> None:
-        messagebox.showinfo("Remove Keyword", "Keyword removal not yet implemented")
+        messagebox.showinfo(
+            "Remove Keyword", "Keyword removal not yet implemented"
+        )
 
     def _add_function(self) -> None:
-        messagebox.showinfo("Add Function", "Function addition not yet implemented")
+        messagebox.showinfo(
+            "Add Function", "Function addition not yet implemented"
+        )
 
     def _configure_syntax(self) -> None:
         messagebox.showinfo(
@@ -1211,14 +1333,16 @@ For more information, visit the Help menu.
         )
 
     def _test_language(self) -> None:
-        messagebox.showinfo("Test Language", "Language testing not yet implemented")
+        messagebox.showinfo(
+            "Test Language", "Language testing not yet implemented"
+        )
 
     def _run_code(self) -> None:
         """Run the code in the editor."""
         if not self.current_config:
             messagebox.showwarning(
                 "Warning",
-                "No language configuration loaded. Please create or load a configuration first.",
+                "No language configuration loaded. Please create or load a configuration first.",  # noqa: E501
             )
             return
 
@@ -1240,7 +1364,9 @@ For more information, visit the Help menu.
                 f">>> Running code with config '{self.current_config.name}'\n"
             )
             console_text += f"Code length: {len(code)} characters\n"
-            console_text += "Output: [Code execution not fully implemented yet]\n"
+            console_text += (
+                "Output: [Code execution not fully implemented yet]\n"
+            )
 
             # Add to console
             console = getattr(self, "console_text", None)
@@ -1258,19 +1384,27 @@ For more information, visit the Help menu.
                 messagebox.showerror("Error", error_msg)
 
     def _new_project(self) -> None:
-        messagebox.showinfo("New Project", "Project creation not yet implemented")
+        messagebox.showinfo(
+            "New Project", "Project creation not yet implemented"
+        )
 
     def _open_project(self) -> None:
-        messagebox.showinfo("Open Project", "Project opening not yet implemented")
+        messagebox.showinfo(
+            "Open Project", "Project opening not yet implemented"
+        )
 
     def _close_project(self) -> None:
-        messagebox.showinfo("Close Project", "Project closing not yet implemented")
+        messagebox.showinfo(
+            "Close Project", "Project closing not yet implemented"
+        )
 
     def _add_file_to_project(self) -> None:
         messagebox.showinfo("Add File", "File addition not yet implemented")
 
     def _add_folder_to_project(self) -> None:
-        messagebox.showinfo("Add Folder", "Folder addition not yet implemented")
+        messagebox.showinfo(
+            "Add Folder", "Folder addition not yet implemented"
+        )
 
     def _remove_from_project(self) -> None:
         messagebox.showinfo("Remove", "Removal not yet implemented")
@@ -1285,7 +1419,9 @@ For more information, visit the Help menu.
         messagebox.showinfo("Clean", "Project cleaning not yet implemented")
 
     def _git_status(self) -> None:
-        messagebox.showinfo("Git Status", "Git integration not yet implemented")
+        messagebox.showinfo(
+            "Git Status", "Git integration not yet implemented"
+        )
 
     def _git_commit(self) -> None:
         messagebox.showinfo("Git Commit", "Git commit not yet implemented")
@@ -1294,10 +1430,14 @@ For more information, visit the Help menu.
         messagebox.showinfo("Git Push", "Git push not yet implemented")
 
     def _open_terminal(self) -> None:
-        messagebox.showinfo("Terminal", "Terminal integration not yet implemented")
+        messagebox.showinfo(
+            "Terminal", "Terminal integration not yet implemented"
+        )
 
     def _command_palette(self) -> None:
-        messagebox.showinfo("Command Palette", "Command palette not yet implemented")
+        messagebox.showinfo(
+            "Command Palette", "Command palette not yet implemented"
+        )
 
     def _generate_docs(self) -> None:
         messagebox.showinfo(
@@ -1311,25 +1451,37 @@ For more information, visit the Help menu.
         messagebox.showinfo("Debug", "Debugging not yet implemented")
 
     def _check_syntax(self) -> None:
-        messagebox.showinfo("Check Syntax", "Syntax checking not yet implemented")
+        messagebox.showinfo(
+            "Check Syntax", "Syntax checking not yet implemented"
+        )
 
     def _find_references(self) -> None:
-        messagebox.showinfo("Find References", "Reference finding not yet implemented")
+        messagebox.showinfo(
+            "Find References", "Reference finding not yet implemented"
+        )
 
     def _show_call_hierarchy(self) -> None:
-        messagebox.showinfo("Call Hierarchy", "Call hierarchy not yet implemented")
+        messagebox.showinfo(
+            "Call Hierarchy", "Call hierarchy not yet implemented"
+        )
 
     def _open_settings(self) -> None:
         messagebox.showinfo("Settings", "Settings dialog not yet implemented")
 
     def _new_window(self) -> None:
-        messagebox.showinfo("New Window", "Multi-window support not yet implemented")
+        messagebox.showinfo(
+            "New Window", "Multi-window support not yet implemented"
+        )
 
     def _close_window(self) -> None:
-        messagebox.showinfo("Close Window", "Window management not yet implemented")
+        messagebox.showinfo(
+            "Close Window", "Window management not yet implemented"
+        )
 
     def _split_editor(self) -> None:
-        messagebox.showinfo("Split Editor", "Editor splitting not yet implemented")
+        messagebox.showinfo(
+            "Split Editor", "Editor splitting not yet implemented"
+        )
 
     def _close_split(self) -> None:
         messagebox.showinfo("Close Split", "Split closing not yet implemented")
@@ -1341,7 +1493,9 @@ For more information, visit the Help menu.
         messagebox.showinfo("Save Layout", "Layout saving not yet implemented")
 
     def _load_layout(self) -> None:
-        messagebox.showinfo("Load Layout", "Layout loading not yet implemented")
+        messagebox.showinfo(
+            "Load Layout", "Layout loading not yet implemented"
+        )
 
     def _open_documentation(self) -> None:
         messagebox.showinfo(
@@ -1354,7 +1508,9 @@ For more information, visit the Help menu.
         )
 
     def _api_reference(self) -> None:
-        messagebox.showinfo("API Reference", "API reference not yet implemented")
+        messagebox.showinfo(
+            "API Reference", "API reference not yet implemented"
+        )
 
     def _tutorial(self, tutorial_type: str) -> None:
         messagebox.showinfo(
@@ -1362,10 +1518,14 @@ For more information, visit the Help menu.
         )
 
     def _example(self, example_type: str) -> None:
-        messagebox.showinfo("Example", f"Example '{example_type}' not yet implemented")
+        messagebox.showinfo(
+            "Example", f"Example '{example_type}' not yet implemented"
+        )
 
     def _show_shortcuts(self) -> None:
-        messagebox.showinfo("Shortcuts", "Keyboard shortcuts help not yet implemented")
+        messagebox.showinfo(
+            "Shortcuts", "Keyboard shortcuts help not yet implemented"
+        )
 
     def _show_about(self) -> None:
         """Show about dialog."""
@@ -1391,7 +1551,9 @@ All rights reserved."""
         messagebox.showinfo("About", about_text)
 
     def _open_recent_menu(self) -> None:
-        messagebox.showinfo("Recent Files", "Recent files menu not yet implemented")
+        messagebox.showinfo(
+            "Recent Files", "Recent files menu not yet implemented"
+        )
 
     def _save_all(self) -> None:
         messagebox.showinfo("Save All", "Save all not yet implemented")
@@ -1409,7 +1571,9 @@ All rights reserved."""
         messagebox.showinfo("Save Config", "Config saving not yet implemented")
 
     def _save_config_as(self) -> None:
-        messagebox.showinfo("Save Config As", "Config save as not yet implemented")
+        messagebox.showinfo(
+            "Save Config As", "Config save as not yet implemented"
+        )
 
     def _compare_configs(self) -> None:
         messagebox.showinfo("Compare", "Config comparison not yet implemented")
@@ -1469,31 +1633,49 @@ All rights reserved."""
         messagebox.showinfo("Select Line", "Select line not yet implemented")
 
     def _find_in_files(self) -> None:
-        messagebox.showinfo("Find in Files", "Find in files not yet implemented")
+        messagebox.showinfo(
+            "Find in Files", "Find in files not yet implemented"
+        )
 
     def _goto_definition(self) -> None:
-        messagebox.showinfo("Go to Definition", "Go to definition not yet implemented")
+        messagebox.showinfo(
+            "Go to Definition", "Go to definition not yet implemented"
+        )
 
     def _format_document(self) -> None:
-        messagebox.showinfo("Format", "Document formatting not yet implemented")
+        messagebox.showinfo(
+            "Format", "Document formatting not yet implemented"
+        )
 
     def _toggle_comment(self) -> None:
-        messagebox.showinfo("Toggle Comment", "Comment toggle not yet implemented")
+        messagebox.showinfo(
+            "Toggle Comment", "Comment toggle not yet implemented"
+        )
 
     def _toggle_editor_panel(self) -> None:
-        messagebox.showinfo("Toggle Editor", "Panel toggle not yet implemented")
+        messagebox.showinfo(
+            "Toggle Editor", "Panel toggle not yet implemented"
+        )
 
     def _toggle_console_panel(self) -> None:
-        messagebox.showinfo("Toggle Console", "Panel toggle not yet implemented")
+        messagebox.showinfo(
+            "Toggle Console", "Panel toggle not yet implemented"
+        )
 
     def _toggle_config_panel(self) -> None:
-        messagebox.showinfo("Toggle Config", "Panel toggle not yet implemented")
+        messagebox.showinfo(
+            "Toggle Config", "Panel toggle not yet implemented"
+        )
 
     def _toggle_project_panel(self) -> None:
-        messagebox.showinfo("Toggle Project", "Panel toggle not yet implemented")
+        messagebox.showinfo(
+            "Toggle Project", "Panel toggle not yet implemented"
+        )
 
     def _toggle_minimap(self) -> None:
-        messagebox.showinfo("Toggle Minimap", "Minimap toggle not yet implemented")
+        messagebox.showinfo(
+            "Toggle Minimap", "Minimap toggle not yet implemented"
+        )
 
     def _toggle_syntax_highlighting(self) -> None:
         messagebox.showinfo(
@@ -1515,10 +1697,14 @@ All rights reserved."""
         messagebox.showinfo("Reset Zoom", "Zoom reset not yet implemented")
 
     def _clear_console(self) -> None:
-        messagebox.showinfo("Clear Console", "Console clearing not yet implemented")
+        messagebox.showinfo(
+            "Clear Console", "Console clearing not yet implemented"
+        )
 
     def _copy_console(self) -> None:
-        messagebox.showinfo("Copy Console", "Console copying not yet implemented")
+        messagebox.showinfo(
+            "Copy Console", "Console copying not yet implemented"
+        )
 
     def _save_console_output(self) -> None:
         messagebox.showinfo("Save Output", "Output saving not yet implemented")
@@ -1658,7 +1844,7 @@ All rights reserved."""
             return False
 
     def _save_file_as(self) -> bool:
-        """Save the current file with a new name. Returns True if successful."""
+        """Save the current file with a new name. Returns True if successful."""  # noqa: E501
         file_path = filedialog.asksaveasfilename(
             title="Save File As",
             defaultextension=".py",
@@ -1716,7 +1902,8 @@ All rights reserved."""
     def _set_theme(self, theme: str) -> None:
         """Set the editor theme."""
         self.theme_var.set(theme)
-        # Basic theme switching - could be expanded with more sophisticated theming
+        # Basic theme switching - could be expanded with more  # noqa
+        # sophisticated theming
         if theme == "dark":
             bg_color = "#2b2b2b"
             fg_color = "#ffffff"
@@ -1773,7 +1960,7 @@ All rights reserved."""
 
                 # Update status bar (assuming it exists)
                 # self.status_bar.config(text=status_text)
-            except:
+            except Exception:
                 pass
 
     def _update_line_numbers(self) -> None:
@@ -1821,9 +2008,9 @@ All rights reserved."""
 
         # Options
         case_var = tk.BooleanVar()
-        ttk.Checkbutton(find_win, text="Case sensitive", variable=case_var).grid(
-            row=1, column=0, columnspan=2, padx=5, sticky="w"
-        )
+        ttk.Checkbutton(
+            find_win, text="Case sensitive", variable=case_var
+        ).grid(row=1, column=0, columnspan=2, padx=5, sticky="w")
 
         # Buttons
         button_frame = ttk.Frame(find_win)
@@ -1833,7 +2020,9 @@ All rights reserved."""
             self._find_text(find_var.get(), case_var.get())
             find_win.destroy()
 
-        ttk.Button(button_frame, text="Find", command=do_find).pack(side="left", padx=5)
+        ttk.Button(button_frame, text="Find", command=do_find).pack(
+            side="left", padx=5
+        )
         ttk.Button(button_frame, text="Cancel", command=find_win.destroy).pack(
             side="left", padx=5
         )
@@ -1856,7 +2045,9 @@ All rights reserved."""
                 self.editor.see(tk.INSERT)
                 self._update_line_numbers()
             except tk.TclError:
-                messagebox.showerror("Error", f"Line {line_num} does not exist")
+                messagebox.showerror(
+                    "Error", f"Line {line_num} does not exist"
+                )
 
     def _new_from_template(self) -> None:
         pass
@@ -1865,7 +2056,7 @@ All rights reserved."""
 def main():
     """Main entry point for the IDE."""
     root = tk.Tk()
-    app = AdvancedIDE(root)
+    AdvancedIDE(root)
     root.mainloop()
 
 

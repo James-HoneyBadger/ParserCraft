@@ -406,11 +406,11 @@ class LanguageConfig:
         for symbol, op in self.operators.items():
             if op.precedence < 0:
                 errors.append(
-                    f"Operator '{symbol}' has invalid precedence: {op.precedence}"
+                    f"Operator '{symbol}' has invalid precedence: {op.precedence}"  # noqa: E501
                 )
             if op.associativity not in ["left", "right", "none"]:
                 errors.append(
-                    f"Operator '{symbol}' has invalid associativity: {op.associativity}"
+                    f"Operator '{symbol}' has invalid associativity: {op.associativity}"  # noqa: E501
                 )
 
         return errors
@@ -572,6 +572,23 @@ class LanguageConfig:
         """Create a deep copy of this configuration."""
         return deepcopy(self)
 
+    @property
+    def keywords(self) -> dict[str, KeywordMapping]:
+        """Backward-compatible access to keyword mappings."""
+        return self.keyword_mappings
+
+    @keywords.setter
+    def keywords(self, value: dict[str, KeywordMapping]) -> None:
+        """Allow legacy code to assign keyword mappings."""
+        self.keyword_mappings = value
+
+    def delete_operator(self, operator_symbol: str) -> bool:
+        """Delete an operator configuration if it exists."""
+        if operator_symbol in self.operators:
+            del self.operators[operator_symbol]
+            return True
+        return False
+
     def merge(self, other: "LanguageConfig", prefer_other: bool = True) -> None:
         """Merge another configuration into this one."""
         if prefer_other or not self.name:
@@ -598,7 +615,7 @@ class LanguageConfig:
         lines.append("|----------|--------|----------|-------------|")
         for original, mapping in sorted(self.keyword_mappings.items()):
             lines.append(
-                f"| `{mapping.original}` | `{mapping.custom}` | {mapping.category} | {mapping.description} |"
+                f"| `{mapping.original}` | `{mapping.custom}` | {mapping.category} | {mapping.description} |"  # noqa: E501
             )
 
         lines.append("\n## Built-in Functions\n")
@@ -608,7 +625,7 @@ class LanguageConfig:
             arity_str = "variadic" if func.arity == -1 else str(func.arity)
             enabled_str = "✓" if func.enabled else "✗"
             lines.append(
-                f"| `{func.name}` | {arity_str} | {func.description} | {enabled_str} |"
+                f"| `{func.name}` | {arity_str} | {func.description} | {enabled_str} |"  # noqa: E501
             )
 
         result = "\n".join(lines)

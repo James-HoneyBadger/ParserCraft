@@ -150,9 +150,9 @@ repeat_while guess opposite equals secret:
         """Check if a file is a TeachScript file."""
         return filepath.endswith(self.EXTENSION)
 
-    def add_teachscript_menus(self, menubar: ttk.Menu):
+    def add_teachscript_menus(self, menubar: tk.Menu):
         """Add TeachScript-specific menus to the IDE."""
-        teachscript_menu = ttk.Menu(menubar, name="teachscript")
+        teachscript_menu = tk.Menu(menubar, name="teachscript")
         menubar.add_cascade(label="TeachScript", menu=teachscript_menu)
 
         # New TeachScript Project
@@ -296,7 +296,7 @@ repeat_while guess opposite equals secret:
                 self.ide.console.config(state="disabled")
                 self.ide.console.see(tk.END)
 
-        except Exception as e:
+        except (ValueError, SyntaxError, RuntimeError) as e:
             messagebox.showerror("Execution Error", str(e))
 
     def _show_transpiled_code(self):
@@ -329,7 +329,7 @@ repeat_while guess opposite equals secret:
                 or messagebox.showinfo("Copied", "Code copied to clipboard"),
             ).pack(pady=5)
 
-        except Exception as e:
+        except (ValueError, SyntaxError, AttributeError) as e:
             messagebox.showerror("Transpilation Error", str(e))
 
     def _check_syntax(self):
@@ -351,7 +351,7 @@ repeat_while guess opposite equals secret:
             else:
                 messagebox.showinfo("Success", "No syntax errors found!")
 
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             messagebox.showerror("Error", str(e))
 
     def _show_tutorial(self):

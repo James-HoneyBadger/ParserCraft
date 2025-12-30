@@ -68,7 +68,7 @@ class LanguageValidator:
         """Check for keyword conflicts and ambiguities."""
         custom_keywords = [
             kw.custom for kw in self.config.keyword_mappings.values()
-        ]  # noqa: E501
+        ]  # noqa: E501 pylint: disable=line-too-long
 
         # Check for duplicate custom keywords
         seen = set()
@@ -84,8 +84,8 @@ class LanguageValidator:
                     severity="error",
                     category="keyword_conflict",
                     message=f"Duplicate keyword: '{dup}'",
-                    details="Multiple original keywords map to the same custom keyword",  # noqa: E501
-                    suggestion="Use unique custom keywords for each original keyword",  # noqa: E501
+                    details="Multiple original keywords map to the same custom keyword",  # noqa: E501 pylint: disable=line-too-long
+                    suggestion="Use unique custom keywords for each original keyword",  # noqa: E501 pylint: disable=line-too-long
                 )
             )
 
@@ -132,8 +132,8 @@ class LanguageValidator:
                     ValidationIssue(
                         severity="warning",
                         category="python_reserved",
-                        message=f"Keyword '{keyword}' conflicts with Python reserved word",  # noqa: E501
-                        details="This may cause issues when transpiling to Python",  # noqa: E501
+                        message=f"Keyword '{keyword}' conflicts with Python reserved word",  # noqa: E501 pylint: disable=line-too-long
+                        details="This may cause issues when transpiling to Python",  # noqa: E501 pylint: disable=line-too-long
                         suggestion=f"Consider using a different name like '{keyword}_'",  # noqa: E501
                     )
                 )
@@ -221,9 +221,9 @@ class LanguageValidator:
                     ValidationIssue(
                         severity="warning",
                         category="precedence_ambiguity",
-                        message=f"Operators at precedence {prec} have mixed associativity",  # noqa: E501
+                        message=f"Operators at precedence {prec} have mixed associativity",  # noqa: E501 pylint: disable=line-too-long
                         details=f"Operators: {op_symbols}",
-                        suggestion="Use consistent associativity for operators at same precedence",  # noqa: E501
+                        suggestion="Use consistent associativity for operators at same precedence",  # noqa: E501 pylint: disable=line-too-long
                     )
                 )
 
@@ -234,7 +234,7 @@ class LanguageValidator:
                     ValidationIssue(
                         severity="info",
                         category="high_precedence",
-                        message=f"Operator '{op.symbol}' has very high precedence: {op.precedence}",  # noqa: E501
+                        message=f"Operator '{op.symbol}' has very high precedence: {op.precedence}",  # noqa: E501 pylint: disable=line-too-long
                         details="Typical precedence ranges from 1-15",
                         suggestion="Consider using standard precedence values",
                     )
@@ -323,9 +323,9 @@ class LanguageValidator:
                 ValidationIssue(
                     severity="info",
                     category="common_reserved",
-                    message=f"Keywords match common reserved words: {', '.join(conflicts)}",  # noqa: E501
+                    message=f"Keywords match common reserved words: {', '.join(conflicts)}",  # noqa: E501 pylint: disable=line-too-long
                     details="These words are reserved in many programming languages",  # noqa: E501
-                    suggestion="This is usually fine but be aware of potential confusion",  # noqa: E501
+                    suggestion="This is usually fine but be aware of potential confusion",  # noqa: E501 pylint: disable=line-too-long
                 )
             )
 

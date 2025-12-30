@@ -250,7 +250,7 @@ class LanguageRuntime:
             f"Version: {config.version}",
             f"Description: {config.description}",
             f"Keywords: {len(config.keyword_mappings)}",
-            f"Functions: {len([f for f in config.builtin_functions.values() if f.enabled])}",  # noqa: E501
+            f"Functions: {len([f for f in config.builtin_functions.values() if f.enabled])}",  # noqa: E501 pylint: disable=line-too-long
             f"Operators: {len(config.operators)}",
         ]
 
@@ -313,7 +313,7 @@ def auto_load_config() -> Optional[LanguageConfig]:
             config = LanguageConfig.load(config_file)
             print(f"[Auto-loaded config from: {config_file}]")
             return config
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             print(f"[Warning: Failed to load config: {e}]")
 
     return None

@@ -102,7 +102,7 @@ class LanguageTestRunner:
                     return TestResult(
                         test.name,
                         False,
-                        f"Token count mismatch: expected {test.expected_tokens}, got {actual_tokens}",  # noqa: E501
+                        f"Token count mismatch: expected {test.expected_tokens}, got {actual_tokens}",  # noqa: E501 pylint: disable=line-too-long
                         execution_time=(datetime.now() - start_time).total_seconds(),
                     )
 
@@ -113,7 +113,7 @@ class LanguageTestRunner:
                     return TestResult(
                         test.name,
                         False,
-                        f"AST node count mismatch: expected {test.expected_ast_nodes}, got {actual_nodes}",  # noqa: E501
+                        f"AST node count mismatch: expected {test.expected_ast_nodes}, got {actual_nodes}",  # noqa: E501 pylint: disable=line-too-long
                         execution_time=(datetime.now() - start_time).total_seconds(),
                     )
 

@@ -164,9 +164,9 @@ class VisualConfigEditor(ttk.Frame):
                 if self.on_save:
                     try:
                         self.on_save(self.config_obj)
-                    except (
+                    except (  # pylint: disable=broad-exception-caught
                         Exception
-                    ) as cb_err:  # noqa: BLE001  # pylint: disable=broad-except
+                    ) as cb_err:
                         messagebox.showwarning(
                             "Update Warning",
                             f"Saved, but IDE update failed: {cb_err}",

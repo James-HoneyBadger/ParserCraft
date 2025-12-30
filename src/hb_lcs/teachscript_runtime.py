@@ -329,7 +329,7 @@ class TeachScriptRuntime:
             self._fire_event("error", error=str(e))
             self.last_error = str(e)
             return "", str(e)
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             error_msg = f"Unexpected error: {str(e)}"
             self._fire_event("error", error=error_msg)
             self.last_error = error_msg

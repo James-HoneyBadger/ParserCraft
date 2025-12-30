@@ -3742,7 +3742,7 @@ All rights reserved."""
                         link.click();
                     }}
                     function highlight() {{
-                        document.getElementById('console').textContent = 'Syntax highlighting simulated.';  # noqa: E501
+                        document.getElementById('console').textContent = 'Syntax highlighting simulated.';  # noqa: E501 pylint: disable=line-too-long
                     }}
                 </script>
             </body>

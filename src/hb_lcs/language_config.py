@@ -505,7 +505,7 @@ class LanguageConfig:
                 )
             if op.associativity not in ["left", "right", "none"]:
                 errors.append(
-                    f"Operator '{symbol}' has invalid associativity: {op.associativity}"  # noqa: E501
+                    f"Operator '{symbol}' has invalid associativity: {op.associativity}"  # noqa: E501 pylint: disable=line-too-long
                 )
 
         return errors
@@ -721,7 +721,7 @@ class LanguageConfig:
         lines.append("|----------|--------|----------|-------------|")
         for original, mapping in sorted(self.keyword_mappings.items()):
             lines.append(
-                f"| `{mapping.original}` | `{mapping.custom}` | {mapping.category} | {mapping.description} |"  # noqa: E501
+                f"| `{mapping.original}` | `{mapping.custom}` | {mapping.category} | {mapping.description} |"  # noqa: E501 pylint: disable=line-too-long
             )
 
         lines.append("\n## Built-in Functions\n")
@@ -731,7 +731,7 @@ class LanguageConfig:
             arity_str = "variadic" if func.arity == -1 else str(func.arity)
             enabled_str = "✓" if func.enabled else "✗"
             lines.append(
-                f"| `{func.name}` | {arity_str} | {func.description} | {enabled_str} |"  # noqa: E501
+                f"| `{func.name}` | {arity_str} | {func.description} | {enabled_str} |"  # noqa: E501 pylint: disable=line-too-long
             )
 
         result = "\n".join(lines)

@@ -60,7 +60,7 @@ class InterpreterPackage:
                 "errors": [],
                 "variables": self.runtime.globals.copy(),
             }
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             return {
                 "status": "error",
                 "output": "",

@@ -24,7 +24,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 # Local imports must come after sys.path modification
-from codex.codex_gui import CodeExIDE  # noqa: E402 pylint: disable=wrong-import-position
+from codex.codex_gui import \
+    CodeExIDE  # noqa: E402 pylint: disable=wrong-import-position
 
 
 def main():

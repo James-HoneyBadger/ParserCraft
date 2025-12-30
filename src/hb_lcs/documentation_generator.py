@@ -99,9 +99,7 @@ class DocumentationGenerator:
         if opts.multi_line_comment_start:
             start_str = opts.multi_line_comment_start
             end_str = opts.multi_line_comment_end
-            lines.append(
-                f"- **Multi-line Comments**: `{start_str}...{end_str}`"
-            )
+            lines.append(f"- **Multi-line Comments**: `{start_str}...{end_str}`")
         term = opts.statement_terminator or "None"
         lines.append(f"- **Statement Terminator**: `{term}`")
         lines.append(

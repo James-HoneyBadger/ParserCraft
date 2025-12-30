@@ -13,11 +13,59 @@
       "category": "control",
       "description": "Conditional statement"
     },
+    "else": {
+      "original": "else",
+      "custom": "else",
+      "category": "control",
+      "description": "Else clause"
+    },
+    "elif": {
+      "original": "elif",
+      "custom": "elif",
+      "category": "control",
+      "description": "Else-if clause"
+    },
+    "while": {
+      "original": "while",
+      "custom": "while",
+      "category": "control",
+      "description": "While loop"
+    },
+    "for": {
+      "original": "for",
+      "custom": "for",
+      "category": "control",
+      "description": "For loop"
+    },
+    "break": {
+      "original": "break",
+      "custom": "break",
+      "category": "control",
+      "description": "Break statement"
+    },
+    "continue": {
+      "original": "continue",
+      "custom": "continue",
+      "category": "control",
+      "description": "Continue statement"
+    },
+    "pass": {
+      "original": "pass",
+      "custom": "pass",
+      "category": "control",
+      "description": "Pass statement"
+    },
     "when": {
       "original": "when",
       "custom": "when",
       "category": "control",
       "description": "Reactive programming"
+    },
+    "def": {
+      "original": "def",
+      "custom": "def",
+      "category": "function",
+      "description": "Function definition"
     },
     "function": {
       "original": "function",
@@ -30,6 +78,60 @@
       "custom": "give",
       "category": "function",
       "description": "Return value"
+    },
+    "lambda": {
+      "original": "lambda",
+      "custom": "lambda",
+      "category": "function",
+      "description": "Lambda expression"
+    },
+    "yield": {
+      "original": "yield",
+      "custom": "yield",
+      "category": "function",
+      "description": "Yield statement"
+    },
+    "try": {
+      "original": "try",
+      "custom": "try",
+      "category": "exception",
+      "description": "Try block"
+    },
+    "except": {
+      "original": "except",
+      "custom": "except",
+      "category": "exception",
+      "description": "Exception handler"
+    },
+    "finally": {
+      "original": "finally",
+      "custom": "finally",
+      "category": "exception",
+      "description": "Finally block"
+    },
+    "import": {
+      "original": "import",
+      "custom": "import",
+      "category": "import",
+      "description": "Import module"
+    },
+    "from": {
+      "original": "from",
+      "custom": "from",
+      "category": "import",
+      "description": "From import"
+    },
+    "as": {
+      "original": "as",
+      "custom": "as",
+      "category": "import",
+      "description": "Import alias"
+    },
+    "with": {
+      "original": "with",
+      "custom": "with",
+      "category": "context",
+      "description": "Context manager"
     },
     "const": {
       "original": "const",

@@ -8,9 +8,10 @@ interactive program development and testing within the IDE.
 
 import tkinter as tk
 from tkinter import scrolledtext, ttk
-from typing import List
+from typing import List, Optional
 
-from .teachscript_runtime import get_runtime, TeachScriptError
+from . import teachscript_runtime
+from .teachscript_runtime import TeachScriptError, get_runtime
 
 
 class TeachScriptConsole(ttk.Frame):
@@ -95,7 +96,7 @@ class TeachScriptConsole(ttk.Frame):
         # Focus input
         self.input_entry.focus()
 
-    def _on_input(self, event=None):
+    def _on_input(self, event: Optional[tk.Event] = None) -> str:
         """Process input when Enter is pressed."""
         code = self.input_var.get()
         self.input_var.set("")
@@ -162,14 +163,14 @@ class TeachScriptConsole(ttk.Frame):
         self.output.see(tk.END)
         self.output.config(state="disabled")
 
-    def _show_previous_history(self, event=None):
+    def _show_previous_history(self, event: Optional[tk.Event] = None) -> str:
         """Show previous command from history."""
         if self.history_index < len(self.history) - 1:
             self.history_index += 1
             self.input_var.set(self.history[-(self.history_index + 1)])
         return "break"
 
-    def _show_next_history(self, event=None):
+    def _show_next_history(self, event: Optional[tk.Event] = None) -> str:
         """Show next command from history."""
         if self.history_index > 0:
             self.history_index -= 1
@@ -187,7 +188,6 @@ class TeachScriptConsole(ttk.Frame):
 
     def _reset_environment(self):
         """Reset the runtime environment."""
-        from . import teachscript_runtime
         teachscript_runtime.reset_runtime()
         self.runtime = get_runtime()
 

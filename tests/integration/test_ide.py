@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+"""
+Test script for the Advanced IDE
+"""
+
+import tkinter as tk
+from src.hb_lcs.ide import AdvancedIDE
+
+
+def main():
+    """Launch the Advanced IDE."""
+    root = tk.Tk()
+    root.title("CodeCraft IDE - Language Configuration Editor")
+    root.geometry("1200x800")
+
+    # Create the IDE (variable name prefixed with _ to indicate intentional non-use)
+    _ide = AdvancedIDE(root)
+
+    # Start the main event loop
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()

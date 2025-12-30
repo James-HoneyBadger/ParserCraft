@@ -20,28 +20,29 @@ See Also:
     - Documentation: docs/guides/CODEX_USER_GUIDE.md
 """
 
-import tkinter as tk
-from tkinter import ttk, filedialog, messagebox, scrolledtext, TclError
 import json
 import sys
-from pathlib import Path
-from typing import Optional, Dict, Any
+import tkinter as tk
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+from tkinter import TclError, filedialog, messagebox, scrolledtext, ttk
 
 # Ensure parent modules are in path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from hb_lcs.language_config import LanguageConfig
+from codex.codex_components import (
+    CodeExConsole,
+    CodeExEditor,
+    CodeExMenu,
+    CodeExProjectExplorer,
+)
 from hb_lcs.interpreter_generator import (
     InterpreterGenerator,
     InterpreterPackage,
 )
-from codex.codex_components import (
-    CodeExEditor,
-    CodeExConsole,
-    CodeExProjectExplorer,
-    CodeExMenu,
-)
+from hb_lcs.language_config import LanguageConfig
 
 
 class CodeExIDE(ttk.Frame):
@@ -60,6 +61,12 @@ class CodeExIDE(ttk.Frame):
         self.projects_dir = Path.home() / ".codex" / "projects"
         self.projects_dir.mkdir(parents=True, exist_ok=True)
         self._execution_history = []
+
+        # Attribute initialization (prevents W0201 warnings)
+        self.interpreter_var: tk.StringVar = tk.StringVar(value="Select interpreter...")
+        self.interpreter_combo: Optional[ttk.Combobox] = None
+        self.status_label: Optional[ttk.Label] = None
+        self.project_label: Optional[ttk.Label] = None
 
         # Load settings
         self.settings = self._load_settings()
@@ -113,7 +120,6 @@ class CodeExIDE(ttk.Frame):
 
         # Language/Interpreter selector
         ttk.Label(toolbar, text="Interpreter:").pack(side="left", padx=5)
-        self.interpreter_var = tk.StringVar(value="Select interpreter...")
         self.interpreter_combo = ttk.Combobox(
             toolbar,
             textvariable=self.interpreter_var,

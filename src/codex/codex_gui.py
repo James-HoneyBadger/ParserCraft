@@ -205,7 +205,8 @@ class CodeExIDE(ttk.Frame):
         interpreter = self.interpreter_generator.get_interpreter(selected)
         if interpreter:
             self.current_interpreter = interpreter
-            self.status_label.config(text=f"Loaded: {selected}")
+            if self.status_label:
+                self.status_label.config(text=f"Loaded: {selected}")
 
     def new_project(self):
         """Create new project."""

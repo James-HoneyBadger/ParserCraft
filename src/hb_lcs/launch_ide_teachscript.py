@@ -9,16 +9,14 @@ import sys
 import tkinter as tk
 from pathlib import Path
 
-# Add src directory to path
-sys.path.insert(0, str(Path(__file__).parent))
-
-from ide import (  # noqa: E402 pylint: disable=wrong-import-position
+# Relative imports from current package
+from hb_lcs.ide import (  # noqa: E402 pylint: disable=wrong-import-position
     AdvancedIDE,
 )
-from ide_teachscript_integration import (  # noqa: E402 pylint: disable=wrong-import-position
+from hb_lcs.ide_teachscript_integration import (  # noqa: E402 pylint: disable=wrong-import-position
     TeachScriptIDEIntegration,
 )
-from teachscript_highlighting import (  # noqa: E402 pylint: disable=wrong-import-position
+from hb_lcs.teachscript_highlighting import (  # noqa: E402 pylint: disable=wrong-import-position
     TeachScriptCodeCompletion,
     TeachScriptHighlighter,
 )

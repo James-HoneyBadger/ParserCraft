@@ -239,7 +239,7 @@ class TeachScriptCodeCompletion:
     def __init__(self, text_widget: tk.Text):
         """Initialize code completion."""
         self.text = text_widget
-        self.suggestions = []
+        self.suggestions: list[str] = []
         self.popup: Optional[tk.Toplevel] = None
 
         self.text.bind("<Control-space>", self._show_completions)
@@ -322,10 +322,10 @@ class TeachScriptLinter:
         Returns:
             List of (line_number, error_message) tuples
         """
-        errors = []
+        errors: list[tuple[int, str]] = []
         lines = code.split("\n")
 
-        for line_num, line in enumerate(lines, 1):
+        for _line_num, line in enumerate(lines, 1):
             # Check indentation
             if line and not line[0].isspace() and not line.startswith("#"):
                 _ = line.lstrip()

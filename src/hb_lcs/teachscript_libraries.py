@@ -168,7 +168,7 @@ class GameObject:
 
     name: str
     position: Point
-    velocity: Point = None
+    velocity: Optional[Point] = None
     width: float = 10
     height: float = 10
     active: bool = True
@@ -348,7 +348,7 @@ class Animation:
     def __init__(self, duration: float):
         """Initialize animation."""
         self.duration = duration
-        self.elapsed = 0
+        self.elapsed: float = 0.0
         self.completed = False
 
     def update(self, dt: float):

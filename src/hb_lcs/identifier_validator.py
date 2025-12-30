@@ -7,7 +7,7 @@ Ensures compatibility with Python and other common languages.
 """
 
 import re
-from typing import Any, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 
 class IdentifierValidator:
@@ -185,7 +185,7 @@ class ConflictDetector:
         get_custom_name: Any,
     ) -> List[Tuple[str, str, str]]:
         """Find duplicates where multiple originals map to same custom name."""
-        custom_to_originals = {}
+        custom_to_originals: Dict[str, List[str]] = {}
 
         for original, item in items.items():
             custom = get_custom_name(item)
@@ -238,7 +238,7 @@ class ConflictDetector:
         """Check for operator precedence issues."""
         issues = []
 
-        precedences = {}
+        precedences: Dict[str, int] = {}
         for symbol, op in operators.items():
             prec = op.precedence
             if prec < 0:

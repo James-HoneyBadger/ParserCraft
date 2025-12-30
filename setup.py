@@ -12,7 +12,7 @@ long_description = readme_file.read_text(encoding="utf-8")
 
 setup(
     name="codecraft",
-    version="1.0.0",
+    version="2.0.0",
     author="James HoneyBadger",
     description="CodeCraft - Create custom programming languages without writing a compiler",
     long_description=long_description,

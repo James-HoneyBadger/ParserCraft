@@ -18,7 +18,7 @@ def create_basic_like():
     print("1. BASIC-Like Language - Imperative Procedural")
     print("=" * 60)
 
-    config = LanguageConfig(name="BASIC-Like Language", version="1.0")
+    config = LanguageConfig(name="BASIC-Like Language", version="2.0")
 
     # Rename keywords to BASIC style
     config.rename_keyword("if", "IF")
@@ -68,7 +68,7 @@ def create_functional():
     print("2. Functional Language - Lambda Calculus")
     print("=" * 60)
 
-    config = LanguageConfig(name="Functional Lambda Language", version="1.0")
+    config = LanguageConfig(name="Functional Lambda Language", version="2.0")
 
     # Functional keywords
     config.rename_keyword("function", "lambda")
@@ -114,7 +114,7 @@ def create_stack_based():
     print("3. Stack-Based Language - Postfix/RPN")
     print("=" * 60)
 
-    config = LanguageConfig(name="Stack-Based Forth-Like", version="1.0")
+    config = LanguageConfig(name="Stack-Based Forth-Like", version="2.0")
 
     # Forth-style keywords
     config.rename_keyword("function", ":")
@@ -163,7 +163,7 @@ def create_object_oriented():
     print("4. Object-Oriented Language - Message Passing")
     print("=" * 60)
 
-    config = LanguageConfig(name="Object-Oriented Language", version="1.0")
+    config = LanguageConfig(name="Object-Oriented Language", version="2.0")
 
     # OO keywords
     config.rename_keyword("class", "class")
@@ -211,7 +211,7 @@ def create_logic_based():
     print("5. Logic Programming Language - Declarative")
     print("=" * 60)
 
-    config = LanguageConfig(name="Logic Programming Language", version="1.0")
+    config = LanguageConfig(name="Logic Programming Language", version="2.0")
 
     # Logic keywords
     config.rename_keyword("if", ":-")
@@ -257,7 +257,7 @@ def create_assembly_like():
     print("6. Assembly-Like Language - Register Machine")
     print("=" * 60)
 
-    config = LanguageConfig(name="Assembly-Like Language", version="1.0")
+    config = LanguageConfig(name="Assembly-Like Language", version="2.0")
 
     # Assembly keywords
     config.rename_keyword("let", "MOV")

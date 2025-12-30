@@ -400,7 +400,7 @@ CodeEx follows semantic versioning: MAJOR.MINOR.PATCH
 - **MINOR**: New features added
 - **PATCH**: Bug fixes
 
-Current Version: 1.0.0
+Current Version: 2.0.0
 
 ## Documentation Standards
 

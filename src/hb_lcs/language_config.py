@@ -177,7 +177,7 @@ class LanguageConfig:
 
     # Metadata
     name: str = "Custom Language"
-    version: str = "1.0.0"
+    version: str = "2.0.0"
     description: str = "A customizable programming language"
     author: str = ""
     target_interpreter: str = "python"

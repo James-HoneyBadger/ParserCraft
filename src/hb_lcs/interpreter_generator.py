@@ -27,7 +27,7 @@ class InterpreterPackage:
         """Initialize interpreter package."""
         self.config = config
         self.name = config.name
-        self.version = "1.0"
+        self.version = "2.0"
         self.created_at = datetime.now().isoformat()
         # Initialize runtime (singleton pattern)
         self.runtime = LanguageRuntime.get_instance()

@@ -1,6 +1,6 @@
 # CodeEx - CodeCraft Execution Environment
 
-**Version 1.0**
+**Version 2.0**
 
 CodeEx is a professional IDE designed specifically for developing and running applications created with CodeCraft. It provides a complete development environment for creating custom programming languages and executing code written in those languages.
 

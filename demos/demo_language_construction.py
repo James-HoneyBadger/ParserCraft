@@ -25,7 +25,7 @@ def demo_basic_usage():
     # Create a new configuration
     config = LanguageConfig(
         name="My Custom Language",
-        version="1.0",
+        version="2.0",
         description="A custom language variant",
     )
 

@@ -1,24 +1,46 @@
 #!/usr/bin/env python3
 """
-Language Configuration CLI Tool
+CodeCraft Configuration CLI Tool
 
-Command-line utility for creating, editing, and managing language
-configurations.
+Command-line utility for creating, editing, and managing custom programming
+language configurations without a GUI.
 
 Usage:
-    langconfig create [--preset PRESET] [--output FILE]
-    langconfig edit FILE
-    langconfig validate FILE
-    langconfig info [FILE]
-    langconfig export FILE [--format markdown|json|yaml]
-    langconfig import FILE [--scope runtime|project|user]
-    langconfig list-presets
-    langconfig convert FILE --to FORMAT
-    langconfig diff FILE1 FILE2
-    langconfig update FILE [--set KEY VALUE] [--merge FILE]
-    langconfig delete FILE [--keyword KW] [--function FN]
-    langconfig repl [FILE] [--debug]
-    langconfig batch FILE [--script SCRIPT]
+    codecraft create [--preset PRESET] [--output FILE]
+    codecraft edit FILE
+    codecraft validate FILE
+    codecraft info [FILE]
+    codecraft export FILE [--format markdown|json|yaml]
+    codecraft import FILE [--scope runtime|project|user]
+    codecraft list-presets
+    codecraft convert FILE --to FORMAT
+    codecraft diff FILE1 FILE2
+    codecraft update FILE [--set KEY VALUE] [--merge FILE]
+    codecraft delete FILE [--keyword KW] [--function FN]
+    codecraft repl [FILE] [--debug]
+    codecraft batch FILE [--script SCRIPT]
+
+Presets:
+    - python_like    : Python-style syntax
+    - javascript_like: JavaScript-style syntax
+    - lisp_like      : Lisp-style syntax
+    - minimal        : Minimal functional language
+    - teachscript    : Educational language (TeachScript)
+
+Examples:
+    # Create a new Python-like language
+    codecraft create --preset python_like --output my_lang.yaml
+
+    # Validate a configuration file
+    codecraft validate my_lang.yaml
+
+    # Export to markdown documentation
+    codecraft export my_lang.yaml --format markdown
+
+See Also:
+    - CodeCraft IDE: Interactive GUI for language design
+    - CodeEx IDE: Develop applications in your languages
+    - Documentation: docs/guides/CODEX_QUICKSTART.md
 """
 
 import sys

@@ -1,137 +1,253 @@
-# Honey Badger Language Construction Set
+# CodeCraft
 
-A comprehensive system for creating custom programming language variants through configuration files, with a graphical IDE for editing and testing.
+**Create Custom Programming Languages Without Writing a Compiler**
 
-## 🎯 **PROOF OF CONCEPT: TeachScript**
+CodeCraft is a comprehensive framework for designing and deploying custom programming language variants through simple configuration files. No compiler engineering required—just define your language syntax and semantics through intuitive JSON/YAML configurations.
 
-**See a complete, working custom language built with HB_LCS!**
+## 🎯 **Proof of Concept: TeachScript**
 
-**TeachScript** is a beginner-friendly educational programming language with custom syntax:
-- `when` instead of `if`
-- `teach` instead of `def`
-- `say()` instead of `print()`
-- And much more!
+**See a complete, working custom language built with CodeCraft!**
 
-**Try it now**:
+**TeachScript** is a beginner-friendly educational programming language demonstrating CodeCraft's power:
+- `when` instead of `if` for conditionals
+- `teach` instead of `def` for function definitions
+- `say()` instead of `print()` for output
+- Intuitive, English-like syntax ideal for learning
+
+**Try TeachScript now**:
 ```bash
-# Using installed package
-cd demos/teachscript
-python run_teachscript.py examples/01_hello_world.teach
+# Quick start - launch TeachScript IDE
+./run-codecraft.sh
 
-# Or from project root
+# Or run a TeachScript program
 python demos/teachscript/run_teachscript.py demos/teachscript/examples/01_hello_world.teach
 
-# Run test suite
+# Run the full test suite
 python -m pytest tests/
 ```
 
-**Read the complete manual**: [TEACHSCRIPT_MANUAL.md](TEACHSCRIPT_MANUAL.md)
+**Read the full documentation**: [docs/teachscript/README_TEACHSCRIPT.md](docs/teachscript/README_TEACHSCRIPT.md)
 
-**All 7 example programs verified working** ✓
+**All examples verified and working** ✓
 
 ---
 
 ## Overview
 
-The Language Construction Set allows you to:
-- **Rename keywords** - Change language keywords (e.g., `if` → `cuando`)
-- **Customize functions** - Add, remove, or modify built-in functions
-- **Configure syntax** - Adjust array indexing, comments, operators
-- **Use presets** - Start from Python-like, JavaScript-like, or minimal templates
-- **Manage configurations** - CLI tools for creating and validating configs
-- **Graphical IDE** - Edit code and load configurations visually
+CodeCraft empowers you to:
+- **Create custom languages** - Design any language variant without compiler knowledge
+- **Rename keywords** - Change language keywords (e.g., `if` → `cuando`) for any locale or style
+- **Customize functions** - Define and modify built-in function libraries
+- **Configure syntax** - Adjust array indexing, comments, operators, and more
+- **Use templates** - Start from Python-like, JavaScript-like, Lisp-like, or minimal presets
+- **Manage with CLI** - Powerful command-line tools for configuration creation and validation
+- **Visual IDE** - CodeCraft IDE for interactive language design and testing
+- **Professional IDE** - CodeEx for developing applications in your custom language
 
 ## Quick Start
 
-### Installation
+### Easy Launch (Recommended)
+
+The fastest way to get started—scripts handle all setup:
+
+```bash
+# Linux/macOS - Launch CodeCraft IDE
+./run-codecraft.sh
+
+# Linux/macOS - Launch CodeEx IDE
+./run-codex.sh
+
+# Windows - Launch CodeCraft IDE
+run-codecraft.bat
+
+# Windows - Launch CodeEx IDE
+run-codex.bat
+```
+
+These scripts automatically:
+- Create a Python virtual environment (`.venv`)
+- Install all dependencies
+- Verify required components (tkinter)
+- Launch the application
+
+### Manual Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/James-HoneyBadger/Language_Construction_Set.git
-cd Language_Construction_Set
+git clone https://github.com/James-HoneyBadger/CodeCraft.git
+cd CodeCraft
 
-# Install the package
+# Install the package in development mode
 pip install -e .
 
-# Or install with development tools
+# Or install with development dependencies
 pip install -e .[dev]
 ```
 
 ### Project Structure
 
 ```
-Language_Construction_Set/
-├── src/hb_lcs/          # Core library
-│   ├── language_config.py   # Configuration system
-│   ├── language_runtime.py  # Runtime integration
-│   ├── cli.py              # Command-line tool
-│   ├── ide.py              # Graphical IDE
-│   └── launch_ide.py       # IDE launcher
-├── docs/                # Documentation
-│   ├── guides/          # User guides
-│   ├── reference/       # Technical reference
-│   └── teachscript/     # TeachScript manuals
-├── configs/             # Language configurations
-│   ├── examples/        # Example configs
-│   └── teachscript.*    # TeachScript config
-├── demos/               # Demonstration programs
-│   ├── teachscript/     # TeachScript demos & runner
-│   │   ├── examples/    # 9 .teach programs
-│   │   └── run_teachscript.py
-│   └── demo_*.py        # Other demos
-├── tests/               # Test suite
-└── README.md            # This file
+CodeCraft/
+├── src/
+│   ├── hb_lcs/              # Core language construction framework
+│   │   ├── language_config.py       # Configuration system
+│   │   ├── language_runtime.py      # Runtime integration
+│   │   ├── parser_generator.py      # Parser generation
+│   │   ├── ide.py                   # CodeCraft IDE
+│   │   ├── cli.py                   # CLI tools
+│   │   ├── teachscript_*.py         # TeachScript integration
+│   │   └── launch_ide.py            # IDE launcher
+│   └── codex/               # CodeEx IDE components
+│       ├── codex.py                 # CodeEx main application
+│       ├── codex_gui.py             # GUI components
+│       └── codex_components.py      # UI components
+├── docs/                    # Comprehensive documentation
+│   ├── guides/              # User guides and tutorials
+│   ├── reference/           # Technical reference
+│   ├── teachscript/         # TeachScript documentation
+│   ├── codex/               # CodeEx documentation
+│   └── summaries/           # Project summaries
+├── configs/                 # Language configurations
+│   ├── examples/            # Example configurations
+│   └── teachscript.*        # TeachScript configuration
+├── demos/                   # Example programs
+│   ├── teachscript/         # TeachScript examples
+│   └── demo_*.py            # Feature demonstrations
+├── tests/                   # Comprehensive test suite
+│   ├── integration/         # Integration tests
+│   └── test_*.py            # Unit tests
+├── run-codecraft.sh         # CodeCraft launcher (Linux/macOS)
+├── run-codex.sh             # CodeEx launcher (Linux/macOS)
+├── run-codecraft.bat        # CodeCraft launcher (Windows)
+├── run-codex.bat            # CodeEx launcher (Windows)
+└── README.md                # This file
 ```
 
-### Legacy Installation (without pip)
+## Using CodeCraft IDE
+
+Launch the CodeCraft IDE for interactive language design:
 
 ```bash
-# Clone or extract this project
-cd Language_Construction_Set
+# Using the launch script
+./run-codecraft.sh              # Linux/macOS
+run-codecraft.bat               # Windows
 
-# Optional: Install YAML support
-pip install pyyaml
+# Or manually
+python -m hb_lcs.ide
 ```
 
-### Using the IDE
+**CodeCraft IDE Features:**
+- Visual configuration editor for language design
+- Syntax highlighting and code editor
+- Real-time language testing and validation
+- Multiple language presets to customize
+- Configuration export/import
+- Project management
+- Version control integration
 
-Launch the graphical IDE:
+Learn more: [docs/guides/CODEX_DEVELOPER_GUIDE.md](docs/guides/CODEX_DEVELOPER_GUIDE.md)
+
+## Using CodeEx IDE
+
+Launch CodeEx for professional application development:
 
 ```bash
-# If installed with pip
-hblcs-ide
+# Using the launch script
+./run-codex.sh                  # Linux/macOS
+run-codex.bat                   # Windows
 
-# Or run directly
-python src/hb_lcs/launch_ide.py
+# Or manually
+python src/codex/codex.py
 ```
 
-Features:
-- Load and test language configurations
-- Syntax highlighting and line numbers
-- Configuration validation
-- Light/Dark themes
-- Built-in examples
+**CodeEx Features:**
+- Load any CodeCraft-created language
+- Professional multi-panel editor
+- Real-time code execution
+- Project organization and management
+- Integrated console and debugging
+- Code templates and snippets
 
-See [IDE_README.md](IDE_README.md) for detailed IDE documentation.
+Learn more: [docs/guides/CODEX_USER_GUIDE.md](docs/guides/CODEX_USER_GUIDE.md)
 
-### Basic Usage (Python API)
+## Command-Line Tools
+
+CodeCraft includes powerful CLI tools for language configuration:
+
+```bash
+# Create a new language configuration
+codecraft create --preset python_like --output my_lang.yaml
+
+# Validate a configuration
+codecraft validate my_lang.yaml
+
+# Edit a configuration
+codecraft edit my_lang.yaml
+
+# View configuration info
+codecraft info my_lang.yaml
+
+# Export configuration to different formats
+codecraft export my_lang.yaml --format markdown
+```
+
+Learn more: [docs/reference/CLI_REFERENCE.md](docs/reference/CLI_REFERENCE.md)
+
+## Python API
+
+Use CodeCraft's Python API to programmatically create language configurations:
 
 ```python
 from hb_lcs.language_config import LanguageConfig
+from hb_lcs.language_runtime import LanguageRuntime
 
-# Create a custom configuration
+# Create a custom language configuration
 config = LanguageConfig()
 
-# Rename keywords
-config.rename_keyword("if", "cuando")  # Spanish-style
-config.rename_keyword("function", "def")  # Python-style
+# Rename keywords for your language
+config.rename_keyword("if", "cuando")          # Spanish conditional
+config.rename_keyword("function", "func")      # Function keyword
+config.rename_keyword("return", "devolver")    # Spanish return
 
-# Customize syntax
-config.set_array_indexing(0, False)  # 0-based indexing
-config.set_comment_style("#")  # Python-style comments
+# Customize syntax and semantics
+config.set_array_indexing(0)                   # 0-based indexing
+config.set_comment_style("#")                  # Python-style comments
+config.set_string_delimiters('"', "'")         # Quote styles
 
-# Save configuration
+# Add custom built-in functions
+config.add_function("say", "output text")
+
+# Save your configuration
 config.save("my_language.yaml")
+
+# Use it at runtime
+runtime = LanguageRuntime(config)
+result = runtime.execute("say 'Hello, World!'")
+```
+
+Learn more: [docs/reference/API_REFERENCE.md](docs/reference/API_REFERENCE.md)
+
+## Example: Creating a Spanish-Like Language
+
+```bash
+# 1. Create configuration
+./run-codecraft.sh
+
+# 2. In CodeCraft IDE:
+#    - Load preset: "python_like"
+#    - Rename "if" → "si"
+#    - Rename "else" → "sino"
+#    - Rename "def" → "define"
+#    - Save as "spanish.yaml"
+
+# 3. Test in CodeEx:
+./run-codex.sh
+
+# 4. Load "spanish.yaml" and write code:
+si True:
+    define greet():
+        say "¡Hola!"
+    greet()
 ```
 
 ### Using Presets

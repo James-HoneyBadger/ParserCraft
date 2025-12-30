@@ -1,8 +1,23 @@
 #!/usr/bin/env python3
 """
-CodeEx GUI - Main IDE Interface
+CodeEx GUI - Professional IDE for CodeCraft Applications
 
-Professional IDE interface for CodeCraft application development.
+Multi-panel integrated development environment for writing applications
+in CodeCraft-generated custom programming languages.
+
+Features:
+- Multi-file project management
+- Editor with syntax highlighting
+- Real-time code execution with custom interpreters
+- Integrated console and debugging output
+- Code templates and snippets
+- Project file browser
+- Output and error tracking
+- Language configuration management
+
+See Also:
+    - CodeCraft IDE: For creating custom language configurations
+    - Documentation: docs/guides/CODEX_USER_GUIDE.md
 """
 
 import tkinter as tk

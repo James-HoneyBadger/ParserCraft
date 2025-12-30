@@ -1,31 +1,102 @@
-# CodeEx Quick Start Guide
+# CodeCraft Quick Start Guide
 
-Get CodeEx running in 5 minutes!
+Get CodeCraft and CodeEx running in 5 minutes!
 
-## Installation
+## Quick Launch (Easiest)
+
+```bash
+# Linux/macOS
+./run-codecraft.sh    # Launch CodeCraft IDE (language design)
+./run-codex.sh        # Launch CodeEx IDE (application development)
+
+# Windows
+run-codecraft.bat     # Launch CodeCraft IDE
+run-codex.bat         # Launch CodeEx IDE
+```
+
+These scripts automatically set up the Python environment and install dependencies.
+
+## Prerequisites
+
+- Python 3.9+
+- Basic understanding of programming concepts
+
+## What You'll Get
+
+### CodeCraft IDE
+- Visual language configuration editor
+- Language presets (Python-like, JavaScript-like, Lisp-like, etc.)
+- Real-time configuration validation
+- Testing and preview panels
+- Export/import configurations
+
+### CodeEx IDE
+- Professional application development environment
+- Load any CodeCraft-created language
+- Multi-file project support
+- Syntax highlighting
+- Real-time code execution
+
+## First Steps
+
+### 1. Launch CodeCraft IDE
+
+```bash
+./run-codecraft.sh    # (Linux/macOS)
+run-codecraft.bat     # (Windows)
+```
+
+### 2. Design Your Language
+
+In CodeCraft IDE:
+- Click "New Configuration"
+- Select preset: "python_like"
+- Rename keywords:
+  - `if` → `cuando` (Spanish "when")
+  - `def` → `funcion` (Spanish "function")
+- Save as "spanish.yaml"
+
+### 3. Launch CodeEx IDE
+
+```bash
+./run-codex.sh        # (Linux/macOS)
+run-codex.bat         # (Windows)
+```
+
+### 4. Develop in Your Language
+
+In CodeEx IDE:
+- Load "spanish.yaml"
+- Create a new file: "hello.when"
+- Write code using your custom syntax:
+```
+cuando True:
+    funcion greet():
+        say "¡Hola!"
+    greet()
+```
+- Click "Run" to execute
+
+## Manual Installation
 
 ### Prerequisites
 
 - Python 3.8+
-- CodeCraft package (installed)
 - tkinter (usually included with Python)
 
 ### Verify Installation
 
 ```bash
 # Check Python version
-python --version  # Should be 3.8 or higher
+python3 --version  # Should be 3.8 or higher
 
 # Test tkinter
-python -c "import tkinter; print('tkinter OK')"
-
-# Test CodeCraft
-python -c "from src.hb_lcs.language_config import LanguageConfig; print('CodeCraft OK')"
+python3 -c "import tkinter; print('tkinter OK')"
 ```
 
-## Launching CodeEx
+## Launching Manually
 
-### From Command Line
+### CodeCraft IDE from Command Line
 
 ```bash
 cd /path/to/CodeCraft

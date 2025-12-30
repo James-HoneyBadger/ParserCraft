@@ -1,19 +1,33 @@
 #!/usr/bin/env python3
 
 """
-Honey Badger Language Construction Set - Advanced IDE
+CodeCraft IDE - Language Construction Interface
 
-A comprehensive graphical IDE for creating, editing, and testing
-custom programming languages.
-Features include:
-- Interactive configuration editor
-- Syntax highlighting and code completion
-- Multi-panel interface with editor, console, and configuration panels
-- Built-in help system and tutorials
-- Project management and version control integration
-- Testing and validation tools
-- Export/import capabilities
+A comprehensive graphical IDE for designing and testing custom programming languages
+through configuration-driven development.
+
+Features:
+- Interactive visual configuration editor
+- Multi-language preset templates (Python-like, JavaScript-like, Lisp-like, etc.)
+- Syntax highlighting and code editor with line numbers
+- Real-time configuration validation
+- Multi-panel interface: editor, console, preview, and configuration panels
+- Built-in help system and language design tutorials
+- Project management for language configurations
+- Configuration import/export (JSON, YAML)
+- TeachScript integration and testing
+- Live language testing environment
+- Version control integration support
 - Advanced language construction features
+
+Usage:
+    python -m hb_lcs.ide              # Launch the IDE
+    python src/hb_lcs/ide.py          # Direct execution
+
+See Also:
+    - CodeEx IDE: For developing applications in custom languages
+    - CLI Tools: codecraft create, codecraft edit, codecraft validate
+    - Documentation: docs/guides/CODEX_DEVELOPER_GUIDE.md
 """
 
 import base64

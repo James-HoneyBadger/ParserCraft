@@ -10,7 +10,7 @@ from src.hb_lcs.ide import AdvancedIDE
 def main():
     """Launch the Advanced IDE."""
     root = tk.Tk()
-    root.title("Honey Badger Language Construction Set - Advanced IDE")
+    root.title("CodeCraft IDE - Language Configuration Editor")
     root.geometry("1200x800")
 
     # Create the IDE

@@ -1,12 +1,18 @@
-# CodeEx Developer Guide
+# CodeCraft IDE Developer Guide
 
-Technical documentation for CodeEx architecture, design patterns, and development.
+Technical documentation for the CodeCraft IDE - the language design interface.
+
+## Overview
+
+The CodeCraft IDE (`src/hb_lcs/ide.py`) is a comprehensive graphical interface
+for creating and testing custom programming languages. It provides visual editors
+for language configuration with real-time validation and testing capabilities.
 
 ## Architecture Overview
 
 ### System Design
 
-CodeEx implements a three-tier architecture:
+CodeCraft IDE implements a multi-panel architecture:
 
 ```
 ┌─────────────────────────────────────┐

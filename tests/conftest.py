@@ -1,4 +1,4 @@
-"""Pytest configuration for the Honey Badger Language Construction Set tests."""
+"""Pytest configuration for CodeCraft Language Construction Framework tests."""
 
 from __future__ import annotations
 

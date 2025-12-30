@@ -61,7 +61,7 @@ def main():
     """Run all tests."""
     print("=" * 70)
     print("TeachScript Test Suite")
-    print("Honey Badger Language Construction Set")
+    print("CodeCraft - Custom Programming Language Framework")
     print("=" * 70)
     print()
 

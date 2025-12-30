@@ -1,52 +1,50 @@
 # Documentation Index & Guide Selection
 
-**Honey Badger Language Construction Set v4.0**  
+**CodeCraft - Custom Language Construction Framework v1.0**  
 Quick Reference for Finding the Right Documentation  
-December 3, 2025
+December 30, 2025
 
-## 📚 Four Comprehensive Guides
+## 📚 Documentation Categories
 
-We've created four complete guides to help you get the most out of HB_LCS:
+### Quick Start
+- **[Getting Started](guides/CODEX_QUICKSTART.md)** - 10-minute introduction
+- **[Run Scripts](../run-codecraft.sh)** - Automated setup and launch
 
-### 1️⃣ **[INSTALL_GUIDE.md](INSTALL_GUIDE.md)** - Setup & Installation
-**For**: Everyone starting with HB_LCS  
-**Length**: ~3,000 words | 20-30 minutes to read  
-**Topics**:
-- System requirements and verification
-- Step-by-step installation (5 methods)
-- Virtual environment setup
-- Troubleshooting installation issues
-- Post-installation verification
-- Configuration and customization
+### Application Guides
+- **[CodeCraft IDE Guide](guides/CODEX_DEVELOPER_GUIDE.md)** - Language design environment
+- **[CodeEx IDE Guide](guides/CODEX_USER_GUIDE.md)** - Application development environment
+- **[Integration Guide](guides/CODEX_INTEGRATION_GUIDE.md)** - Integrating CodeCraft into projects
 
-**Start here if you**:
-- Just downloaded HB_LCS
-- Need to install on a new computer
-- Are having installation problems
-- Want to verify your setup works
+### Technical Reference
+- **[API Reference](reference/API_REFERENCE.md)** - Python API documentation
+- **[CLI Reference](reference/CLI_REFERENCE.md)** - Command-line tool documentation
+- **[Configuration Reference](reference/CONFIG_REFERENCE.md)** - Language configuration schema
 
----
+### TeachScript Documentation
+TeachScript is a complete example language built with CodeCraft:
+- **[TeachScript User Guide](teachscript/README_TEACHSCRIPT.md)** - Learn TeachScript syntax
+- **[TeachScript Advanced Guide](teachscript/TEACHSCRIPT_ADVANCED_GUIDE.md)** - Advanced features
+- **[TeachScript IDE Integration](teachscript/TEACHSCRIPT_IDE_INTEGRATION.md)** - Using TeachScript in IDEs
 
-### 2️⃣ **[USER_GUIDE.md](USER_GUIDE.md)** - How to Use the System
-**For**: Users creating and working with languages  
-**Length**: ~5,000 words | 30-45 minutes to read  
-**Topics**:
-- Getting started (5-10 minutes)
-- Graphical IDE features and menus
-- Command-line tool usage
-- Creating custom languages
-- Working with presets
-- Common tasks (10 practical examples)
-- Advanced features
-- Troubleshooting and tips
-
-**Start here if you**:
-- Want to create your first language
-- Need to use the IDE or CLI
-- Looking for how-to instructions
-- Want practical examples
+### Project Documentation
+- **[CODEX Documentation](codex/)** - CodeEx IDE implementation details
+- **[Architecture Summaries](summaries/)** - System design and implementation notes
 
 ---
+
+## 🎯 Choose Your Path
+
+**I want to...**
+
+| Goal | Start Here |
+|------|-----------|
+| Launch and test quickly | [run-codecraft.sh](../run-codecraft.sh) |
+| Create a custom language | [CODEX_DEVELOPER_GUIDE.md](guides/CODEX_DEVELOPER_GUIDE.md) |
+| Develop in my custom language | [CODEX_USER_GUIDE.md](guides/CODEX_USER_GUIDE.md) |
+| Learn programming basics | [TeachScript Guide](teachscript/README_TEACHSCRIPT.md) |
+| Use CodeCraft in Python code | [API_REFERENCE.md](reference/API_REFERENCE.md) |
+| Use the CLI tool | [CLI_REFERENCE.md](reference/CLI_REFERENCE.md) |
+| Integrate CodeCraft in projects | [CODEX_INTEGRATION_GUIDE.md](guides/CODEX_INTEGRATION_GUIDE.md) |
 
 ### 3️⃣ **[TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md)** - Complete API Documentation
 **For**: Developers and advanced users  

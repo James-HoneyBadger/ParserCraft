@@ -58,9 +58,11 @@ try:
 except ImportError:  # pragma: no cover - platform dependent
     readline = None
 
-from hb_lcs.language_config import (LanguageConfig,
-                                    create_custom_config_interactive,
-                                    list_presets)
+from hb_lcs.language_config import (
+    LanguageConfig,
+    create_custom_config_interactive,
+    list_presets,
+)
 from hb_lcs.language_runtime import LanguageRuntime
 
 try:

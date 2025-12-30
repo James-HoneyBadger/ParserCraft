@@ -12,12 +12,16 @@ from pathlib import Path
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-# noqa: E402 - Local imports after sys.path modification
-from ide import AdvancedIDE  # noqa: E402 pylint: disable=wrong-import-position
-from ide_teachscript_integration import \
-    TeachScriptIDEIntegration  # noqa: E402 pylint: disable=wrong-import-position
+from ide import (  # noqa: E402 pylint: disable=wrong-import-position
+    AdvancedIDE,
+)
+from ide_teachscript_integration import (  # noqa: E402 pylint: disable=wrong-import-position
+    TeachScriptIDEIntegration,
+)
 from teachscript_highlighting import (  # noqa: E402 pylint: disable=wrong-import-position
-    TeachScriptCodeCompletion, TeachScriptHighlighter)
+    TeachScriptCodeCompletion,
+    TeachScriptHighlighter,
+)
 
 
 def launch_ide_with_teachscript():

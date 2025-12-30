@@ -31,13 +31,19 @@ from typing import Any, Dict, Optional
 # Ensure parent modules are in path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-# noqa: E402 - Local imports after sys.path modification
 from codex.codex_components import (  # noqa: E402 pylint: disable=wrong-import-position
-    CodeExConsole, CodeExEditor, CodeExMenu, CodeExProjectExplorer)
+    CodeExConsole,
+    CodeExEditor,
+    CodeExMenu,
+    CodeExProjectExplorer,
+)
 from hb_lcs.interpreter_generator import (  # noqa: E402 pylint: disable=wrong-import-position
-    InterpreterGenerator, InterpreterPackage)
-from hb_lcs.language_config import \
-    LanguageConfig  # noqa: E402 pylint: disable=wrong-import-position
+    InterpreterGenerator,
+    InterpreterPackage,
+)
+from hb_lcs.language_config import (  # noqa: E402 pylint: disable=wrong-import-position
+    LanguageConfig,
+)
 
 
 class CodeExIDE(ttk.Frame):

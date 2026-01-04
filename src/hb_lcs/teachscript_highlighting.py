@@ -305,10 +305,11 @@ class TeachScriptCodeCompletion:
                 if word_start:
                     self.text.delete(word_start, "insert")
                     self.text.insert(word_start, completion)
-                self.popup.destroy()
+                    if self.popup:
+                        self.popup.destroy()
 
         listbox.bind("<Return>", select)
-        listbox.bind("<Escape>", lambda e: self.popup.destroy())
+        listbox.bind("<Escape>", lambda e: self.popup.destroy() if self.popup else None)
 
 
 class TeachScriptLinter:

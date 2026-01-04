@@ -27,8 +27,10 @@ class VisualConfigEditor(ttk.Frame):
         self._build_ui()
 
     def _build_ui(self) -> None:
-        self.master.title("Visual Configuration Editor")
-        self.master.geometry("700x500")
+        top_widget = self.winfo_toplevel()
+        if isinstance(top_widget, tk.Tk):
+            top_widget.title("Visual Configuration Editor")
+            top_widget.geometry("700x500")
 
         # Top bar
         top = ttk.Frame(self)

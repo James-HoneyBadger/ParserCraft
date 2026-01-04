@@ -111,7 +111,7 @@ class AdvancedIDE(ttk.Frame):
         self.language_label: Optional[ttk.Label] = None
 
         # Settings
-        self.settings = {
+        self.settings: dict[str, Any] = {
             "theme": "light",
             "editor_font_size": 11,
             "console_font_size": 10,

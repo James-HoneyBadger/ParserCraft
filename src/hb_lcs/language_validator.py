@@ -332,7 +332,7 @@ class LanguageValidator:
     def check_naming_conventions(self) -> None:
         """Check naming conventions for keywords and functions."""
         # Check for mixed case conventions
-        keyword_cases = defaultdict(int)
+        keyword_cases: dict[str, int] = defaultdict(int)
         for kw in self.config.keyword_mappings.values():
             if kw.custom.isupper():
                 keyword_cases["upper"] += 1

@@ -177,9 +177,9 @@ class GameObject:
         if self.velocity is None:
             self.velocity = Point(0, 0)
 
-    def update(self, dt: float = 0.016):
+    def update(self, dt: float = 0.016) -> None:
         """Update object position."""
-        if self.active:
+        if self.active and self.velocity is not None:
             self.position = self.position + (self.velocity * dt)
 
     def get_bounds(self) -> Rectangle:

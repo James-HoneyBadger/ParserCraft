@@ -238,7 +238,7 @@ class ConflictDetector:
         """Check for operator precedence issues."""
         issues = []
 
-        precedences: Dict[str, int] = {}
+        precedences: dict[int, list[str]] = {}
         for symbol, op in operators.items():
             prec = op.precedence
             if prec < 0:

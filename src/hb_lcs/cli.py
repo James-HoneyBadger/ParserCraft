@@ -45,6 +45,8 @@ See Also:
 
 import argparse
 import ast
+import contextlib
+import io
 import json
 import os
 import re
@@ -68,9 +70,10 @@ from hb_lcs.language_config import (
 from hb_lcs.language_runtime import LanguageRuntime
 
 try:
-    from yaml import YAMLError  # type: ignore
+    from yaml import YAMLError, safe_load  # type: ignore
 except ImportError:  # pragma: no cover - optional dependency
     YAMLError = None  # type: ignore[assignment]
+    safe_load = None  # type: ignore[assignment]
 
 if YAMLError is not None:
     CONFIG_LOAD_ERRORS: tuple[type[Exception], ...] = (
@@ -133,7 +136,119 @@ def _translate_with_keywords(
         original_kw = LanguageRuntime.translate_keyword(custom_kw)
         pattern = r"\b" + re.escape(custom_kw) + r"\b"
         translated = re.sub(pattern, original_kw, translated)
+
+    # Also translate custom function names if present
+    for custom_func in LanguageRuntime.get_custom_functions():
+        original_func = LanguageRuntime.translate_function(custom_func)
+        pattern = r"\b" + re.escape(custom_func) + r"\b"
+        translated = re.sub(pattern, original_func, translated)
+
     return translated
+
+
+def _load_test_cases(path: Path) -> Optional[list[dict[str, Any]]]:
+    """Load test cases from a YAML or JSON file."""
+    if not path.exists():
+        print(f"Error: Test file not found: {path}")
+        return None
+
+    try:
+        content = path.read_text(encoding="utf-8")
+    except OSError as error:
+        print(f"Error reading test file: {error}")
+        return None
+
+    try:
+        if path.suffix.lower() in {".yaml", ".yml"} and safe_load is not None:
+            cases = safe_load(content)
+        else:
+            cases = json.loads(content)
+    except Exception as error:  # pylint: disable=broad-exception-caught
+        print(f"Error parsing test file: {error}")
+        return None
+
+    if not isinstance(cases, list):
+        print("Error: Test file must contain a list of cases")
+        return None
+
+    return cases
+
+
+def _run_test_case(
+    case: dict[str, Any],
+    base_dir: Path,
+    custom_keywords: Sequence[str],
+    show_translation: bool,
+    debug: bool,
+) -> tuple[bool, list[str]]:
+    """Execute a single test case and return (passed, details)."""
+    details: list[str] = []
+
+    source: Optional[str] = None
+    if file_path := case.get("file"):
+        candidate = (base_dir / file_path).resolve()
+        if not candidate.exists():
+            return False, [f"File not found: {candidate}"]
+        try:
+            source = candidate.read_text(encoding="utf-8")
+        except OSError as error:
+            return False, [f"Error reading file: {error}"]
+    elif inline := case.get("source"):
+        source = str(inline)
+
+    if not source:
+        return False, ["Missing 'file' or 'source' in test case"]
+
+    translated = _translate_with_keywords(source, custom_keywords)
+
+    if show_translation:
+        details.append("Translated code:\n" + translated)
+
+    buffer = io.StringIO()
+    variables: dict[str, Any] = {}
+    safe_globals = {"__builtins__": SAFE_BUILTINS.copy()}
+
+    try:
+        with contextlib.redirect_stdout(buffer):
+            exec(  # pylint: disable=exec-used
+                translated,
+                safe_globals,
+                variables,
+            )
+    except Exception as error:  # pylint: disable=broad-exception-caught
+        failure = f"Execution error: {error}"
+        if debug:
+            traceback.print_exc()
+        return False, details + [failure]
+
+    stdout = buffer.getvalue()
+    expected_stdout = case.get("expect_stdout")
+    expected_vars = case.get("expect_vars") or {}
+
+    passed = True
+
+    if expected_stdout is not None:
+        if stdout.strip() != str(expected_stdout).strip():
+            passed = False
+            details.append(
+                "Stdout mismatch:\n"
+                f"Expected: {expected_stdout!r}\n"
+                f"Actual:   {stdout!r}"
+            )
+
+    for name, expected_value in expected_vars.items():
+        if name not in variables:
+            passed = False
+            details.append(f"Missing variable: {name}")
+            continue
+        if variables[name] != expected_value:
+            passed = False
+            details.append(
+                f"Variable mismatch for '{name}': "
+                f"expected {expected_value!r}, got {variables[name]!r}"
+            )
+
+    return passed, details
 
 
 def _handle_repl_command(
@@ -942,6 +1057,56 @@ def cmd_batch(args):
     return 1
 
 
+def cmd_test(args):
+    """Translate, run, and verify test cases."""
+    tests_path = Path(args.tests)
+    cases = _load_test_cases(tests_path)
+    if cases is None:
+        return 1
+
+    config_path = Path(args.config)
+    if not config_path.exists():
+        print(f"Error: Configuration file not found: {config_path}")
+        return 1
+
+    config = _load_config_from_path(config_path, "Error loading config: ")
+    if config is None:
+        return 1
+
+    LanguageRuntime.load_config(config=config)
+    custom_keywords = tuple(LanguageRuntime.get_custom_keywords())
+
+    base_dir = tests_path.parent
+    failures = 0
+
+    for index, case in enumerate(cases, start=1):
+        name = case.get("name") or f"case {index}"
+        passed, details = _run_test_case(
+            case,
+            base_dir,
+            custom_keywords,
+            args.show_translation,
+            args.debug,
+        )
+
+        status = "PASS" if passed else "FAIL"
+        print(f"[{status}] {name}")
+        for detail in details:
+            print(f"  {detail}")
+
+        if not passed:
+            failures += 1
+            if args.stop_on_fail:
+                break
+
+    total = len(cases)
+    print(
+        f"\nSummary: {total - failures}/{total} passed, {failures} failed"
+    )
+
+    return 0 if failures == 0 else 1
+
+
 def cmd_translate(args):
     """Translate a source file using a language configuration."""
     config_path = Path(args.config)
@@ -1266,6 +1431,29 @@ Examples:
         "--debug", "-d", action="store_true", help="Enable debug mode"
     )
 
+    # Test command
+    test_parser = subparsers.add_parser(
+        "test",
+        help="Translate, run, and verify test cases",
+    )
+    test_parser.add_argument(
+        "--config", "-c", required=True, help="Configuration file"
+    )
+    test_parser.add_argument(
+        "--tests", "-t", required=True, help="Test cases file (yaml/json)"
+    )
+    test_parser.add_argument(
+        "--show-translation",
+        action="store_true",
+        help="Show translated Python code for each case",
+    )
+    test_parser.add_argument(
+        "--stop-on-fail", action="store_true", help="Stop after first fail"
+    )
+    test_parser.add_argument(
+        "--debug", "-d", action="store_true", help="Enable debug mode"
+    )
+
     # Translate command
     translate_parser = subparsers.add_parser(
         "translate",
@@ -1302,6 +1490,7 @@ Examples:
         "import": cmd_import,
         "repl": cmd_repl,
         "batch": cmd_batch,
+        "test": cmd_test,
         "translate": cmd_translate,
     }
 

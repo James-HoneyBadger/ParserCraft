@@ -33,6 +33,10 @@ parsercraft create [OPTIONS]
 **Presets:**
 - `minimal` - Bare minimum configuration
 - `python_like` - Python-style syntax
+
+**Presets:**
+- `minimal` - Bare minimum configuration
+- `python_like` - Python-style syntax
 - `javascript_like` - JavaScript-style syntax
 - `lisp_like` - Lisp-style syntax
 - `teachscript` - Educational language
@@ -342,6 +346,34 @@ export spanish.yaml --format markdown docs.md
 ```bash
 parsercraft batch build_languages.batch --output generated/
 ```
+
+### test
+
+Translate, run, and verify test cases defined in YAML or JSON.
+
+```bash
+parsercraft test --config CONFIG.yaml --tests cases.yaml [--show-translation] [--stop-on-fail]
+```
+
+**Test file format (YAML):**
+```yaml
+- name: prints hello
+	source: |
+		print("hello")
+	expect_stdout: "hello"
+- name: sets variable
+	source: |
+		x = 2 + 3
+	expect_vars:
+		x: 5
+```
+
+**Options:**
+- `--config` - Language configuration file
+- `--tests` - Test cases file (YAML or JSON list)
+- `--show-translation` - Print translated Python per case
+- `--stop-on-fail` - Abort after first failure
+- `--debug` - Show stack traces on execution errors
 
 ## Global Options
 

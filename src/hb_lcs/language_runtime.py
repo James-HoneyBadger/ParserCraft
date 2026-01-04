@@ -102,11 +102,16 @@ class LanguageRuntime:
         }
 
         # Build function map
-        self._function_map = {
-            func.name: func.implementation or func.name
-            for func in self._config.builtin_functions.values()
-            if func.enabled
-        }
+        self._function_map = {}
+        for func in self._config.builtin_functions.values():
+            if not func.enabled:
+                continue
+
+            impl = func.implementation or func.name
+            if impl == func.name and impl.isupper():
+                impl = impl.lower()
+
+            self._function_map[func.name] = impl
 
     @classmethod
     def get_custom_keywords(cls) -> list[str]:
@@ -129,6 +134,21 @@ class LanguageRuntime:
             return keyword_text
 
         return runtime._keyword_reverse_map.get(keyword_text, keyword_text)
+
+    @classmethod
+    def translate_function(cls, function_name: str) -> str:
+        """Translate custom function name to its implementation/original."""
+        runtime = cls.get_instance()
+        if not runtime._config:
+            return function_name
+
+        return runtime._function_map.get(function_name, function_name)
+
+    @classmethod
+    def get_custom_functions(cls) -> list[str]:
+        """Return the list of custom functions currently configured."""
+        runtime = cls.get_instance()
+        return list(runtime._function_map.keys())
 
     @classmethod
     def is_keyword_enabled(cls, original_keyword: str) -> bool:

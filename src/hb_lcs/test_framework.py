@@ -24,6 +24,8 @@ from .parser_generator import ParserGenerator
 class TestCase:
     """Represents a single test case."""
 
+    __test__ = False  # Avoid pytest collecting utility container
+
     name: str
     code: str
     expected_output: Optional[str] = None
@@ -38,6 +40,8 @@ class TestCase:
 @dataclass
 class TestResult:
     """Result of running a test case."""
+
+    __test__ = False  # Avoid pytest collecting utility container
 
     test_name: str
     passed: bool
@@ -255,6 +259,8 @@ class LanguageTestRunner:
 
 class TestGenerator:
     """Generates test cases for language configurations."""
+
+    __test__ = False  # Avoid pytest collecting utility helper
 
     def __init__(self, config: LanguageConfig):
         self.config = config

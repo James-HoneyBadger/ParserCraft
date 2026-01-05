@@ -4,7 +4,7 @@ Turing-Complete Language Configuration Examples
 Demonstrates six different programming paradigms using LCS
 """
 
-from hb_lcs.language_config import LanguageConfig
+from parsercraft.language_config import LanguageConfig
 
 
 def create_basic_like():
@@ -333,7 +333,7 @@ def main():
     """Create all example configurations"""
     print("\n" + "=" * 70)
     print(" " * 15 + "TURING-COMPLETE LANGUAGE EXAMPLES")
-    print(" " * 12 + "Honey Badger Language Construction Set")
+    print(" " * 12 + "ParserCraft")
     print("=" * 70)
 
     configs = []

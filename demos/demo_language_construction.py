@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Demo: Honey Badger Language Construction Set
+Demo: ParserCraft Language Construction Framework
 
-This demo shows how to use the Honey Badger Language Construction Set
+This demo shows how to use ParserCraft
 to create custom language configurations.
 """
 
-from hb_lcs.language_config import LanguageConfig
-from hb_lcs.language_runtime import LanguageRuntime, print_language_info
+from parsercraft.language_config import LanguageConfig
+from parsercraft.language_runtime import LanguageRuntime, print_language_info
 
 
 def demo_basic_usage():

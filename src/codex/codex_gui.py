@@ -37,11 +37,11 @@ from codex.codex_components import (  # noqa: E402 pylint: disable=wrong-import-
     CodeExMenu,
     CodeExProjectExplorer,
 )
-from hb_lcs.interpreter_generator import (  # noqa: E402 pylint: disable=wrong-import-position
+from parsercraft.interpreter_generator import (  # noqa: E402 pylint: disable=wrong-import-position
     InterpreterGenerator,
     InterpreterPackage,
 )
-from hb_lcs.language_config import (  # noqa: E402 pylint: disable=wrong-import-position
+from parsercraft.language_config import (  # noqa: E402 pylint: disable=wrong-import-position
     LanguageConfig,
 )
 
@@ -645,7 +645,7 @@ class CodeExIDE(ttk.Frame):
 
         For more information, visit the project
         documentation or run:
-        python -c "import hb_lcs; help(hb_lcs)"
+        python -c "import parsercraft; help(parsercraft)"
         """
         messagebox.showinfo("About ParserCraft", about)
 

@@ -14,9 +14,9 @@ import sys
 import traceback
 from pathlib import Path
 
-from hb_lcs.language_config import LanguageConfig
-from hb_lcs.identifier_validator import IdentifierValidator, ConflictDetector
-from hb_lcs.documentation_generator import DocumentationGenerator
+from parsercraft.language_config import LanguageConfig
+from parsercraft.identifier_validator import IdentifierValidator, ConflictDetector
+from parsercraft.documentation_generator import DocumentationGenerator
 
 
 def demo_identifier_validation():

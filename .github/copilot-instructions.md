@@ -8,13 +8,13 @@ ParserCraft is a **custom programming language construction framework** that ena
 
 ## Architecture: Three-Layer Design
 
-### 1. Configuration Layer (`src/hb_lcs/language_config.py`)
+### 1. Configuration Layer (`src/parsercraft/language_config.py`)
 - **`LanguageConfig`** dataclass: Single source of truth for language definitions
 - Supports keyword remapping (e.g., `if` → `cuando`), custom functions, operators, syntax options
 - Serializes to YAML/JSON for portability
 - Example config: `configs/teachscript.yaml` (educational language with `teach` instead of `def`)
 
-### 2. Runtime Layer (`src/hb_lcs/language_runtime.py`)
+### 2. Runtime Layer (`src/parsercraft/language_runtime.py`)
 - **`LanguageRuntime`** singleton: Applies config at interpretation time
 - Maintains reverse mappings (custom keyword → Python keyword) for translation
 - Hot-reloadable configurations
@@ -36,7 +36,7 @@ ParserCraft is a **custom programming language construction framework** that ena
 ### LSP Integration (`lsp_server.py`, `lsp_integration.py`)
 - Full Language Server Protocol implementation for IDE features
 - Provides: diagnostics, completion, hover, signature help
-- **Usage pattern**: Start with `python -m hb_lcs.lsp_server --config X.yaml --port 8080`
+- **Usage pattern**: Start with `python -m parsercraft.lsp_server --config X.yaml --port 8080`
 - VSCode extensions auto-generated via `parsercraft extension` CLI command
 
 ### Testing Patterns
@@ -55,13 +55,13 @@ parsercraft create --preset python_like --output my_lang.yaml
 parsercraft validate my_lang.yaml
 
 # Launch IDE for testing
-./run-codecraft.sh  # Auto-creates venv, installs deps
+./run-parsercraft.sh  # Auto-creates venv, installs deps
 ```
 
 ### Running Programs in Custom Languages
 ```python
-from hb_lcs.language_runtime import LanguageRuntime
-from hb_lcs.module_system import ModuleManager
+from parsercraft.language_runtime import LanguageRuntime
+from parsercraft.module_system import ModuleManager
 
 # Load language config
 LanguageRuntime.load_config(config_file="teachscript.yaml")
@@ -79,7 +79,7 @@ manager.run_program("main.teach")
 ## Project-Specific Conventions
 
 ### File Organization
-- `src/hb_lcs/`: Core framework (avoid "parsercraft" in code, use "hb_lcs" imports)
+- `src/parsercraft/`: Core framework (avoid "parsercraft" in code, use "parsercraft" imports)
 - `src/codex/`: Separate IDE (CodeEx) - different codebase, shares framework
 - `configs/examples/`: Reference language configs (Python-like, LISP-like, etc.)
 - `docs/guides/`: User/developer documentation (e.g., `LSP_INTEGRATION_GUIDE.md`)
@@ -112,14 +112,14 @@ config = runtime.get_config()
 | `parsercraft lsp` | Start LSP server | `lsp_server.py:main()` |
 | `parsercraft extension` | Generate VS Code extension | `vscode_integration.py` |
 | `parsercraft run` | Execute program in custom language | `cli.py` + `language_runtime.py` |
-| `./run-codecraft.sh` | Launch ParserCraft IDE (GUI) | `launch_ide.py` via bash wrapper |
+| `./run-parsercraft.sh` | Launch ParserCraft IDE (GUI) | `launch_ide.py` via bash wrapper |
 
 ## IDE Integration
 
 ### ParserCraft IDE (`ide.py`, `launch_ide.py`)
 - Tkinter-based visual language designer
 - Real-time config editing and program execution
-- **Launch pattern**: Shell scripts (`run-codecraft.sh`) handle venv setup + dependency installation
+- **Launch pattern**: Shell scripts (`run-parsercraft.sh`) handle venv setup + dependency installation
 
 ### CodeEx IDE (`src/codex/codex.py`)
 - Separate application for developing programs in custom languages

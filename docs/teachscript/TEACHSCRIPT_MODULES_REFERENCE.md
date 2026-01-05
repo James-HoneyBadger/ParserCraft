@@ -11,7 +11,7 @@ This document provides a complete reference for all TeachScript modules integrat
 ### 1. **teachscript_runtime.py** (Main Runtime Engine)
 
 ```python
-from src.hb_lcs.teachscript_runtime import (
+from src.parsercraft.teachscript_runtime import (
     TeachScriptTranspiler,
     TeachScriptEnvironment,
     TeachScriptRuntime,
@@ -42,7 +42,7 @@ from src.hb_lcs.teachscript_runtime import (
 **Example:**
 
 ```python
-from src.hb_lcs.teachscript_runtime import get_runtime
+from src.parsercraft.teachscript_runtime import get_runtime
 
 runtime = get_runtime()
 code = """
@@ -60,7 +60,7 @@ print(output)  # Hello, World! \n x = 5
 ### 2. **ide_teachscript_integration.py** (IDE Integration)
 
 ```python
-from src.hb_lcs.ide_teachscript_integration import TeachScriptIDEIntegration
+from src.parsercraft.ide_teachscript_integration import TeachScriptIDEIntegration
 ```
 
 **Key Class:**
@@ -85,7 +85,7 @@ from src.hb_lcs.ide_teachscript_integration import TeachScriptIDEIntegration
 **Example:**
 
 ```python
-from src.hb_lcs.ide_teachscript_integration import TeachScriptIDEIntegration
+from src.parsercraft.ide_teachscript_integration import TeachScriptIDEIntegration
 
 integration = TeachScriptIDEIntegration(ide_instance)
 
@@ -101,7 +101,7 @@ integration.add_teachscript_keyboard_shortcuts(root)
 ### 3. **teachscript_highlighting.py** (Syntax Features)
 
 ```python
-from src.hb_lcs.teachscript_highlighting import (
+from src.parsercraft.teachscript_highlighting import (
     TeachScriptHighlighter,
     TeachScriptCodeCompletion,
     TeachScriptLinter
@@ -127,7 +127,7 @@ from src.hb_lcs.teachscript_highlighting import (
 **Example:**
 
 ```python
-from src.hb_lcs.teachscript_highlighting import TeachScriptHighlighter
+from src.parsercraft.teachscript_highlighting import TeachScriptHighlighter
 
 highlighter = TeachScriptHighlighter(text_widget)
 highlighter.highlight_all()
@@ -142,7 +142,7 @@ highlighter.change_theme(custom_theme)
 ### 4. **teachscript_console.py** (Interactive REPL)
 
 ```python
-from src.hb_lcs.teachscript_console import TeachScriptConsole
+from src.parsercraft.teachscript_console import TeachScriptConsole
 ```
 
 **Key Class:**
@@ -166,7 +166,7 @@ exit/quit  - Exit console
 **Example:**
 
 ```python
-from src.hb_lcs.teachscript_console import TeachScriptConsole
+from src.parsercraft.teachscript_console import TeachScriptConsole
 
 console = TeachScriptConsole(parent_frame)
 console.pack(fill="both", expand=True)
@@ -179,7 +179,7 @@ console.pack(fill="both", expand=True)
 ### 5. **teachscript_libraries.py** (Educational Libraries)
 
 ```python
-from src.hb_lcs.teachscript_libraries import (
+from src.parsercraft.teachscript_libraries import (
     TeachScriptGraphics,
     TeachScriptGame,
     TeachScriptMath,
@@ -247,13 +247,13 @@ shuffled = TSRandom.shuffle(list)
 ### 6. **launch_ide_teachscript.py** (IDE Launcher)
 
 ```python
-from src.hb_lcs.launch_ide_teachscript import launch_ide_with_teachscript
+from src.parsercraft.launch_ide_teachscript import launch_ide_with_teachscript
 ```
 
 **Usage:**
 
 ```bash
-python -m src.hb_lcs.launch_ide_teachscript
+python -m src.parsercraft.launch_ide_teachscript
 ```
 
 **Features:**
@@ -319,7 +319,7 @@ python -m src.hb_lcs.launch_ide_teachscript
 ### Pattern 1: Basic Program Execution
 
 ```python
-from src.hb_lcs.teachscript_runtime import get_runtime
+from src.parsercraft.teachscript_runtime import get_runtime
 
 code = """
 remember x = 5
@@ -335,7 +335,7 @@ print(output)
 ### Pattern 2: Syntax Validation
 
 ```python
-from src.hb_lcs.teachscript_runtime import get_runtime
+from src.parsercraft.teachscript_runtime import get_runtime
 
 code = "remember x = 5\nsay(x"  # Missing closing paren
 
@@ -348,7 +348,7 @@ for error in errors:
 ### Pattern 3: Transpilation Inspection
 
 ```python
-from src.hb_lcs.teachscript_runtime import get_runtime
+from src.parsercraft.teachscript_runtime import get_runtime
 
 teachscript_code = """
 remember x = 10
@@ -364,7 +364,7 @@ print(python_code)
 ### Pattern 4: IDE Integration
 
 ```python
-from src.hb_lcs.ide_teachscript_integration import TeachScriptIDEIntegration
+from src.parsercraft.ide_teachscript_integration import TeachScriptIDEIntegration
 
 # In your IDE initialization
 integration = TeachScriptIDEIntegration(ide_instance)
@@ -387,7 +387,7 @@ remember distance = TSGraphics.point_distance(point1, point2)
 say("Distance:", distance)
 
 # Or in Python after transpilation:
-from src.hb_lcs.teachscript_libraries import TeachScriptGraphics as TSGraphics
+from src.parsercraft.teachscript_libraries import TeachScriptGraphics as TSGraphics
 point1 = TSGraphics.create_point(0, 0)
 point2 = TSGraphics.create_point(3, 4)
 distance = TSGraphics.point_distance(point1, point2)
@@ -441,7 +441,7 @@ print("Distance:", distance)
 Example:
 
 ```python
-from src.hb_lcs.teachscript_runtime import TeachScriptError, get_runtime
+from src.parsercraft.teachscript_runtime import TeachScriptError, get_runtime
 
 try:
     runtime = get_runtime()
@@ -516,13 +516,13 @@ Test specific features:
 
 ```bash
 # Test runtime
-python -c "from src.hb_lcs.teachscript_runtime import get_runtime; print(get_runtime().run('say(\"Test\")'))"
+python -c "from src.parsercraft.teachscript_runtime import get_runtime; print(get_runtime().run('say(\"Test\")'))"
 
 # Test highlighting
-python -c "from src.hb_lcs.teachscript_highlighting import TeachScriptHighlighter; print('✓')"
+python -c "from src.parsercraft.teachscript_highlighting import TeachScriptHighlighter; print('✓')"
 
 # Test libraries
-python -c "from src.hb_lcs.teachscript_libraries import TeachScriptMath; print(TeachScriptMath.PI)"
+python -c "from src.parsercraft.teachscript_libraries import TeachScriptMath; print(TeachScriptMath.PI)"
 ```
 
 ---
@@ -563,7 +563,7 @@ say("Thanks for playing!")
 Run with:
 
 ```bash
-python -m src.hb_lcs.launch_ide_teachscript
+python -m src.parsercraft.launch_ide_teachscript
 # Then load and run the file
 ```
 

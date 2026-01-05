@@ -1,3 +1,44 @@
+Metadata-Version: 2.4
+Name: parsercraft
+Version: 2.0.0
+Summary: ParserCraft - Create custom programming languages without writing a compiler
+Home-page: https://github.com/James-HoneyBadger/CodeCraft
+Author: James HoneyBadger
+License: MIT
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: Topic :: Software Development :: Compilers
+Classifier: Topic :: Software Development :: Interpreters
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: PyYAML>=6.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: black>=22.0.0; extra == "dev"
+Requires-Dist: flake8>=4.0.0; extra == "dev"
+Provides-Extra: ide
+Requires-Dist: tkinter; extra == "ide"
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
 # ParserCraft
 
 **Create Custom Programming Languages Without Writing a Compiler**
@@ -17,7 +58,7 @@ ParserCraft is a comprehensive framework for designing and deploying custom prog
 **Try TeachScript now**:
 ```bash
 # Quick start - launch TeachScript IDE
-./run-parsercraft.sh
+./run-codecraft.sh
 
 # Or run a TeachScript program
 python demos/teachscript/run_teachscript.py demos/teachscript/examples/01_hello_world.teach
@@ -94,13 +135,13 @@ The fastest way to get started—scripts handle all setup:
 
 ```bash
 # Linux/macOS - Launch ParserCraft IDE
-./run-parsercraft.sh
+./run-codecraft.sh
 
 # Linux/macOS - Launch CodeEx IDE
 ./run-codex.sh
 
 # Windows - Launch ParserCraft IDE
-run-parsercraft.bat
+run-codecraft.bat
 
 # Windows - Launch CodeEx IDE
 run-codex.bat
@@ -116,7 +157,7 @@ These scripts automatically:
 
 ```bash
 # Clone the repository
-git clone https://github.com/James-HoneyBadger/ParserCraft.git
+git clone https://github.com/James-HoneyBadger/CodeCraft.git
 cd ParserCraft
 
 # Install the package in development mode
@@ -158,9 +199,9 @@ ParserCraft/
 ├── tests/                   # Comprehensive test suite
 │   ├── integration/         # Integration tests
 │   └── test_*.py            # Unit tests
-├── run-parsercraft.sh         # ParserCraft launcher (Linux/macOS)
+├── run-codecraft.sh         # ParserCraft launcher (Linux/macOS)
 ├── run-codex.sh             # CodeEx launcher (Linux/macOS)
-├── run-parsercraft.bat        # ParserCraft launcher (Windows)
+├── run-codecraft.bat        # ParserCraft launcher (Windows)
 ├── run-codex.bat            # CodeEx launcher (Windows)
 └── README.md                # This file
 ```
@@ -171,11 +212,11 @@ Launch the ParserCraft IDE for interactive language design:
 
 ```bash
 # Using the launch script
-./run-parsercraft.sh              # Linux/macOS
-run-parsercraft.bat               # Windows
+./run-codecraft.sh              # Linux/macOS
+run-codecraft.bat               # Windows
 
 # Or manually
-python -m parsercraft.ide
+python -m hb_lcs.ide
 ```
 
 **ParserCraft IDE Features:**
@@ -240,8 +281,8 @@ Learn more: [docs/reference/CLI_REFERENCE.md](docs/reference/CLI_REFERENCE.md)
 Use ParserCraft's Python API to programmatically create language configurations:
 
 ```python
-from parsercraft.language_config import LanguageConfig
-from parsercraft.language_runtime import LanguageRuntime
+from hb_lcs.language_config import LanguageConfig
+from hb_lcs.language_runtime import LanguageRuntime
 
 # Create a custom language configuration
 config = LanguageConfig()
@@ -273,7 +314,7 @@ Learn more: [docs/reference/API_REFERENCE.md](docs/reference/API_REFERENCE.md)
 
 ```bash
 # 1. Create configuration
-./run-parsercraft.sh
+./run-codecraft.sh
 
 # 2. In ParserCraft IDE:
 #    - Load preset: "python_like"
@@ -316,7 +357,7 @@ The CLI tool provides command-line access to all features:
 hblcs create --preset python_like --output my_lang.yaml
 
 # Or run directly
-python src/parsercraft/cli.py create --preset python_like --output my_lang.yaml
+python src/hb_lcs/cli.py create --preset python_like --output my_lang.yaml
 
 # Create interactively
 hblcs create --interactive
@@ -712,7 +753,7 @@ See the generated demo files for examples:
 ## Project Structure
 
 ```
-ParserCraft/
+HB_LCS/
 ├── language_config.py      # Core configuration system
 ├── language_runtime.py     # Runtime integration
 ├── langconfig.py           # CLI tool

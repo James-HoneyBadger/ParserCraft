@@ -10,7 +10,7 @@
 
 ```bash
 cd /home/james/ParserCraft
-python -m src.hb_lcs.launch_ide_teachscript
+python -m src.parsercraft.launch_ide_teachscript
 ```
 
 Then:
@@ -274,7 +274,7 @@ Python Standard Library (300,000+ packages)
 
 ### Launch IDE
 ```bash
-python -m src.hb_lcs.launch_ide_teachscript
+python -m src.parsercraft.launch_ide_teachscript
 ```
 
 ### Run TeachScript File
@@ -338,7 +338,7 @@ python TEACHSCRIPT_SETUP_GUIDE.py
 
 ```
 /home/james/ParserCraft/
-├── src/hb_lcs/
+├── src/parsercraft/
 │   ├── teachscript_runtime.py ..................... Main engine
 │   ├── ide_teachscript_integration.py ............ IDE integration
 │   ├── teachscript_highlighting.py .............. Syntax features
@@ -390,7 +390,7 @@ This system successfully demonstrates that educational programming languages can
 
 ```bash
 cd /home/james/ParserCraft
-python -m src.hb_lcs.launch_ide_teachscript
+python -m src.parsercraft.launch_ide_teachscript
 ```
 
 **Happy TeachScripting!** 🎉

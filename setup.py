@@ -17,7 +17,7 @@ setup(
     description="ParserCraft - Create custom programming languages without writing a compiler",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/James-HoneyBadger/CodeCraft",
+    url="https://github.com/James-HoneyBadger/ParserCraft",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     classifiers=[
@@ -51,13 +51,13 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "parsercraft=hb_lcs.cli:main",
-            "parsercraft-ide=hb_lcs.launch_ide:main",
+            "parsercraft=parsercraft.cli:main",
+            "parsercraft-ide=parsercraft.launch_ide:main",
             "codex=codex.codex:main",
         ],
     },
     include_package_data=True,
     package_data={
-        "hb_lcs": ["*.json", "*.yaml"],
+        "parsercraft": ["*.json", "*.yaml"],
     },
 )

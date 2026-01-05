@@ -1,6 +1,6 @@
 # TeachScript Language Manual
 
-**A Complete Custom Language Built with Honey Badger Language Construction Set**
+**A Complete Custom Language Built with ParserCraft**
 
 Version 1.0 | November 2025
 
@@ -23,9 +23,9 @@ Version 1.0 | November 2025
 
 ## Introduction
 
-This manual demonstrates the **complete, working implementation** of a custom programming language called **TeachScript**, created using the Honey Badger Language Construction Set (HB_LCS).
+This manual demonstrates the **complete, working implementation** of a custom programming language called **TeachScript**, created using ParserCraft.
 
-**Purpose**: To prove that HB_LCS actually works by showing a fully functional, beginner-friendly programming language with:
+**Purpose**: To prove that ParserCraft actually works by showing a fully functional, beginner-friendly programming language with:
 - ✓ Custom keywords and syntax
 - ✓ Working code examples
 - ✓ Real execution and output
@@ -156,13 +156,13 @@ Fibonacci 7 = 13
 
 ### Prerequisites
 - Python 3.7 or higher
-- Honey Badger Language Construction Set (HB_LCS)
+- ParserCraft
 
 ### Installation Steps
 
-1. **Clone or download HB_LCS**:
+1. **Clone or download ParserCraft**:
 ```bash
-cd HB_LCS
+cd ParserCraft
 ```
 
 2. **Verify TeachScript files are present**:
@@ -563,9 +563,9 @@ This ensures `when` is replaced with `if`, but `whenever` is left unchanged.
 
 ## Creating Your Own Language
 
-### Using HB_LCS to Build Languages
+### Using ParserCraft to Build Languages
 
-TeachScript demonstrates how to use HB_LCS to create custom languages. Here's how:
+TeachScript demonstrates how to use ParserCraft to create custom languages. Here's how:
 
 ### Step 1: Define Your Language
 
@@ -678,7 +678,7 @@ python3 run_teachscript.py teachscript_examples/01_hello_world.teach --verbose
 
 ## Conclusion
 
-**TeachScript proves that the Honey Badger Language Construction Set works as claimed.**
+**TeachScript proves that ParserCraft works as claimed.**
 
 ✓ **Custom language created**: TeachScript with unique syntax  
 ✓ **Real code examples**: 7+ working programs  
@@ -686,7 +686,7 @@ python3 run_teachscript.py teachscript_examples/01_hello_world.teach --verbose
 ✓ **Complete documentation**: Full language specification and tutorial  
 ✓ **Reproducible**: You can run and verify every example  
 
-The Honey Badger Language Construction Set successfully enables:
+ParserCraft successfully enables:
 - Creating custom programming languages
 - Renaming keywords and functions
 - Implementing alternative syntax
@@ -713,7 +713,7 @@ The Honey Badger Language Construction Set successfully enables:
   - `08_prime_numbers.teach`
   - `09_guessing_game.teach` (interactive)
 
-### HB_LCS Documentation
+### ParserCraft Documentation
 
 - `README.md` - Project overview
 - `USER_GUIDE.md` - User manual
@@ -725,11 +725,11 @@ The Honey Badger Language Construction Set successfully enables:
 
 ## License
 
-TeachScript is a demonstration language created with the Honey Badger Language Construction Set.
+TeachScript is a demonstration language created with ParserCraft.
 
 ## Author
 
-Created to demonstrate the capabilities of the Honey Badger Language Construction Set.
+Created to demonstrate the capabilities of ParserCraft.
 
 ---
 

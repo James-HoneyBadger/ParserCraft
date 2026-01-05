@@ -32,7 +32,7 @@ Recommended:
 
 STEP 1: Clone or Extract the Repository
   
-  $ git clone https://github.com/James-HoneyBadger/CodeCraft.git
+  $ git clone https://github.com/James-HoneyBadger/ParserCraft.git
   $ cd ParserCraft
   
   OR if you have it extracted:

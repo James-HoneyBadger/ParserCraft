@@ -8,9 +8,9 @@ Date: November 18, 2025
 
 ## Executive Summary
 
-This document proves that **Honey Badger Language Construction Set (HB_LCS) successfully creates working custom programming languages**.
+This document proves that **ParserCraft successfully creates working custom programming languages**.
 
-**TeachScript** is a fully functional educational programming language built entirely with HB_LCS, demonstrating:
+**TeachScript** is a fully functional educational programming language built entirely with ParserCraft, demonstrating:
 
 ✓ Custom keywords and syntax  
 ✓ Renamed built-in functions  
@@ -393,8 +393,8 @@ FUNCTION_MAP = {
 All results are reproducible:
 
 ```bash
-# Clone/navigate to HB_LCS directory
-cd HB_LCS
+# Clone/navigate to ParserCraft directory
+cd ParserCraft
 
 # Run individual examples
 python3 run_teachscript.py teachscript_examples/01_hello_world.teach
@@ -421,7 +421,7 @@ All source code and configurations are available:
 
 ## Conclusion
 
-**TeachScript successfully proves that Honey Badger Language Construction Set works as claimed.**
+**TeachScript successfully proves that ParserCraft works as claimed.**
 
 ### Evidence
 
@@ -434,7 +434,7 @@ All source code and configurations are available:
 
 ### What This Proves
 
-✓ HB_LCS can create functional custom programming languages  
+✓ ParserCraft can create functional custom programming languages  
 ✓ Keywords can be renamed (e.g., `if` → `when`)  
 ✓ Functions can be renamed (e.g., `print` → `say`)  
 ✓ Syntax can be customized  
@@ -443,7 +443,7 @@ All source code and configurations are available:
 
 ### Beyond TeachScript
 
-TeachScript is just one example. HB_LCS can create:
+TeachScript is just one example. ParserCraft can create:
 - Domain-specific languages
 - Educational languages in different human languages
 - Experimental syntax variants
@@ -476,7 +476,7 @@ TeachScript is just one example. HB_LCS can create:
 
 ## Author's Note
 
-This implementation demonstrates that the Honey Badger Language Construction Set is not just a concept or framework, but a **working tool** that can create **real, functional programming languages**.
+This implementation demonstrates that ParserCraft is not just a concept or framework, but a **working tool** that can create **real, functional programming languages**.
 
 Every example in this document can be run and verified. Every piece of output shown is actual output from running the code. This is a complete, working proof of concept.
 
@@ -488,5 +488,5 @@ Every example in this document can be run and verified. Every piece of output sh
 
 For more information:
 - **TeachScript Manual**: [TEACHSCRIPT_MANUAL.md](TEACHSCRIPT_MANUAL.md)
-- **HB_LCS Documentation**: [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)
+- **ParserCraft Documentation**: [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)
 - **Project README**: [README.md](README.md)

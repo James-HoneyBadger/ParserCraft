@@ -42,7 +42,7 @@ teach greet(name):
 ### 1. Run the Enhanced IDE
 ```bash
 cd /home/james/ParserCraft
-python -m src.hb_lcs.launch_ide_teachscript
+python -m src.parsercraft.launch_ide_teachscript
 ```
 
 ### 2. Create a New TeachScript Project
@@ -231,7 +231,7 @@ remember value = anim.get_value()
 
 ```
 /home/james/ParserCraft/
-├── src/hb_lcs/
+├── src/parsercraft/
 │   ├── teachscript_runtime.py          # Main transpiler & runtime
 │   ├── teachscript_highlighting.py     # Syntax highlighting
 │   ├── teachscript_console.py          # Interactive REPL
@@ -372,7 +372,7 @@ TeachScript can handle:
 
 - **Documentation**: See `/home/james/ParserCraft/docs/teachscript/`
 - **Examples**: Check `/home/james/ParserCraft/demos/teachscript/examples/`
-- **Source Code**: `/home/james/ParserCraft/src/hb_lcs/`
+- **Source Code**: `/home/james/ParserCraft/src/parsercraft/`
 - **Issues**: Create on GitHub
 
 ---
@@ -385,7 +385,7 @@ Same as ParserCraft - See LICENSE file
 
 ## 🙏 Credits
 
-Created as part of the Honey Badger Language Construction Set (HB_LCS) project,
+Created as part of the ParserCraft project,
 demonstrating that custom programming languages can be practical, powerful, and beautiful.
 
 ---

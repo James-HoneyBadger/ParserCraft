@@ -29,7 +29,7 @@ echo ""
 
 # Install if needed
 echo "Checking installation..."
-python3 -c "from src.hb_lcs.teachscript_runtime import get_runtime" 2>/dev/null
+python3 -c "from src.parsercraft.teachscript_runtime import get_runtime" 2>/dev/null
 if [ $? -ne 0 ]; then
     echo "Installing ParserCraft..."
     pip install -e . > /dev/null 2>&1
@@ -47,7 +47,7 @@ echo ""
 # Test TeachScript
 echo "Testing TeachScript runtime..."
 python3 << 'EOF'
-from src.hb_lcs.teachscript_runtime import get_runtime
+from src.parsercraft.teachscript_runtime import get_runtime
 runtime = get_runtime()
 output, error = runtime.run('say("TeachScript is working!")')
 if not error:
@@ -68,12 +68,12 @@ echo "================================================"
 echo ""
 echo "To launch the IDE, run:"
 echo ""
-echo "  python -m src.hb_lcs.launch_ide_teachscript"
+echo "  python -m src.parsercraft.launch_ide_teachscript"
 echo ""
 echo "Or:"
 echo ""
 echo "  cd /home/james/ParserCraft"
-echo "  python -m src.hb_lcs.launch_ide_teachscript"
+echo "  python -m src.parsercraft.launch_ide_teachscript"
 echo ""
 echo "To run a TeachScript file directly:"
 echo ""

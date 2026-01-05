@@ -1,6 +1,6 @@
 # TeachScript Quick Reference
 
-**Honey Badger Language Construction Set - TeachScript Language**
+**ParserCraft - TeachScript Language**
 
 ## Quick Start
 
@@ -132,4 +132,4 @@ teach is_prime(n):
 
 - **Complete Manual**: [TEACHSCRIPT_MANUAL.md](TEACHSCRIPT_MANUAL.md)
 - **Example Programs**: `teachscript_examples/` directory
-- **HB_LCS Documentation**: [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)
+- **ParserCraft Documentation**: [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)

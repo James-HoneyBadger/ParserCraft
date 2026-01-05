@@ -1,0 +1,4 @@
+[console_scripts]
+codex = codex.codex:main
+parsercraft = parsercraft.cli:main
+parsercraft-ide = parsercraft.launch_ide:main

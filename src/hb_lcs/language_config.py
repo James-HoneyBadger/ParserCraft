@@ -29,7 +29,7 @@ import json
 from copy import deepcopy
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Optional, Union, TYPE_CHECKING
+from typing import Any, Optional, Union
 
 # Optional YAML support
 try:

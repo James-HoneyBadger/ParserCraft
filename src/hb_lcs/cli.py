@@ -55,7 +55,7 @@ import sys
 import traceback
 from math import e, pi
 from pathlib import Path
-from typing import Any, Callable, Optional, Sequence, TYPE_CHECKING
+from typing import Any, Optional, Sequence
 
 try:
     import readline  # noqa: F401

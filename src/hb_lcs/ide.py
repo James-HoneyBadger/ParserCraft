@@ -4408,6 +4408,588 @@ All rights reserved."""
 
         return "\n".join(lines)
 
+    # ============================================================================
+    # Phase 9: Mobile, Cloud, and Analytics Features
+    # ============================================================================
+
+    def init_mobile_platform(self, platform: str = "ios") -> dict:
+        """Initialize mobile platform configuration for app packaging."""
+        from .mobile_cloud_analytics import MobilePlatform, MobilePlatformManager
+
+        platform_enum = MobilePlatform(platform)
+        manager = MobilePlatformManager()
+
+        config = manager.create_mobile_config(
+            platform=platform_enum,
+            app_name="ParserCraft",
+            bundle_id="com.parsercraft.app",
+            version="1.0.0",
+        )
+
+        return {
+            "platform": platform,
+            "config": config.to_dict(),
+            "manager": manager,
+            "supported_platforms": manager.get_supported_platforms(),
+        }
+
+    def package_mobile_app(self, platform: str, app_name: str) -> dict:
+        """Package application for mobile platform."""
+        from .mobile_cloud_analytics import MobilePlatform, MobilePlatformManager
+
+        manager = MobilePlatformManager()
+        platform_enum = MobilePlatform(platform)
+
+        config = manager.create_mobile_config(
+            platform=platform_enum,
+            app_name=app_name,
+            bundle_id=f"com.parsercraft.{app_name.lower()}",
+        )
+
+        build_result = manager.package_app(config)
+        return {
+            "status": "success",
+            "build": build_result,
+            "artifacts": build_result["artifacts"],
+        }
+
+    def init_cloud_deployment(
+        self,
+        provider: str = "aws",
+        region: str = "us-east-1",
+    ) -> dict:
+        """Initialize cloud deployment configuration."""
+        from .mobile_cloud_analytics import CloudDeploymentManager, CloudProvider
+
+        provider_enum = CloudProvider(provider)
+        manager = CloudDeploymentManager()
+
+        config = manager.create_deployment_config(
+            provider=provider_enum,
+            region=region,
+            instance_type="t3.medium" if provider == "aws" else "Standard_B2s",
+        )
+
+        return {
+            "provider": provider,
+            "region": region,
+            "config": config.to_dict(),
+            "manager": manager,
+            "supported_providers": manager.get_supported_providers(),
+        }
+
+    def deploy_to_cloud(
+        self,
+        provider: str,
+        region: str,
+        app_name: str,
+    ) -> dict:
+        """Deploy application to cloud provider."""
+        from .mobile_cloud_analytics import CloudDeploymentManager, CloudProvider
+
+        manager = CloudDeploymentManager()
+        provider_enum = CloudProvider(provider)
+
+        config = manager.create_deployment_config(
+            provider=provider_enum,
+            region=region,
+            instance_type="t3.medium",
+        )
+
+        deployment = manager.deploy(config, app_name=app_name)
+        return {
+            "status": "success",
+            "deployment": deployment,
+            "endpoints": deployment["endpoints"],
+        }
+
+    def init_analytics_tracking(self) -> dict:
+        """Initialize analytics tracking system."""
+        from .mobile_cloud_analytics import AnalyticsTracker
+
+        tracker = AnalyticsTracker()
+
+        return {
+            "tracker": tracker,
+            "features": [
+                "event_tracking",
+                "metric_recording",
+                "session_management",
+                "analytics_reports",
+            ],
+        }
+
+    def track_usage_event(
+        self,
+        event_type: str,
+        properties: Optional[Dict[str, Any]] = None,
+    ) -> dict:
+        """Track a usage event for analytics."""
+        if not hasattr(self, "_analytics_tracker"):
+            from .mobile_cloud_analytics import AnalyticsTracker
+
+            self._analytics_tracker = AnalyticsTracker()
+
+        event = self._analytics_tracker.track_event(
+            event_type=event_type,
+            properties=properties or {},
+        )
+
+        return {
+            "status": "tracked",
+            "event_id": event.event_id,
+            "event_type": event.event_type,
+        }
+
+    def get_analytics_dashboard(self) -> dict:
+        """Get analytics dashboard with key metrics."""
+        if not hasattr(self, "_analytics_tracker"):
+            return {"status": "no_data", "message": "Analytics not initialized"}
+
+        report = self._analytics_tracker.get_analytics_report()
+
+        return {
+            "status": "success",
+            "total_events": report["total_events"],
+            "event_counts": report["event_counts"],
+            "unique_users": report["unique_users"],
+            "unique_sessions": report["unique_sessions"],
+            "metric_stats": report["metric_stats"],
+        }
+
+    def init_distributed_metrics(self) -> dict:
+        """Initialize distributed metrics aggregation."""
+        from .mobile_cloud_analytics import DistributedMetricsAggregator
+
+        aggregator = DistributedMetricsAggregator()
+
+        # Register example sources
+        aggregator.register_source("server1", "web_server", {"region": "us-east-1"})
+        aggregator.register_source("server2", "web_server", {"region": "us-west-2"})
+
+        return {
+            "aggregator": aggregator,
+            "sources_registered": 2,
+            "features": [
+                "source_registration",
+                "metric_ingestion",
+                "aggregated_stats",
+                "source_health",
+            ],
+        }
+
+    # ============================================================================
+    # Phase 10: Enterprise Security & Collaboration Features
+    # ============================================================================
+
+    def init_sso_authentication(self, provider: str = "okta") -> dict:
+        """Initialize SSO authentication for enterprise integration."""
+        from .enterprise_security import SSOAuthenticationManager, SSOProvider
+
+        manager = SSOAuthenticationManager()
+        
+        # Register default provider
+        provider_enum = SSOProvider(provider)
+        config = manager.register_provider(
+            provider=provider_enum,
+            client_id=f"{provider}_client_id",
+            client_secret=f"{provider}_client_secret",
+            domain=f"{provider}.example.com",
+            redirect_uri="https://parsercraft.example.com/callback",
+        )
+
+        return {
+            "status": "initialized",
+            "provider": provider,
+            "manager": manager,
+            "supported_providers": manager.get_supported_providers(),
+        }
+
+    def authenticate_user_sso(self, provider: str, auth_code: str) -> dict:
+        """Authenticate user via SSO provider."""
+        from .enterprise_security import SSOAuthenticationManager, SSOProvider
+
+        if not hasattr(self, "_sso_manager"):
+            self._sso_manager = SSOAuthenticationManager()
+            # Register provider if not already done
+            self._sso_manager.register_provider(
+                provider=SSOProvider(provider),
+                client_id=f"{provider}_client",
+                client_secret="secret",
+                domain=f"{provider}.example.com",
+                redirect_uri="https://app.example.com/callback",
+            )
+
+        result = self._sso_manager.authenticate(SSOProvider(provider), auth_code)
+        return result
+
+    def init_rbac_system(self) -> dict:
+        """Initialize Role-Based Access Control system."""
+        from .enterprise_security import RBACManager
+
+        if not hasattr(self, "_rbac_manager"):
+            self._rbac_manager = RBACManager()
+
+        return {
+            "status": "initialized",
+            "manager": self._rbac_manager,
+            "available_roles": ["admin", "developer", "reviewer", "viewer", "guest"],
+            "available_permissions": [
+                "read_config",
+                "write_config",
+                "execute_code",
+                "deploy",
+                "manage_users",
+            ],
+        }
+
+    def create_enterprise_user(self, username: str, email: str, roles: Optional[List[str]] = None) -> dict:
+        """Create a user with role-based access control."""
+        from .enterprise_security import Role
+
+        if not hasattr(self, "_rbac_manager"):
+            self.init_rbac_system()
+
+        # Convert role strings to enums
+        role_set = {Role(r) for r in (roles or ["viewer"])}
+        user = self._rbac_manager.create_user(username, email, role_set)
+
+        return {
+            "status": "created",
+            "user_id": user.user_id,
+            "username": user.username,
+            "roles": [r.value for r in user.roles],
+        }
+
+    def enable_user_mfa(self, user_id: str) -> dict:
+        """Enable Multi-Factor Authentication for a user."""
+        if not hasattr(self, "_rbac_manager"):
+            return {"status": "error", "message": "RBAC not initialized"}
+
+        result = self._rbac_manager.enable_mfa(user_id)
+        return result
+
+    def scan_for_vulnerabilities(self, code: str, file_path: str = "unknown") -> dict:
+        """Scan code for security vulnerabilities."""
+        from .enterprise_security import VulnerabilityScanner
+
+        if not hasattr(self, "_vuln_scanner"):
+            self._vuln_scanner = VulnerabilityScanner()
+
+        vulnerabilities = self._vuln_scanner.scan_code(code, file_path)
+
+        return {
+            "status": "scanned",
+            "file_path": file_path,
+            "vulnerabilities_found": len(vulnerabilities),
+            "vulnerabilities": [v.to_dict() for v in vulnerabilities],
+            "summary": self._vuln_scanner.get_summary(),
+        }
+
+    def get_ai_code_assistance(self, assistance_type: str, code: str, **kwargs: Any) -> dict:
+        """Get AI-powered code assistance."""
+        from .enterprise_security import AICodeAssistant
+
+        if not hasattr(self, "_ai_assistant"):
+            self._ai_assistant = AICodeAssistant()
+
+        if assistance_type == "completion":
+            cursor_pos = kwargs.get("cursor_position", len(code))
+            suggestions = self._ai_assistant.get_code_completion(code, cursor_pos)
+            return {"status": "success", "suggestions": suggestions}
+        
+        elif assistance_type == "error_explanation":
+            error_msg = kwargs.get("error_message", "")
+            explanation = self._ai_assistant.explain_error(error_msg)
+            return {"status": "success", "explanation": explanation}
+        
+        elif assistance_type == "refactoring":
+            suggestions = self._ai_assistant.suggest_refactoring(code)
+            return {"status": "success", "suggestions": suggestions}
+        
+        elif assistance_type == "optimization":
+            optimizations = self._ai_assistant.optimize_performance(code)
+            return {"status": "success", "optimizations": optimizations}
+        
+        elif assistance_type == "security":
+            issues = self._ai_assistant.analyze_security(code)
+            return {"status": "success", "issues": issues}
+        
+        elif assistance_type == "documentation":
+            doc = self._ai_assistant.generate_documentation(code)
+            return {"status": "success", "documentation": doc}
+        
+        return {"status": "error", "message": "Unknown assistance type"}
+
+    def init_realtime_collaboration(self, max_users: int = 50) -> dict:
+        """Initialize real-time collaboration system."""
+        from .enterprise_security import RealtimeCollaborationManager
+
+        if not hasattr(self, "_collab_manager"):
+            self._collab_manager = RealtimeCollaborationManager(max_users=max_users)
+
+        return {
+            "status": "initialized",
+            "max_users": max_users,
+            "manager": self._collab_manager,
+            "features": [
+                "multi_user_editing",
+                "cursor_tracking",
+                "user_presence",
+                "document_synchronization",
+            ],
+        }
+
+    def create_collaboration_session(self, session_name: str, owner_id: str) -> dict:
+        """Create a new collaboration session."""
+        if not hasattr(self, "_collab_manager"):
+            self.init_realtime_collaboration()
+
+        result = self._collab_manager.create_session(session_name, owner_id)
+        return result
+
+    def init_encryption_security(self) -> dict:
+        """Initialize encryption and security features."""
+        from .enterprise_security import EncryptionManager
+
+        if not hasattr(self, "_encryption_manager"):
+            self._encryption_manager = EncryptionManager()
+
+        config = self._encryption_manager.get_tls_config()
+        
+        return {
+            "status": "initialized",
+            "tls_version": config["version"],
+            "cipher_suite": config["cipher_suite"],
+            "encryption_algorithm": "AES-256",
+            "features": [
+                "data_encryption",
+                "password_hashing",
+                "tls_communication",
+                "secure_sessions",
+            ],
+        }
+
+    def init_compliance_framework(self, framework: str = "SOC2") -> dict:
+        """Initialize compliance management."""
+        from .enterprise_security import ComplianceManager
+
+        if not hasattr(self, "_compliance_manager"):
+            self._compliance_manager = ComplianceManager()
+
+        # Enable the specified framework
+        self._compliance_manager.enable_framework(framework)
+        
+        return {
+            "status": "initialized",
+            "framework": framework,
+            "supported_frameworks": self._compliance_manager.get_supported_frameworks(),
+            "manager": self._compliance_manager,
+        }
+
+    def run_compliance_audit(self, framework: str) -> dict:
+        """Run compliance audit for a framework."""
+        if not hasattr(self, "_compliance_manager"):
+            self.init_compliance_framework(framework)
+
+        result = self._compliance_manager.run_compliance_check(framework)
+        return result
+
+    # ========================================================================
+    #                       PHASE 11: ADVANCED DEBUGGING & HARDWARE
+    # ========================================================================
+
+    def init_time_travel_debugger(self, max_snapshots: int = 10000) -> dict:
+        """Initialize time-travel debugger."""
+        from .advanced_debugging_hardware import TimeTravelDebugger
+
+        if not hasattr(self, "_tt_debugger"):
+            self._tt_debugger = TimeTravelDebugger(max_snapshots=max_snapshots)
+
+        return {
+            "status": "initialized",
+            "max_snapshots": max_snapshots,
+            "features": [
+                "record_replay",
+                "step_forward_backward",
+                "breakpoints",
+                "watch_expressions",
+                "execution_timeline",
+            ],
+        }
+
+    def start_debug_recording(self) -> dict:
+        """Start recording execution for time-travel debugging."""
+        if not hasattr(self, "_tt_debugger"):
+            self.init_time_travel_debugger()
+
+        self._tt_debugger.start_recording()
+        return {"status": "recording", "debugger": self._tt_debugger}
+
+    def stop_debug_recording(self) -> dict:
+        """Stop debug recording."""
+        if not hasattr(self, "_tt_debugger"):
+            return {"status": "error", "message": "Debugger not initialized"}
+
+        self._tt_debugger.stop_recording()
+        return {
+            "status": "stopped",
+            "snapshots_recorded": len(self._tt_debugger.snapshots),
+            "timeline": self._tt_debugger.get_execution_timeline(),
+        }
+
+    def init_performance_profiler(self) -> dict:
+        """Initialize performance profiler."""
+        from .advanced_debugging_hardware import PerformanceProfiler
+
+        if not hasattr(self, "_profiler"):
+            self._profiler = PerformanceProfiler()
+
+        return {
+            "status": "initialized",
+            "features": [
+                "cpu_profiling",
+                "memory_tracking",
+                "hotspot_detection",
+                "flamegraph_generation",
+                "performance_recommendations",
+            ],
+        }
+
+    def profile_code_section(self, name: str, location: str) -> dict:
+        """Start profiling a code section."""
+        if not hasattr(self, "_profiler"):
+            self.init_performance_profiler()
+
+        self._profiler.start_profiling(name, location)
+        return {"status": "profiling", "section": name}
+
+    def get_profiling_hotspots(self, top_n: int = 10) -> dict:
+        """Get performance hotspots."""
+        if not hasattr(self, "_profiler"):
+            return {"status": "error", "message": "Profiler not initialized"}
+
+        hotspots = self._profiler.get_hotspots(top_n)
+        return {
+            "status": "success",
+            "hotspots": [
+                {
+                    "function": h.function_name,
+                    "location": h.location,
+                    "cpu_time": h.cpu_time,
+                    "calls": h.call_count,
+                    "avg_time": h.avg_time_per_call,
+                    "percentage": h.percentage_of_total,
+                    "recommendations": h.recommendations,
+                }
+                for h in hotspots
+            ],
+            "summary": self._profiler.get_summary(),
+        }
+
+    def init_hardware_integration(self) -> dict:
+        """Initialize hardware integration manager."""
+        from .advanced_debugging_hardware import HardwareIntegrationManager
+
+        if not hasattr(self, "_hardware_manager"):
+            self._hardware_manager = HardwareIntegrationManager()
+
+        return {
+            "status": "initialized",
+            "supported_platforms": [
+                "Arduino",
+                "ESP32",
+                "Raspberry Pi",
+                "STM32",
+                "FPGA (Xilinx/Intel)",
+            ],
+            "protocols": ["MQTT", "CoAP", "HTTP", "WebSocket", "Bluetooth", "Zigbee", "LoRa"],
+        }
+
+    def register_iot_device(
+        self, device_id: str, name: str, hardware: str, protocol: str, ip: str = None
+    ) -> dict:
+        """Register IoT device."""
+        if not hasattr(self, "_hardware_manager"):
+            self.init_hardware_integration()
+
+        from .advanced_debugging_hardware import HardwareTarget, IoTProtocol
+
+        hw_target = HardwareTarget[hardware.upper().replace(" ", "_")]
+        iot_protocol = IoTProtocol[protocol.upper()]
+
+        device = self._hardware_manager.register_device(device_id, name, hw_target, iot_protocol, ip)
+        return {
+            "status": "registered",
+            "device_id": device.device_id,
+            "name": device.name,
+            "hardware": device.hardware.value,
+            "protocol": device.protocol.value,
+        }
+
+    def deploy_to_hardware(self, device_id: str, code: str) -> dict:
+        """Deploy code to hardware device."""
+        if not hasattr(self, "_hardware_manager"):
+            return {"status": "error", "message": "Hardware manager not initialized"}
+
+        result = self._hardware_manager.deploy_to_device(device_id, code)
+        return result
+
+    def init_fpga_synthesizer(self, language: str = "verilog") -> dict:
+        """Initialize FPGA synthesizer."""
+        from .advanced_debugging_hardware import FPGASynthesizer, HDLLanguage
+
+        lang = HDLLanguage[language.upper()]
+        if not hasattr(self, "_fpga_synth"):
+            self._fpga_synth = FPGASynthesizer(language=lang)
+
+        return {
+            "status": "initialized",
+            "hdl_language": language,
+            "features": [
+                "verilog_generation",
+                "vhdl_generation",
+                "resource_estimation",
+                "timing_analysis",
+            ],
+        }
+
+    def create_fpga_module(
+        self, name: str, inputs: list, outputs: list, logic: str, clock_freq: int = 100
+    ) -> dict:
+        """Create FPGA module."""
+        if not hasattr(self, "_fpga_synth"):
+            self.init_fpga_synthesizer()
+
+        module = self._fpga_synth.create_module(name, inputs, outputs, logic, clock_freq)
+        verilog_code = self._fpga_synth.generate_verilog(module)
+        resources = self._fpga_synth.estimate_resources(module)
+
+        return {
+            "status": "created",
+            "module_name": name,
+            "verilog_code": verilog_code,
+            "resource_estimate": resources,
+            "clock_frequency": clock_freq,
+        }
+
+    def init_hardware_debugger(self, device_id: str) -> dict:
+        """Initialize hardware debugger for embedded systems."""
+        from .advanced_debugging_hardware import HardwareDebugger
+
+        if not hasattr(self, "_hw_debuggers"):
+            self._hw_debuggers = {}
+
+        self._hw_debuggers[device_id] = HardwareDebugger(device_id)
+        connected = self._hw_debuggers[device_id].connect()
+
+        return {
+            "status": "initialized" if connected else "connection_failed",
+            "device_id": device_id,
+            "connected": connected,
+            "features": ["remote_breakpoints", "memory_inspection", "register_dump", "stack_trace"],
+        }
+
 
 def main():
     """Main entry point for the IDE."""

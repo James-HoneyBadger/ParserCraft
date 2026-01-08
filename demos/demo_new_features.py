@@ -162,7 +162,7 @@ def demo_documentation_generation():
     # Generate docs for a custom config
     config = LanguageConfig()
     config.name = "Educational Language"
-    config.version = "2.0.0"
+    config.version = "3.0.0"
     config.description = "A language for teaching programming concepts"
     config.author = "ParserCraft Team"
 

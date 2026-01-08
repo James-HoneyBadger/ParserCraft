@@ -840,7 +840,7 @@ ParserCraft follows semantic versioning:
 - **Minor version**: New features, backwards compatible
 - **Patch version**: Bug fixes
 
-Current version: **2.0.0**
+Current version: **3.0.0**
 
 ---
 

@@ -6,6 +6,6 @@ Professional IDE for developing applications in custom programming languages
 created with ParserCraft.
 """
 
-__version__ = "2.0.0"
+__version__ = "3.0.0"
 __author__ = "James HoneyBadger"
 __all__ = ["codex", "codex_gui", "codex_components"]

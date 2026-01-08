@@ -64,7 +64,7 @@ class AdvancedIDE(ttk.Frame):
         super().__init__(master)
         self.pack(fill="both", expand=True)
         self.root = tk.Tk() if master is None else master.winfo_toplevel()
-        self.root.title("ParserCraft - Language Construction Framework v2.0")
+        self.root.title("ParserCraft - Language Construction Framework v3.0")
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
 
         # Initialize state

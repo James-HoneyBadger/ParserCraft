@@ -9,7 +9,7 @@ set "VENV_DIR=%SCRIPT_DIR%.venv"
 set "PYTHON_CMD=python"
 
 echo ================================================
-echo     ParserCraft IDE Launcher v2.0.0
+echo     ParserCraft IDE Launcher v3.0.0
 echo ================================================
 echo.
 

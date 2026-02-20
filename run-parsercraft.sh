@@ -68,7 +68,7 @@ echo ""
 
 cd "$SCRIPT_DIR"
 export PYTHONPATH="$SCRIPT_DIR/src:$PYTHONPATH"
-python src/parsercraft/launch_ide.py
+parsercraft-ide
 
 # Deactivate virtual environment on exit
 deactivate

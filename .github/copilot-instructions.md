@@ -154,3 +154,21 @@ runtime = LanguageRuntime.get_instance()
 | Language config | `config/language_config.py` → `LanguageConfig` |
 | Module system | `runtime/module_system.py` → `ModuleManager` |
 | Incremental parse | `parser/incremental.py` → `IncrementalParser` |
+
+## Documentation Files
+
+User-facing documentation is in `docs/`:
+
+| File | Purpose |
+|------|---------|
+| `docs/INSTALL.md` | Installation, virtual environments, platform notes |
+| `docs/USER_GUIDE.md` | End-user guide (CLI, REPL, configs, IDE, stdlib, FFI) |
+| `docs/TECHNICAL_REFERENCE.md` | Full public API reference |
+| `docs/TUTORIAL.md` | Step-by-step tutorials (5 progressive examples) |
+
+## Key Behavioural Notes
+
+- `:=` is a valid assignment operator (Pascal-style). `PythonTranspiler._emit_transparent` detects both `=` and `:=` as assignment operators. `_emit_assignment` filters both from the meaningful-children list.
+- `transpile_and_exec(ast)` runs `exec(py_code, namespace)`. The returned dict contains user-defined variables; filter `__builtins__` with `{k: v for k, v in ns.items() if not k.startswith("__")}`.
+- All backend classes implement `translate_source_ast(ast: SourceAST) -> str`.
+- The test suite must stay at 113 passing: `python -m pytest tests/ -q`.

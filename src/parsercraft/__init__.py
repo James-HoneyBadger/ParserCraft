@@ -1,34 +1,56 @@
 """
-ParserCraft — Custom Programming Language Construction Framework
+ParserCraft v4.0.0 — Custom Programming Language Construction Framework
+=======================================================================
 
-Core pipeline: PEG grammar → PEGInterpreter → SourceAST → backend
+ParserCraft provides a complete stack for designing, implementing, and
+distributing programming languages — from grammar definition through
+multi-target code generation.
 
-Supports:
-    - PEG grammar definition (text notation or fluent GrammarBuilder API)
-    - Multiple code-generation backends: Python transpiler, C,
-      WebAssembly, LLVM IR
-    - Config-driven keyword remapping via YAML/JSON language definitions
-    - Interactive REPL, standard library injection, and FFI (ctypes + Python)
-    - Tkinter IDE and 40+ CLI subcommands
+Core pipeline::
 
-Primary usage (grammar engine):
+    Grammar (PEG text or GrammarBuilder API)
+        │
+        ▼
+    PEGInterpreter  ──►  SourceAST  ──►  Backend
+                                         ├── PythonTranspiler  → Python / exec()
+                                         ├── CCodeGenerator    → ANSI C
+                                         ├── WasmGenerator     → WAT
+                                         └── LLVMIRGenerator   → LLVM IR
+
+Quick start::
+
     from parsercraft.parser import GrammarParser, PEGInterpreter
     from parsercraft.codegen import transpile_and_exec
 
     grammar = GrammarParser().parse(
-        'program <- statement+\n'
-        'statement <- IDENT "=" expr ";"\n'
+        'program <- statement+\\n'
+        'statement <- IDENT "=" expr ";\"\\n'
         'expr <- NUMBER'
     )
     ast = PEGInterpreter(grammar).parse('x = 42 ;')
-    result = transpile_and_exec(ast)  # {'x': 42}
+    result = transpile_and_exec(ast)   # {'x': 42}
 
-Config-driven usage:
+Config-driven usage::
+
     from parsercraft import LanguageConfig, LanguageRuntime
 
     config = LanguageConfig.from_preset("python_like")
     config.rename_keyword("if", "cuando")
     config.save("spanish.yaml")
+
+Entry points
+------------
+- ``parsercraft``       — CLI (30+ subcommands)
+- ``parsercraft-ide``   — Tkinter IDE
+- ``parsercraft-repl``  — Interactive REPL
+
+Documentation
+-------------
+- README.md              — Project overview and Quick Start
+- docs/INSTALL.md        — Installation and setup
+- docs/USER_GUIDE.md     — End-user guide (CLI, REPL, configs, IDE)
+- docs/TECHNICAL_REFERENCE.md — Full API reference
+- docs/TUTORIAL.md       — Step-by-step tutorials
 """
 
 __version__ = "4.0.0"

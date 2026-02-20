@@ -300,7 +300,7 @@ class PythonTranspiler:
         meaningful = [
             c for c in node.children
             if not (c.node_type == "Operator"
-                    and c.value in ("=", ";", ":", ","))]
+                    and c.value in ("=", ":=", ";", ":", ","))]
 
         if len(meaningful) >= 2:
             target = self._expr_to_str(meaningful[0])
@@ -881,9 +881,9 @@ class PythonTranspiler:
         Also detects inline assignment patterns (IDENT '=' expr ';').
         """
         if node.children:
-            # Detect assignment pattern: IDENT = expr ;
+            # Detect assignment pattern: IDENT = expr ;  (or := for Pascal)
             has_eq = any(
-                c.node_type == "Operator" and c.value == "="
+                c.node_type == "Operator" and c.value in ("=", ":=")
                 for c in node.children
             )
             if has_eq:

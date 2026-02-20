@@ -2,22 +2,25 @@
 """
 C Code Generator Backend for ParserCraft
 
-Generates C code from custom language AST for native compilation.
+Translates a SourceAST (produced by the PEG grammar engine) into C source
+code ready for compilation with gcc/clang.
 
 Features:
-    - AST to C translation
-    - Memory management
-    - Type-safe code generation
-    - Standard library bindings
-    - Optimization passes
-    - Error reporting
+    - SourceAST → C translation (assignments, control flow, functions)
+    - Typed variable declarations via CType/CVariable
+    - Generates a standalone main() with stdio includes
+    - Language-name annotation in the file header comment
+    - Inline assignment pattern detection (IDENT "=" expr ";")
 
 Usage:
-    from parsercraft.codegen_c import CCodeGenerator
-    
-    generator = CCodeGenerator(config)
-    c_code = generator.generate(ast, "output.c")
-    
+    from parsercraft.codegen.codegen_c import CCodeGenerator
+
+    gen = CCodeGenerator()
+    c_code = gen.translate_source_ast(ast)  # SourceAST from grammar engine
+
+    # Optionally write to file:
+    # gen.generate(ast, "output.c")
+
     # Compile with:
     # gcc output.c -o program
 """
@@ -57,7 +60,10 @@ class CVariable:
         prefix = "const " if self.is_const else ""
         suffix = "*" if self.is_pointer else ""
         if self.initial_value:
-            return f"{prefix}{self.c_type}{suffix} {self.name} = {self.initial_value};"
+            decl = (
+                f"{prefix}{self.c_type}{suffix} {self.name}"
+            )
+            return f"{decl} = {self.initial_value};"
         return f"{prefix}{self.c_type}{suffix} {self.name};"
 
 
@@ -74,7 +80,8 @@ class CFunction:
 
     def signature(self) -> str:
         """Generate function signature."""
-        params = ", ".join(f"{typ} {name}" for name, typ in self.parameters.items())
+        params = ", ".join(f"{typ} {name}" for name,
+                           typ in self.parameters.items())
         prefix = "static " if self.is_static else ""
         inline = "inline " if self.is_inline else ""
         return f"{prefix}{inline}{self.return_type} {self.name}({params})"
@@ -96,6 +103,7 @@ class CCodeGenerator:
         self.includes: Set[str] = {"<stdio.h>", "<stdlib.h>", "<string.h>"}
         self.indent_level = 0
         self.var_counter = 0
+        self._body_lines: List[str] = []
 
     def add_include(self, header: str) -> None:
         """Add include directive."""
@@ -103,7 +111,7 @@ class CCodeGenerator:
             header = f'"{header}"'
         self.includes.add(header)
 
-    def gen_temp_var(self, c_type: str = "int") -> str:
+    def gen_temp_var(self, _c_type: str = "int") -> str:
         """Generate unique temporary variable."""
         var_name = f"__tmp_{self.var_counter}"
         self.var_counter += 1
@@ -150,12 +158,13 @@ class CCodeGenerator:
 """
 
     def generate(
-        self, ast: Dict[str, Any], output_file: str = "output.c"
+        self, _ast: Dict[str, Any], output_file: str = "output.c"
     ) -> str:
         """Generate complete C program."""
+        lang_name = self.config.name if self.config else 'Unknown'
         code_parts = [
             "// Auto-generated C code from ParserCraft",
-            f"// Original language: {self.config.name if self.config else 'Unknown'}",
+            f"// Original language: {lang_name}",
             "",
             self.generate_header(),
             "",
@@ -168,7 +177,7 @@ class CCodeGenerator:
 
         # Write to file if specified
         if output_file:
-            with open(output_file, "w") as f:
+            with open(output_file, "w", encoding="utf-8") as f:
                 f.write(full_code)
 
         return full_code
@@ -192,18 +201,22 @@ class CCodeGenerator:
         args_str = ", ".join(args)
         return f"{func_name}({args_str})"
 
-    def gen_variable_declare(self, name: str, c_type: str, value: str = None) -> str:
+    def gen_variable_declare(
+            self, name: str, c_type: str,
+            value: Optional[str] = None) -> str:
         """Generate variable declaration."""
         var = CVariable(name, c_type, initial_value=value)
         return var.declaration()
 
-    def gen_return(self, value: str = None) -> str:
+    def gen_return(self, value: Optional[str] = None) -> str:
         """Generate return statement."""
         if value:
             return f"{self.indent()}return {value};"
         return f"{self.indent()}return;"
 
-    def gen_if(self, condition: str, true_body: List[str], false_body: List[str] = None) -> str:
+    def gen_if(
+            self, condition: str, true_body: List[str],
+            false_body: Optional[List[str]] = None) -> str:
         """Generate if statement."""
         lines = [f"{self.indent()}if ({condition}) {{"]
         self.indent_level += 1
@@ -221,7 +234,9 @@ class CCodeGenerator:
         lines.append(f"{self.indent()}}}")
         return "\n".join(lines)
 
-    def gen_loop(self, init: str, condition: str, increment: str, body: List[str]) -> str:
+    def gen_loop(
+            self, init: str, condition: str,
+            increment: str, body: List[str]) -> str:
         """Generate for loop."""
         lines = [f"{self.indent()}for ({init}; {condition}; {increment}) {{"]
         self.indent_level += 1
@@ -249,7 +264,8 @@ class CCodeGenerator:
         """Generate assignment statement."""
         return f"{self.indent()}{target} = {value};"
 
-    def gen_printf(self, format_str: str, args: List[str] = None) -> str:
+    def gen_printf(self, format_str: str,
+                   args: Optional[List[str]] = None) -> str:
         """Generate printf call."""
         args_str = f", {', '.join(args)}" if args else ""
         return f'{self.indent()}printf("{format_str}"{args_str});'
@@ -266,7 +282,7 @@ class CCodeGenerator:
         self.functions = []
         self.globals = []
         self.includes = {"<stdio.h>", "<stdlib.h>", "<string.h>"}
-        self._body_lines: List[str] = []
+        self._body_lines = []
         self.indent_level = 1  # Inside main()
 
         self._visit_source_node(ast)
@@ -299,8 +315,10 @@ class CCodeGenerator:
             # Detect inline assignment: IDENT '=' expr ';'
             ops = [c for c in node.children if c.node_type == "Operator"]
             if any(o.value == "=" for o in ops):
-                meaningful = [c for c in node.children
-                              if not (c.node_type == "Operator" and c.value in ("=", ";"))]
+                meaningful = [
+                    c for c in node.children
+                    if not (c.node_type == "Operator"
+                            and c.value in ("=", ";"))]
                 if len(meaningful) >= 2:
                     target = self._source_expr(meaningful[0])
                     value = self._source_expr(meaningful[1])
@@ -311,8 +329,10 @@ class CCodeGenerator:
                     self._visit_source_node(child)
 
         elif nt in ("assignment", "Assignment"):
-            meaningful = [c for c in node.children
-                          if not (c.node_type == "Operator" and c.value in ("=", ";"))]
+            meaningful = [
+                c for c in node.children
+                if not (c.node_type == "Operator"
+                        and c.value in ("=", ";"))]
             if len(meaningful) >= 2:
                 target = self._source_expr(meaningful[0])
                 value = self._source_expr(meaningful[1])
@@ -320,7 +340,8 @@ class CCodeGenerator:
                 self._body_lines.append(f"{c_type} {target} = {value};")
 
         elif nt in ("function_def", "FunctionDef"):
-            meaningful = [c for c in node.children if c.node_type != "Operator"]
+            meaningful = [
+                c for c in node.children if c.node_type != "Operator"]
             name = ""
             params_str = ""
             body_nodes = []
@@ -328,15 +349,22 @@ class CCodeGenerator:
                 if child.node_type in ("Identifier", "IDENT") and not name:
                     name = str(child.value)
                 elif child.node_type == "param_list":
-                    params_str = ", ".join(f"int {self._source_expr(p)}" for p in child.children)
+                    params_str = ", ".join(
+                        f"int {self._source_expr(p)}" for p in child.children)
                 elif child.node_type in ("block", "Block"):
                     body_nodes = child.children
                 else:
                     body_nodes.append(child)
 
-            func = CFunction(name=name, return_type="int",
-                             parameters={p.strip().split()[-1]: p.strip().rsplit(" ", 1)[0]
-                                         for p in params_str.split(",") if p.strip()} if params_str else {})
+            if params_str:
+                params_dict = {
+                    p.strip().split()[-1]: p.strip().rsplit(" ", 1)[0]
+                    for p in params_str.split(",") if p.strip()
+                }
+            else:
+                params_dict = {}
+            func = CFunction(
+                name=name, return_type="int", parameters=params_dict)
             saved = self._body_lines
             self._body_lines = []
             for child in body_nodes:
@@ -368,7 +396,8 @@ class CCodeGenerator:
                 self._body_lines.append("}")
 
         elif nt in ("return_stmt", "ReturnStmt"):
-            meaningful = [c for c in node.children if c.node_type != "Operator"]
+            meaningful = [
+                c for c in node.children if c.node_type != "Operator"]
             if meaningful:
                 val = self._source_expr(meaningful[0])
                 self._body_lines.append(f"return {val};")
@@ -376,7 +405,8 @@ class CCodeGenerator:
                 self._body_lines.append("return;")
 
         elif nt in ("expr_stmt", "ExprStmt"):
-            meaningful = [c for c in node.children if c.node_type != "Operator"]
+            meaningful = [
+                c for c in node.children if c.node_type != "Operator"]
             if meaningful:
                 expr = self._source_expr(meaningful[0])
                 self._body_lines.append(f"{expr};")
@@ -413,10 +443,14 @@ class CCodeGenerator:
         if nt == "Operator":
             return str(node.value)
 
-        if nt in ("expr", "Expr", "comparison", "addition", "multiplication", "term"):
+        if nt in (
+                "expr", "Expr", "comparison",
+                "addition", "multiplication", "term"):
             structural = {"=", ";", ":", ",", "(", ")", "{", "}", "[", "]"}
-            children = [c for c in node.children
-                        if not (c.node_type == "Operator" and c.value in structural)]
+            children = [
+                c for c in node.children
+                if not (c.node_type == "Operator"
+                        and c.value in structural)]
             parts = []
             for child in children:
                 if child.node_type == "Operator":
@@ -426,7 +460,8 @@ class CCodeGenerator:
             return " ".join(parts) if parts else ""
 
         if nt in ("factor", "primary"):
-            meaningful = [c for c in node.children if c.node_type != "Operator"]
+            meaningful = [
+                c for c in node.children if c.node_type != "Operator"]
             if meaningful:
                 return self._source_expr(meaningful[0])
 
@@ -441,7 +476,8 @@ class CCodeGenerator:
         if node.value is not None:
             return str(node.value)
         if node.children:
-            meaningful = [c for c in node.children if c.node_type != "Operator"]
+            meaningful = [
+                c for c in node.children if c.node_type != "Operator"]
             if meaningful:
                 return self._source_expr(meaningful[0])
         return "0"
@@ -456,4 +492,3 @@ class CCodeGenerator:
         if nt == "String":
             return "const char*"
         return "int"  # Default
-

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-ParserCraft Configuration CLI Tool
+ParserCraft CLI
 
-Command-line utility for creating, editing, and managing custom programming
-language configurations without a GUI.
+Command-line interface for creating, editing, running, and managing custom
+programming language configurations and programs.
 
-Usage:
+Language Configuration Commands:
     parsercraft create [--preset PRESET] [--output FILE]
     parsercraft edit FILE
     parsercraft validate FILE
@@ -17,15 +17,42 @@ Usage:
     parsercraft diff FILE1 FILE2
     parsercraft update FILE [--set KEY VALUE] [--merge FILE]
     parsercraft delete FILE [--keyword KW] [--function FN]
+    parsercraft translate FILE [--config CONFIG]
+
+Execution Commands:
     parsercraft repl [FILE] [--debug]
     parsercraft batch FILE [--script SCRIPT]
+    parsercraft test FILE [--cases FILE]
+    parsercraft test-run FILE
+
+Code Generation Commands:
+    parsercraft codegen-c FILE [--output FILE]
+    parsercraft codegen-wasm FILE [--output FILE]
+
+Type System Commands:
+    parsercraft type-check FILE [--config CONFIG]
+    parsercraft generics FILE
+    parsercraft check-protocol FILE
+
+Module System Commands:
+    parsercraft module-info FILE
+    parsercraft module-deps FILE
+    parsercraft module-cycles FILE
+
+Tooling Commands:
+    parsercraft lsp [--port PORT] [--stdio]
+    parsercraft extension [--output DIR]
+    parsercraft package-search QUERY
+    parsercraft package-install PACKAGE
+    parsercraft refactor-rename FILE --old NAME --new NAME
+    parsercraft format FILE
+    parsercraft debug-launch FILE
 
 Presets:
     - python_like    : Python-style syntax
     - javascript_like: JavaScript-style syntax
     - lisp_like      : Lisp-style syntax
     - minimal        : Minimal functional language
-    - teachscript    : Educational language (TeachScript)
 
 Examples:
     # Create a new Python-like language
@@ -34,14 +61,20 @@ Examples:
     # Validate a configuration file
     parsercraft validate my_lang.yaml
 
-    # Export to markdown documentation
-    parsercraft export my_lang.yaml --format markdown
+    # Run an interactive REPL with a language config
+    parsercraft repl my_lang.yaml
+
+    # Generate C code from a source file
+    parsercraft codegen-c program.src --output program.c
+
+    # Start the LSP server on stdio
+    parsercraft lsp --stdio
 
 See Also:
-    - ParserCraft IDE: Interactive GUI for language design
-    - CodeEx IDE: Develop applications in your languages
-    - Documentation: docs/guides/CODEX_QUICKSTART.md
+    parsercraft-ide    Launch the Tkinter IDE
+    parsercraft-repl   Launch the standalone REPL
 """
+# pylint: disable=too-many-lines,import-outside-toplevel
 
 import argparse
 import ast
@@ -60,7 +93,7 @@ from typing import Any, Optional, Sequence
 try:
     import readline  # noqa: F401
 except ImportError:  # pragma: no cover - platform dependent
-    readline = None
+    readline = None  # type: ignore[assignment]
 
 from parsercraft.config.language_config import (
     LanguageConfig,
@@ -71,7 +104,7 @@ from parsercraft.runtime.language_runtime import LanguageRuntime
 
 # YAML support (optional)
 try:
-    from yaml import YAMLError, safe_load  # type: ignore[assignment]
+    from yaml import YAMLError, safe_load
 except ImportError:  # pragma: no cover - optional dependency
     YAMLError = None  # type: ignore[assignment,misc]
     safe_load = None  # type: ignore[assignment]
@@ -84,7 +117,9 @@ if YAMLError is not None:
         YAMLError,
     )
 else:
-    CONFIG_LOAD_ERRORS = (OSError, ValueError, json.JSONDecodeError)
+    CONFIG_LOAD_ERRORS = (  # type: ignore[unreachable]
+        OSError, ValueError, json.JSONDecodeError
+    )
 
 
 SAFE_BUILTINS: dict[str, Any] = {
@@ -344,7 +379,9 @@ def _execute_repl_line(
         safe_globals = {"__builtins__": SAFE_BUILTINS.copy()}
 
         stripped_line = line.strip()
-        has_assignment = re.match(r'.*(?<![=!<>+\-*/])=(?!=).*', stripped_line) is not None
+        has_assignment = (
+            re.match(r'.*(?<![=!<>+\-*/])=(?!=).*', stripped_line) is not None
+        )
         starts_with_keyword = stripped_line.startswith(tuple(keyword_prefixes))
 
         if has_assignment or starts_with_keyword:
@@ -555,8 +592,8 @@ def cmd_create(args):
         try:
             config = LanguageConfig.from_preset(args.preset)
             print(f"Created configuration from preset: {args.preset}")
-        except ValueError as e:
-            print(f"Error: {e}")
+        except ValueError as exc:
+            print(f"Error: {exc}")
             print(f"Available presets: {', '.join(list_presets())}")
             return 1
     elif args.interactive:
@@ -572,7 +609,7 @@ def cmd_create(args):
     return 0
 
 
-def cmd_edit(args):
+def cmd_edit(args) -> int:
     """Edit an existing configuration (opens in text editor)."""
 
     filepath = Path(args.file)
@@ -754,12 +791,12 @@ def cmd_export(args):
 
     elif format_type == "json":
         output_file = f"{output}.json"
-        config.save(output_file, format="json")
+        config.save(output_file, fmt="json")
         print(f"Exported to JSON: {output_file}")
 
     elif format_type == "yaml":
         output_file = f"{output}.yaml"
-        config.save(output_file, format="yaml")
+        config.save(output_file, fmt="yaml")
         print(f"Exported to YAML: {output_file}")
 
     else:
@@ -853,7 +890,7 @@ def cmd_convert(args):
 
     output = args.output or f"{filepath.stem}.{to_format}"
 
-    config.save(output, format=to_format)
+    config.save(output, fmt=to_format)
     print(f"Converted {filepath} ({from_format}) to {output} ({to_format})")
 
     return 0
@@ -963,7 +1000,7 @@ def cmd_diff(args):
     return 0
 
 
-def cmd_update(args):
+def cmd_update(args) -> int:
     """Update a configuration file."""
     filepath = Path(args.file)
     if not filepath.exists():
@@ -1239,15 +1276,22 @@ def cmd_lsp(args):
 
     try:
         server = create_lsp_server(str(config_path))
-        print(f"✓ LSP Server started for {server.config.name}", file=sys.stderr)
+        print(
+            f"\u2713 LSP Server started for {server.config.name}",
+            file=sys.stderr,
+        )
         print(f"  Port: {args.port}", file=sys.stderr)
-        print(f"  Mode: {'stdio' if args.stdio else 'socket'}", file=sys.stderr)
-        
+        print(
+            f"  Mode: {'stdio' if args.stdio else 'socket'}", file=sys.stderr
+        )
         if args.stdio:
             server.run_stdio()
         else:
             # Socket mode not yet implemented
-            print("Socket mode not yet implemented. Please use --stdio.", file=sys.stderr)
+            print(
+                "Socket mode not yet implemented. Please use --stdio.",
+                file=sys.stderr,
+            )
             return 1
 
         return 0
@@ -1258,7 +1302,9 @@ def cmd_lsp(args):
 
 def cmd_extension(args):
     """Generate VS Code extension."""
-    from parsercraft.packaging.vscode_integration import generate_vscode_extension
+    from parsercraft.packaging.vscode_integration import (
+        generate_vscode_extension
+    )
 
     config_path = Path(args.config)
     if not config_path.exists():
@@ -1306,22 +1352,22 @@ def cmd_type_check(args):
         return 1
 
     try:
-        source = source_path.read_text(encoding="utf-8")
+        source_path.read_text(encoding="utf-8")
     except OSError as error:
         print(f"Error reading source file: {error}")
         return 1
 
     # Parse analysis level
     level_map = {
-        "lenient": AnalysisLevel.Lenient,
-        "moderate": AnalysisLevel.Moderate,
-        "strict": AnalysisLevel.Strict,
-        "very-strict": AnalysisLevel.VeryStrict,
+        "lenient": AnalysisLevel.LENIENT,
+        "moderate": AnalysisLevel.MODERATE,
+        "strict": AnalysisLevel.STRICT,
+        "very-strict": AnalysisLevel.VERY_STRICT,
     }
-    analysis_level = level_map.get(args.level, AnalysisLevel.Moderate)
+    analysis_level = level_map.get(args.level, AnalysisLevel.MODERATE)
 
     # Create type checker
-    checker = TypeChecker(config=config, analysis_level=analysis_level)
+    checker = TypeChecker(config, level=analysis_level)
 
     # Check the file
     print(f"Type checking: {source_path}")
@@ -1329,9 +1375,7 @@ def cmd_type_check(args):
     print("=" * 70)
 
     try:
-        errors = checker.check_file(
-            source_path=str(source_path), source=source
-        )
+        errors = checker.check_file(str(source_path))
 
         if not errors:
             print("✓ No type errors found")
@@ -1339,15 +1383,12 @@ def cmd_type_check(args):
 
         # Display errors
         print(f"Found {len(errors)} error(s):\n")
-        for error in errors:
-            print(f"[{error.kind.name}] {error.message}")
-            if error.location:
-                loc = error.location
-                print(
-                    f"  Location: {loc.path}:{loc.line}:{loc.column}"
-                )
-            if error.suggestion:
-                print(f"  Suggestion: {error.suggestion}")
+        for err in errors:
+            print(f"[{err.kind}] {err.message}")
+            if err.location:
+                print(f"  Location: {err.location}")
+            if err.suggestion:
+                print(f"  Suggestion: {err.suggestion}")
             print()
 
         return 1 if not args.warnings_as_errors else 1
@@ -1362,7 +1403,6 @@ def cmd_type_check(args):
 def cmd_module_info(args):
     """Show information about a module."""
     from parsercraft.runtime.module_system import ModuleManager
-    from .language_config import LanguageConfig
 
     module_name = args.module
     module_dir = Path(args.module_dir) if args.module_dir else Path.cwd()
@@ -1383,7 +1423,7 @@ def cmd_module_info(args):
             print(f"Author: {module.metadata['author']}")
 
         print(f"\nExports ({len(module.exports)}):")
-        for name, export in module.exports.items():
+        for _, export in module.exports.items():
             visibility = export.visibility.name
             print(f"  {export.name} ({visibility})")
 
@@ -1404,7 +1444,6 @@ def cmd_module_info(args):
 def cmd_module_deps(args):
     """Show module dependencies."""
     from parsercraft.runtime.module_system import ModuleManager
-    from .language_config import LanguageConfig
 
     module_name = args.module
     module_dir = Path(args.module_dir) if args.module_dir else Path.cwd()
@@ -1446,8 +1485,9 @@ def cmd_module_deps(args):
 
 def cmd_module_cycles(args):
     """Detect circular dependencies."""
-    from parsercraft.runtime.module_system import ModuleManager, CircularDependencyError
-    from .language_config import LanguageConfig
+    from parsercraft.runtime.module_system import (
+        ModuleManager, CircularDependencyError
+    )
 
     module_dir = Path(args.module_dir) if args.module_dir else Path.cwd()
 
@@ -1462,8 +1502,8 @@ def cmd_module_cycles(args):
         cycles = []
         try:
             manager.load_with_dependencies("main")
-        except CircularDependencyError as e:
-            cycles.append(str(e))
+        except CircularDependencyError as exc:
+            cycles.append(str(exc))
 
         if not cycles:
             print("✓ No circular dependencies detected")
@@ -1487,7 +1527,7 @@ def cmd_generics(args):
     # from .generics import GenericChecker
 
     try:
-        with open(args.file) as f:
+        with open(args.file, encoding="utf-8") as f:
             source = f.read()
 
         # checker = GenericChecker()
@@ -1542,12 +1582,9 @@ def cmd_check_protocol(args):
 
 def cmd_codegen_c(args):
     """Generate C code from source."""
-    from .codegen_c import CCodeGenerator
+    from parsercraft.codegen.codegen_c import CCodeGenerator
 
     try:
-        with open(args.file) as f:
-            source = f.read()
-
         generator = CCodeGenerator()
         c_code = (
             generator.generate_header()
@@ -1557,7 +1594,7 @@ def cmd_codegen_c(args):
 
         output_file = args.output or args.file.replace(".lang", ".c")
 
-        with open(output_file, "w") as f:
+        with open(output_file, "w", encoding="utf-8") as f:
             f.write(c_code)
 
         print(f"✓ Generated C code: {output_file}")
@@ -1572,19 +1609,16 @@ def cmd_codegen_c(args):
 
 def cmd_codegen_wasm(args):
     """Generate WebAssembly from source."""
-    from .codegen_wasm import WasmGenerator
+    from parsercraft.codegen.codegen_wasm import WasmGenerator
 
     try:
-        with open(args.file) as f:
-            source = f.read()
-
         generator = WasmGenerator()
         module = generator.generate_from_ast(None)
 
         output_file = args.output or args.file.replace(".lang", ".wat")
 
         wat_text = module.to_wat()
-        with open(output_file, "w") as f:
+        with open(output_file, "w", encoding="utf-8") as f:
             f.write(wat_text)
 
         print(f"✓ Generated WebAssembly: {output_file}")
@@ -1641,10 +1675,10 @@ def cmd_package_install(args):
 
 def cmd_refactor_rename(args):
     """Rename symbol."""
-    from .lsp_advanced import RefactoringEngine
+    from parsercraft.tooling.lsp.lsp_advanced import RefactoringEngine
 
     try:
-        with open(args.file) as f:
+        with open(args.file, encoding="utf-8") as f:
             source = f.read()
 
         refactor = RefactoringEngine()
@@ -1673,7 +1707,7 @@ def cmd_refactor_rename(args):
         result = "\n".join(lines)
 
         output_file = args.output or args.file
-        with open(output_file, "w") as f:
+        with open(output_file, "w", encoding="utf-8") as f:
             f.write(result)
 
         print(f"✓ Refactoring complete: {output_file}")
@@ -1687,10 +1721,10 @@ def cmd_refactor_rename(args):
 
 def cmd_format(args):
     """Format source code."""
-    from .lsp_advanced import CodeFormatter
+    from parsercraft.tooling.lsp.lsp_advanced import CodeFormatter
 
     try:
-        with open(args.file) as f:
+        with open(args.file, encoding="utf-8") as f:
             source = f.read()
 
         formatter = CodeFormatter(tab_size=args.tab_size)
@@ -1699,7 +1733,7 @@ def cmd_format(args):
         output_file = args.output or (args.file if args.in_place else None)
 
         if output_file:
-            with open(output_file, "w") as f:
+            with open(output_file, "w", encoding="utf-8") as f:
                 f.write(formatted)
             print(f"✓ Formatted: {output_file}")
         else:
@@ -1714,33 +1748,23 @@ def cmd_format(args):
 
 def cmd_test_run(args):
     """Run tests."""
-    from .testing_framework import TestRunner
+    from parsercraft.tooling.test_framework import LanguageTestRunner
 
     try:
-        runner = TestRunner(verbose=args.verbose)
+        config = LanguageConfig()
+        runner = LanguageTestRunner(config=config)
 
-        # Discover tests
-        test_path = args.path or "tests"
-        test_classes = runner.discover(test_path)
-
-        if not test_classes:
-            print(f"No tests found in: {test_path}")
-            return 0
-
-        print(f"Running {len(test_classes)} test suite(s)...")
+        print(f"Running tests (verbose={args.verbose})...")
         print("=" * 70)
 
-        suite = runner.run(test_classes)
+        results = runner.run_all_tests()
 
+        passed = sum(1 for r in results if r.passed)
+        failed = len(results) - passed
         print()
-        print(
-            f"Results: {suite.passed_count} passed, "
-            f"{suite.failed_count} failed"
-        )
-        print(f"Success rate: {suite.success_rate():.1f}%")
-        print(f"Total time: {suite.total_time:.3f}s")
+        print(f"Results: {passed} passed, {failed} failed")
 
-        return 0 if suite.failed_count == 0 else 1
+        return 0 if failed == 0 else 1
 
     except Exception as error:  # pylint: disable=broad-exception-caught
         print(f"Error: {error}")
@@ -1749,7 +1773,7 @@ def cmd_test_run(args):
 
 def cmd_debug_launch(args):
     """Launch debugger."""
-    from .debug_adapter import Debugger
+    from parsercraft.tooling.debug.debug_adapter import Debugger
 
     try:
         debugger = Debugger(args.file)

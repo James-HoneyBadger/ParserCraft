@@ -4,7 +4,7 @@ Setup script for ParserCraft - Custom Language Construction Framework
 """
 
 from pathlib import Path
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages  # pylint: disable=import-error
 
 # Read the README file
 readme_file = Path(__file__).parent / "README.md"
@@ -12,10 +12,11 @@ long_description = readme_file.read_text(encoding="utf-8")
 
 setup(
     name="parsercraft",
-    version="3.0.0",
+    version="4.0.0",
     author="James HoneyBadger",
-    description=("ParserCraft - Create custom programming languages "
-                 "without writing a compiler"),
+    description=("ParserCraft - Custom programming language construction "
+                 "framework: PEG grammars, AST, Python/C/WASM/LLVM backends"),
+
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/James-HoneyBadger/ParserCraft",
@@ -29,14 +30,12 @@ setup(
         "Topic :: Software Development :: Interpreters",
         "Topic :: Software Development :: Libraries :: Application Frameworks",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
     license="MIT",
-    python_requires=">=3.7",
+    python_requires=">=3.10",
     install_requires=[
         "PyYAML>=6.0",
     ],

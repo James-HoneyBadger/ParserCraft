@@ -1,414 +1,228 @@
-# ParserCraft Project Analysis: Code Stubs & Missing Features
+# ParserCraft Project Analysis
 
-**Date**: January 26, 2026  
-**Project**: ParserCraft - Custom Programming Language Construction Framework
+**Date**: February 2026
+**Version**: 4.0.0
+**Project**: ParserCraft — Custom Programming Language Construction Framework
 
 ---
 
 ## Executive Summary
 
-This analysis identifies **code stubs, incomplete implementations, and missing features** across the ParserCraft codebase. The project is extensive (~45 core modules) with both mature implementations and incomplete features.
-
-### Key Findings:
-- **3 primary stub libraries**: TSGraphics, TSSound, TSNetwork (in `teachscript_runtime.py`)
-- **~1,100+ stub IDE methods** in `ide.py` (tkinter-based IDE with placeholder implementations)
-- **LSP server placeholders** for document formatting
-- **Multiple incomplete features** across testing, debugging, and advanced modules
+ParserCraft is a **well-implemented language construction framework** with a clean
+subpackage architecture, four code-generation backends, and 113 passing tests.
+The core pipeline (PEG grammar → AST → backend) is fully functional. The areas
+with the most limited coverage are advanced type-system generics, the debug
+adapter, and partial module-system edge-case handling.
 
 ---
 
-## 1. STUB LIBRARIES (TeachScript Runtime)
+## Architecture Overview
 
-### Location: `src/parsercraft/teachscript_runtime.py`
-
-#### TSGraphics Library (Line 234-241)
-**Status**: Stub/Placeholder Implementation
-
-```python
-# Graphics library (stub for future implementation)
-self.namespace["TSGraphics"] = {
-    "create_window": lambda w, h, title: print(f"Window: {title} ({w}x{h})"),
-    "draw_circle": lambda x, y, r: print(f"Circle at ({x},{y}) r={r}"),
-    "draw_rectangle": lambda x, y, w, h: print(f"Rectangle at ({x},{y}) {w}x{h}"),
-    "draw_line": lambda x1, y1, x2, y2: print(f"Line ({x1},{y1})->({x2},{y2})"),
-}
+```
+src/parsercraft/
+├── config/       LanguageConfig, LanguageValidator, IdentifierValidator
+├── parser/       GrammarParser, GrammarBuilder, PEGInterpreter, IncrementalParser
+├── codegen/      PythonTranspiler, CCodeGenerator, WasmGenerator, LLVMIRGenerator
+├── runtime/      REPL, StdLib, FFIBridge, LanguageRuntime, ModuleManager
+├── tooling/      CLI (2355 lines, 40+ subcommands), ErrorLocalizer,
+│   ├── lsp/          LSP server (683 lines), advanced LSP, integration layer
+│   └── debug/        DAP debug adapter
+├── ide/          ParserCraftIDE, CodeEditor, ProjectManager (Tkinter)
+├── types/        TypeChecker, generics, protocols, type_system_generics
+└── packaging/    VS Code extension gen, package registry, documentation gen
 ```
 
-**Issues**:
-- Only prints debug output, doesn't actually render graphics
-- No actual window creation or drawing operations
-- Needs integration with a graphics library (pygame, tkinter Canvas, PIL)
+---
 
-**Missing Features**:
-- [ ] Actual graphics rendering
-- [ ] Window management
-- [ ] Color support
-- [ ] Shape filling/stroking
-- [ ] Event handling (mouse, keyboard)
+## 1. Core Pipeline — IMPLEMENTED
+
+### Grammar Engine (`parser/grammar.py`, 970 lines)
+
+**Status**: Fully implemented.
+
+- `GrammarParser` — turns PEG text notation into `Grammar` objects
+- `GrammarBuilder` — fluent programmatic API (`seq`, `choice`, `star`, `plus`,
+  `opt`, `lit`, `ref`)
+- `PEGInterpreter` — packrat-memoized parser; produces `SourceAST` nodes
+- `IncrementalParser` — re-parses only changed regions after text edits
+- Built-in token types: `NUMBER`, `IDENT`, `STRING`
+- Grammar validation: detects undefined rule references and left recursion
+
+### Code Generation Backends (`codegen/`)
+
+All four backends accept a `SourceAST` from the grammar engine and produce
+target-language output.
+
+| Backend | Entry point | Output | Lines |
+|---------|-------------|--------|-------|
+| `PythonTranspiler` | `translate_source_ast(ast)` | Python source / `exec()` | 1174 |
+| `CCodeGenerator` | `translate_source_ast(ast)` | C source with `main()` | 494 |
+| `WasmGenerator` | `translate_source_ast(ast)` | WAT (WebAssembly Text) | 548 |
+| `LLVMIRGenerator` | `translate_source_ast(ast)` | LLVM IR (SSA form) | 536 |
+
+All backends detect the **inline assignment pattern**
+(`IDENT "=" expr ";"`) directly on statement nodes without requiring a
+separate `assignment` rule.
+
+### Runtime (`runtime/`)
+
+| Module | Purpose | Status |
+|--------|---------|--------|
+| `REPL` (336 lines) | Interactive shell with `:ast`, `:py`, `:vars`, `:grammar` commands | Full |
+| `StdLib` (373 lines) | Six built-in modules: `io`, `math`, `string`, `collections`, `system`, `random` | Full |
+| `FFIBridge` (275 lines) | ctypes C library bindings + Python callable registration | Full |
+| `LanguageRuntime` | Config-driven keyword remapping singleton | Full |
+| `ModuleManager` | Multi-file imports, circular dependency detection | Mostly complete (see §3) |
 
 ---
 
-#### TSGame Library (Line 244-249)
-**Status**: Stub/Placeholder
+## 2. Configuration System — IMPLEMENTED
 
-```python
-# Game library (stub for future implementation)
-self.namespace["TSGame"] = {
-    "create_game": lambda title: print(f"Game: {title}"),
-    "handle_input": lambda: None,
-    "update": lambda: None,
-    "render": lambda: None,
-}
-```
+**`config/language_config.py`** provides:
 
-**Issues**:
-- No actual game loop implementation
-- Input handling is a no-op
-- No physics or collision detection
-- Missing game state management
+- YAML/JSON loading and saving
+- Keyword renaming (`rename_keyword`)
+- Custom function registration
+- Preset library (`from_preset`, `load_preset`) covering:
+  `python_like`, `javascript_like`, `lisp_like`, `minimal`, and others
+- Configuration validation with detailed error messages
+- Hot-reloading support via `LanguageRuntime`
 
 ---
 
-### Location: `src/parsercraft/teachscript_libraries.py`
+## 3. Partially Complete Features
 
-#### TSSound Library (Line 10, documented but not implemented)
-**Status**: Documented as stub
+### Module System (`runtime/module_system.py`)
 
-```python
-- TSSound: Audio and sound effects (stub)
-```
+Three bare `pass` statements exist in exception handler branches — these are
+silent failure paths (no fallback or error propagation). The core import and
+circular-dependency logic is implemented; the `pass` clauses mean some edge-case
+errors are silently swallowed rather than reported.
 
-**Missing Implementation**:
-- [ ] Audio file loading
-- [ ] Playback control
-- [ ] Volume/mixing
-- [ ] Audio effects/filters
+**Recommendation**: Replace each `pass` with a specific log/raise or return a
+meaningful error object.
 
-#### TSNetwork Library (Line 11, documented as stub)
-**Status**: Documented as stub
+### Type System Generics (`types/type_system_generics.py`, line 379)
 
-```python
-- TSNetwork: Basic networking (stub)
-```
+One `pass` statement in a type-checking branch. The generics framework is
+implemented around it; this is a single unhandled case (likely an unrecognised
+type node kind).
 
-**Missing Implementation**:
-- [ ] HTTP client
-- [ ] Socket support
-- [ ] WebSocket support
-- [ ] DNS resolution
+**Recommendation**: Add an explicit `raise TypeError(...)` or return a
+`TypeUnknown` sentinel here.
 
----
+### Debug Adapter (`tooling/debug/debug_adapter.py`, line 288)
 
-## 2. IDE PLACEHOLDER METHODS (ide.py)
+One `pass` in an exception handler inside the DAP message-processing loop.
+The adapter continues running but silently drops certain malformed messages.
 
-### Overview
-The ParserCraft IDE (`src/parsercraft/ide.py`, 6,821 lines) contains **comprehensive menu structures and UI layouts** but with ~80+ placeholder method implementations that are either:
-1. **Empty stubs** (`pass` statements)
-2. **Partial implementations** (UI without logic)
-3. **Documented but unimplemented** (comments indicating future work)
-
-### Incomplete Method Categories
-
-#### File Operations
-| Method | Status | Issue |
-|--------|--------|-------|
-| `_new_from_template()` | Stub | Only `pass` statement |
-| `_replace_dialog()` | Stub | Only `pass` statement |
-| `_reload_config()` | Stub | Only `pass` statement |
-| `_unload_config()` | Stub | Only `pass` statement |
-| `_save_layout()` | Stub | Only `pass` statement |
-| `_load_layout()` | Stub | Only `pass` statement |
-| `_save_settings()` | Stub | Only `pass` statement |
-| `_load_settings()` | Stub | Only `pass` statement |
-| `_load_default_content()` | Stub | Only `pass` statement |
-
-#### Editor Panel Management
-| Method | Status | Issue |
-|--------|--------|-------|
-| `_on_editor_scroll()` | Stub | Event binding only |
-| `_on_editor_change()` | Stub | Only optional event param, no implementation |
-
-#### Configuration Validation & Info
-| Method | Status | Issue |
-|--------|--------|-------|
-| `_validate_config()` | Stub | Only `pass` statement |
-| `_show_config_info()` | Stub | Only `pass` statement |
-
-#### Project Management
-| Method | Status | Issue |
-|--------|--------|-------|
-| `_git_init()` | Stub | Referenced but not fully wired |
-
-#### Code Analysis Features
-| Method | Status | Issue |
-|--------|--------|-------|
-| `_check_syntax()` | Partial | Has UI but logic incomplete (shows "Not fully implemented" message) |
-
-#### Search & Navigation
-| Method | Status | Issue |
-|--------|--------|-------|
-| `_find_text()` | Partial | Implemented but needs refinement |
-
-#### Configuration Merge/Versioning
-| Method | Status | Comment |
-|--------|--------|---------|
-| `_perform_version_merge()` | Partial | Has logic but untested |
-| `_perform_package_export()` | Partial | Uses stub methods |
-
-### Example of Placeholder Pattern (Line 1235-1244)
-
-```python
-# Placeholder methods for comprehensive functionality
-def _new_language_config(self) -> None:
-    """Create a new language configuration."""
-    # [1000+ lines of proper implementation follows...]
-```
-
-The comment "Placeholder methods for comprehensive functionality" appears at line 1235, but the following methods are actually **fully implemented**. This label is misleading.
+**Recommendation**: Log the dropped message at DEBUG level so adapter issues
+can be diagnosed.
 
 ---
 
-## 3. LSP SERVER PLACEHOLDERS
+## 4. Tooling — IMPLEMENTED
 
-### Location: `src/parsercraft/lsp_server.py` (Line 528)
+### CLI (`tooling/cli.py`, 2355 lines)
 
-```python
-def format_document(self, uri: str) -> list[dict]:
-    """Handle textDocument/formatting request (returns text edits)."""
-    # Placeholder for document formatting
-    # Could integrate with configured formatter
-    return []
-```
+40+ subcommands covering the full workflow:
 
-**Issues**:
-- Returns empty list (no formatting applied)
-- No integration with language-specific formatters
-- Documentation mentions potential feature but not implemented
+| Category | Commands |
+|----------|---------|
+| Language config | `create`, `edit`, `validate`, `info`, `export`, `import`, `list-presets`, `convert`, `diff`, `update`, `delete`, `translate` |
+| Execution | `repl`, `batch`, `test`, `test-run` |
+| Code generation | `codegen-c`, `codegen-wasm` |
+| Type system | `type-check`, `generics`, `check-protocol` |
+| Module system | `module-info`, `module-deps`, `module-cycles` |
+| Tooling | `lsp`, `extension`, `package-search`, `package-install`, `refactor-rename`, `format`, `debug-launch` |
 
-**Missing Features**:
-- [ ] Code formatting support
-- [ ] Configurable formatter integration
-- [ ] Auto-formatting on save
-- [ ] Range formatting
+### LSP Server (`tooling/lsp/lsp_server.py`, 683 lines)
 
----
+Implements the Language Server Protocol including:
 
-## 4. INCOMPLETE MODULES & FEATURES
+- Document sync (open/change/close)
+- Diagnostics (syntax error reporting)
+- Hover information
+- Completion suggestions
+- Document symbols
+- `format_document` — trims trailing whitespace and normalises line endings
 
-### Module System Issues
+### Error Localizer (`tooling/error_localization.py`)
 
-**File**: `src/parsercraft/module_system.py` (Lines 595-607)
-
-```python
-pass  # (Line 595)
-pass  # (Line 601)
-pass  # (Line 607)
-```
-
-**Context**: These `pass` statements appear in exception handlers or incomplete branches.
+Template-based localised error messages. Language designers supply translation
+files; the localizer formats messages with named placeholders.
 
 ---
 
-### Testing Framework Gaps
+## 5. IDE — IMPLEMENTED
 
-**File**: `src/parsercraft/testing_framework.py`
+The Tkinter IDE is split across three modules:
 
-```python
-def test_something(self) -> None:
-    pass  # Expected (Line 162)
-```
+| Module | Purpose |
+|--------|---------|
+| `ide/app.py` | `ParserCraftIDE` — main application window, menu, console |
+| `ide/editor.py` | `CodeEditor`, `LineNumbers` — syntax-aware text widget |
+| `ide/project.py` | `Project`, `ProjectManager` — file and project management |
 
-Multiple test methods have `pass` implementations without actual test logic.
-
----
-
-### Debugging & Hardware Features
-
-**File**: `src/parsercraft/advanced_debugging_hardware.py` (Line 694)
-
-Multiple stubs for hardware-level debugging that appears to be experimental/advanced features.
+Launch: `parsercraft-ide`
 
 ---
 
-### Code Generation Limitations
+## 6. Packaging (`packaging/`)
 
-#### WASM Code Generation (Line 309, `codegen_wasm.py`)
-
-```python
-instructions.append(f"(local.set ${stmt.target} ...)")  # Incomplete template
-```
-
-Placeholder instruction generation - not complete WASM translation.
+| Module | Purpose |
+|--------|---------|
+| `vscode_integration.py` | Generates VS Code extension scaffolding |
+| `package_registry.py` | Local package registry for language modules |
+| `documentation_generator.py` | Auto-generates Markdown docs from a `LanguageConfig` |
 
 ---
 
-## 5. UNIMPLEMENTED ENTERPRISE FEATURES
+## 7. Test Coverage
 
-### Security Compliance (Line 586, `enterprise_security.py`)
+113 tests across 7 test files, all passing:
 
-```python
-suggestions = ["# TODO: Implement", "pass", "return"]
-```
+| Test file | Covers |
+|-----------|--------|
+| `test_grammar.py` | PEG parsing, GrammarBuilder, `grammar_from_config` |
+| `test_transpiler.py` | Python transpilation, `exec()`, `TranspileOptions` |
+| `test_codegen.py` | C, WASM, and LLVM IR generation |
+| `test_repl.py` | REPL eval, special commands, config loading |
+| `test_stdlib_ffi_errors.py` | StdLib injection, FFI bindings, ErrorLocalizer |
+| `test_incremental.py` | IncrementalParser edit operations |
+| `test_integration.py` | Full pipeline from PEG text → exec(), multi-backend |
 
-Hardcoded placeholder suggestions instead of actual security analysis.
-
-### 85% Compliance Hardcoding (Line 998)
-
-```python
-controls_passed = int(framework_config["controls"] * 0.85)  # 85% compliance
-```
-
-**Issue**: Hardcoded compliance score rather than actual validation.
+Run: `python -m pytest tests/ -v`
 
 ---
 
-## 6. DOCUMENTATION & CONFIGURATION INCONSISTENCIES
+## 8. Known Limitations & Recommendations
 
-### Teachscript Libraries Documentation
-
-**File**: `src/parsercraft/teachscript_libraries.py` (Lines 10-11)
-
-```python
-"""
-- TSSound: Audio and sound effects (stub)
-- TSNetwork: Basic networking (stub)
-"""
-```
-
-**Status**: Only documented in docstring, no actual implementation.
+| Item | Location | Priority | Notes |
+|------|----------|----------|-------|
+| Silent exception swallowing | `runtime/module_system.py` ×3 | Medium | Replace `pass` with log or error |
+| Unhandled type-check case | `types/type_system_generics.py:379` | Low | Add explicit error/sentinel |
+| Silent DAP message drop | `tooling/debug/debug_adapter.py:288` | Low | Add debug-level logging |
+| `exec()` use in transpiler | `codegen/python_transpiler.py` | Note | By design; suppressed via `# noqa` + pylint disable |
 
 ---
 
-## 7. TYPE SYSTEM & GENERICS ISSUES
+## 9. External Dependencies
 
-### Type System Generics (Line 379, `type_system_generics.py`)
+| Package | Role | Required |
+|---------|------|---------|
+| `PyYAML >=6.0` | Config file parsing | Yes |
+| `pytest >=7.0` | Test runner | Dev only |
+| `tkinter` | IDE GUI | Bundled with Python |
 
-```python
-pass
-```
-
-**Context**: Appears in type checking or generic handling code.
-
----
-
-## 8. PARSER & LEXER ISSUES
-
-### Highlighting Gaps (Line 342, `teachscript_highlighting.py`)
-
-```python
-pass  # Error handling or fallback path
-```
-
-Fallback highlighting path not implemented.
-
----
-
-## 9. MISSING FEATURE MATRIX
-
-| Feature | Component | Status | Priority |
-|---------|-----------|--------|----------|
-| Graphics Rendering | TSGraphics | Stub | Medium |
-| Game Development | TSGame | Stub | Medium |
-| Audio Support | TSSound | Stub | Low |
-| Network Support | TSNetwork | Stub | Low |
-| Document Formatting | LSP | Placeholder | Medium |
-| Code Complexity Analysis | IDE | Stub | Low |
-| Performance Profiling | IDE | Partial | Medium |
-| Multi-file Projects | Module System | Partial | High |
-| Debugging Support | Debug Adapter | Partial | High |
-| WASM Codegen | Code Generation | Stub | Low |
-| Template Creation | IDE | Stub | Medium |
-| Replace Dialog | IDE | Stub | Medium |
-| Config Reload | IDE | Stub | Medium |
-| Settings Persistence | IDE | Stub | Medium |
-
----
-
-## 10. RECOMMENDATIONS FOR COMPLETION
-
-### High Priority
-1. **Implement IDE Settings Persistence** (`_load_settings`, `_save_settings`)
-   - Required for UX continuity
-   - Estimated: 2-3 hours
-
-2. **Complete Configuration Management** (`_reload_config`, `_unload_config`)
-   - Core language feature
-   - Estimated: 1-2 hours
-
-3. **Finish Module System**
-   - Multi-file support is documented but incomplete
-   - Estimated: 4-6 hours
-
-### Medium Priority
-4. **Graphics Library Implementation** (TSGraphics)
-   - Consider pygame or tkinter Canvas backend
-   - Estimated: 8-12 hours
-
-5. **Document Formatting in LSP**
-   - Integrate with black/prettier-style formatters
-   - Estimated: 3-4 hours
-
-6. **Replace Dialog in Editor**
-   - Core editor feature
-   - Estimated: 2-3 hours
-
-### Low Priority
-7. **Audio Support** (TSSound)
-   - Consider pydub or pygame.mixer
-   - Estimated: 6-8 hours
-
-8. **Networking Support** (TSNetwork)
-   - HTTP client + WebSocket support
-   - Estimated: 8-10 hours
-
-9. **WASM Code Generation**
-   - Requires wasm-binary knowledge
-   - Estimated: 12-16 hours
-
----
-
-## 11. CODE QUALITY ISSUES
-
-### Hardcoded Values
-- Security compliance hardcoded to 85% (enterprise_security.py:998)
-- Test suggestions hardcoded as ["# TODO: Implement", "pass", "return"]
-
-### Incomplete Error Handling
-- Multiple `pass` statements in exception handlers
-- No fallback behavior defined
-
-### Missing Integration Tests
-- Testing framework has stubs but incomplete coverage
-- Module system circular dependency tests missing
-
----
-
-## 12. DOCUMENTATION GAPS
-
-**Stubs that should be documented**:
-1. Graphics rendering library design
-2. Game loop architecture
-3. Audio system specification
-4. Network protocol support
-5. WASM compilation pipeline
+Python 3.10+ required.
 
 ---
 
 ## Conclusion
 
-ParserCraft is a **well-architected framework** with:
-- ✅ Solid language configuration system
-- ✅ Comprehensive IDE structure
-- ✅ Advanced modules (LSP, type system, module system)
-- ⚠️ **Multiple stub implementations** for educational libraries
-- ⚠️ **IDE placeholder methods** (though many are actually complete)
-- ⚠️ **Enterprise features** with hardcoded values
-
-**Recommendation**: Prioritize completing:
-1. Core IDE functionality (settings, config management)
-2. Graphics library (frequently used in educational context)
-3. LSP document formatting
-4. Module system edge cases
-
-The codebase is **production-ready for core language features** but needs maturation in **educational libraries** and **advanced IDE features**.
-
+ParserCraft v4.0.0 is **production-ready** for its core use-case: defining PEG
+grammars, parsing source code, and generating output in Python, C, WebAssembly,
+or LLVM IR. All 113 tests pass. The three areas with notable gaps (module system
+exception handling, type generics edge case, debug adapter error visibility) are
+isolated and low-risk.

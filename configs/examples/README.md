@@ -187,17 +187,17 @@ Each language demonstrates Turing completeness through:
 
 ### Load in the IDE
 ```bash
-python3 ide.py
-# Then: Config → Examples → [Choose language]
+parsercraft-ide
+# Then: File → Open and select a config, or use the Config panel
 ```
 
 ### Load Programmatically
 ```python
-from language_config import LanguageConfig
-from language_runtime import LanguageRuntime
+from parsercraft.config import LanguageConfig
+from parsercraft.runtime import LanguageRuntime
 
 # Load a configuration
-config = LanguageConfig.load("examples/lisp_like.yaml")
+config = LanguageConfig.load("configs/examples/lisp_like.yaml")
 LanguageRuntime.load_config(config)
 
 # Get info
@@ -206,14 +206,14 @@ print(LanguageRuntime.get_info())
 
 ### Validate Configuration
 ```bash
-python langconfig.py validate examples/forth_like.yaml
+parsercraft validate configs/examples/forth_like.yaml
 ```
 
 ### Create Custom Variant
-Start from any of these as a base:
+Start from any preset as a base:
 ```bash
-python langconfig.py create --from examples/ruby_like.yaml my_custom.yaml
-python langconfig.py edit my_custom.yaml rename-keyword def define
+parsercraft create --preset ruby_like --output my_custom.yaml
+parsercraft edit my_custom.yaml          # opens in $EDITOR
 ```
 
 ## Computational Models
@@ -238,11 +238,12 @@ Each configuration can be extended with:
 
 Example:
 ```bash
-# Add a new keyword
-python langconfig.py edit examples/basic_like.yaml add-keyword loop LOOP
+# Create a variant and open it for editing
+parsercraft create --preset basic_like --output my_basic.yaml
+parsercraft edit my_basic.yaml
 
-# Add a function
-python langconfig.py edit examples/pascal_like.yaml add-function pow Power 2 2
+# Validate after editing
+parsercraft validate my_basic.yaml
 ```
 
 ## Theoretical Background

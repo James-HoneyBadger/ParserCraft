@@ -18,10 +18,11 @@ Supports:
     - Lambda expressions
     - Import statements
     - Custom keyword→Python keyword mapping via LanguageConfig
-"""
+"""  # pylint: disable=too-many-lines
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Set
 
@@ -33,11 +34,13 @@ class TranspileOptions:
     """Configuration for the transpiler."""
     indent_str: str = "    "                    # Indentation string
     keyword_map: Dict[str, str] = field(default_factory=dict)  # custom→Python
-    function_map: Dict[str, str] = field(default_factory=dict) # custom→Python builtins
-    operator_map: Dict[str, str] = field(default_factory=dict) # custom→Python ops
+    function_map: Dict[str, str] = field(
+        default_factory=dict)  # custom→Python builtins
+    operator_map: Dict[str, str] = field(
+        default_factory=dict)  # custom→Python ops
     inject_runtime: bool = False                # Inject runtime helpers
-    source_maps: bool = False                   # Generate source mapping comments
-    wrap_in_main: bool = False                  # Wrap in if __name__ == "__main__"
+    source_maps: bool = False  # Generate source mapping comments
+    wrap_in_main: bool = False  # Wrap in if __name__ == "__main__"
 
 
 class PythonTranspiler:
@@ -165,34 +168,42 @@ class PythonTranspiler:
 
         # Auto-prepend imports for modules referenced by generated code
         if self._imports_needed:
-            imports = "\n".join(f"import {m}" for m in sorted(self._imports_needed))
+            imports = "\n".join(
+                f"import {m}" for m in sorted(self._imports_needed))
             result = imports + "\n\n" + result
 
         # Inject CGA color helper when turtle is used
         if "turtle" in self._imports_needed:
             cga_helper = (
                 "_CGA_PALETTE = {\n"
-                "    0: '#000000', 1: '#0000AA', 2: '#00AA00', 3: '#00AAAA',\n"
-                "    4: '#AA0000', 5: '#AA00AA', 6: '#AA5500', 7: '#AAAAAA',\n"
-                "    8: '#555555', 9: '#5555FF', 10: '#55FF55', 11: '#55FFFF',\n"
-                "    12: '#FF5555', 13: '#FF55FF', 14: '#FFFF55', 15: '#FFFFFF',\n"
+                "    0: '#000000', 1: '#0000AA',"
+                " 2: '#00AA00', 3: '#00AAAA',\n"
+                "    4: '#AA0000', 5: '#AA00AA',"
+                " 6: '#AA5500', 7: '#AAAAAA',\n"
+                "    8: '#555555', 9: '#5555FF',"
+                " 10: '#55FF55', 11: '#55FFFF',\n"
+                "    12: '#FF5555', 13: '#FF55FF',"
+                " 14: '#FFFF55', 15: '#FFFFFF',\n"
                 "}\n"
                 "def _cga(c):\n"
-                "    if isinstance(c, int): return _CGA_PALETTE.get(c, '#AAAAAA')\n"
+                "    if isinstance(c, int):"
+                " return _CGA_PALETTE.get(c, '#AAAAAA')\n"
                 "    return c\n"
             )
-            result = result.split("\n", 1)
-            result = result[0] + "\n" + cga_helper + result[1]
+            result_parts = result.split("\n", 1)
+            result = result_parts[0] + "\n" + cga_helper + result_parts[1]
 
         if self.options.wrap_in_main:
             # Re-indent everything under if __name__
-            indented = "\n".join(f"    {line}" if line.strip() else "" for line in result.split("\n"))
+            indented = "\n".join(f"    {line}" if line.strip(
+            ) else "" for line in result.split("\n"))
             result = f'if __name__ == "__main__":\n{indented}\n'
 
         return result
 
     def transpile_expression(self, ast: SourceAST) -> str:
-        """Transpile a single expression AST node to a Python expression string."""
+        """Transpile a single expression AST node to a Python
+        expression string."""
         return self._expr_to_str(ast)
 
     # -----------------------------------------------------------------------
@@ -222,7 +233,9 @@ class PythonTranspiler:
             return self._expr_literal(node)
         if nt in ("Identifier", "IDENT"):
             return self._expr_identifier(node)
-        if nt in ("expr", "Expr", "comparison", "addition", "multiplication", "term"):
+        if nt in (
+                "expr", "Expr", "comparison",
+                "addition", "multiplication", "term"):
             return self._expr_binary_chain(node)
         if nt in ("BinaryOp", "binary_op"):
             return self._expr_binary(node)
@@ -237,9 +250,12 @@ class PythonTranspiler:
         if nt in ("factor", "primary", "statement", "Statement"):
             # Transparent wrapper — pass through to meaningful child
             # BUT detect parenthesized expressions: factor → "(" expr ")"
-            has_open = any(c.node_type == "Operator" and c.value == "(" for c in node.children)
-            has_close = any(c.node_type == "Operator" and c.value == ")" for c in node.children)
-            meaningful = [c for c in node.children if c.node_type != "Operator"]
+            has_open = any(c.node_type == "Operator" and c.value ==
+                           "(" for c in node.children)
+            has_close = any(c.node_type == "Operator" and c.value ==
+                            ")" for c in node.children)
+            meaningful = [
+                c for c in node.children if c.node_type != "Operator"]
             if has_open and has_close and meaningful:
                 inner = self._expr_to_str(meaningful[0])
                 return f"({inner})"
@@ -275,23 +291,28 @@ class PythonTranspiler:
 
     def _emit_assignment(self, node: SourceAST) -> None:
         """Emit: target = value
-        
+
         Handles AST shapes:
         - [Identifier, expr]                        (no operator nodes)
         - [Identifier, Operator('='), expr, ...]    (operator nodes from PEG)
         """
         # Filter out structural punctuation operators
-        meaningful = [c for c in node.children
-                      if not (c.node_type == "Operator" and c.value in ("=", ";", ":", ","))]
-        
+        meaningful = [
+            c for c in node.children
+            if not (c.node_type == "Operator"
+                    and c.value in ("=", ";", ":", ","))]
+
         if len(meaningful) >= 2:
             target = self._expr_to_str(meaningful[0])
             value = self._expr_to_str(meaningful[1])
-        elif node.value and isinstance(node.value, (list, tuple)) and len(node.value) >= 2:
+        elif (node.value
+              and isinstance(node.value, (list, tuple))
+              and len(node.value) >= 2):
             target = str(node.value[0])
             value = str(node.value[1])
         else:
-            self._line(node.source_text.strip() if node.source_text else "# assignment")
+            self._line(node.source_text.strip()
+                       if node.source_text else "# assignment")
             return
 
         target = self._map_identifier(target)
@@ -369,7 +390,10 @@ class PythonTranspiler:
             self._emit_basic_if(children)
             return
 
-        # Python-style: condition, block, [elif_condition, block]*, [else_block]?
+        # Python-style: condition, block,
+        # [elif_condition, block]*, [else_block]?
+        # Structural keyword operators ('if', 'elif', 'else', ':') produced by
+        # PEG literal matches are handled explicitly; they are NOT conditions.
         idx = 0
         keyword = "if"
         while idx < len(children):
@@ -386,6 +410,30 @@ class PythonTranspiler:
                 for stmt in child.children:
                     self._emit_node(stmt)
                 self.indent_level -= 1
+                idx += 1
+            elif child.node_type == "Operator" and child.value == "else":
+                # Python-style 'else' keyword from PEG literal match
+                self._line("else:")
+                idx += 1
+                # Skip optional ':' operator
+                if (idx < len(children)
+                        and children[idx].node_type == "Operator"
+                        and children[idx].value == ":"):
+                    idx += 1
+                # Emit attached block
+                if idx < len(children) and children[idx].node_type in (
+                        "block", "Block"):
+                    self.indent_level += 1
+                    for stmt in children[idx].children:
+                        self._emit_node(stmt)
+                    self.indent_level -= 1
+                    idx += 1
+            elif (child.node_type == "Operator"
+                  and child.value in ("if", "elif", ":")):
+                # Skip structural keyword/punctuation operators.
+                # 'elif' signals the next condition uses 'elif' keyword.
+                if child.value == "elif":
+                    keyword = "elif"
                 idx += 1
             else:
                 cond = self._expr_to_str(child)
@@ -407,15 +455,19 @@ class PythonTranspiler:
                     break
                 cond = self._expr_to_str(children[i])
                 # Map '=' comparisons to '==' (TempleCode uses = for both)
+                cond = self._fix_basic_comparison(cond)
                 self._line(f"{keyword} {cond}:")
                 keyword = "elif"
                 i += 1
                 # Skip past 'THEN' operator
-                if i < len(children) and children[i].node_type == "Operator" and children[i].value == "THEN":
+                if (i < len(children)
+                        and children[i].node_type == "Operator"
+                        and children[i].value == "THEN"):
                     i += 1
                 # Collect body statements
                 self.indent_level += 1
-                while i < len(children) and children[i].node_type not in ("Operator",):
+                while i < len(children) and children[i].node_type not in (
+                        "Operator",):
                     self._emit_node(children[i])
                     i += 1
                 self.indent_level -= 1
@@ -423,7 +475,8 @@ class PythonTranspiler:
                 self._line("else:")
                 i += 1
                 self.indent_level += 1
-                while i < len(children) and children[i].node_type not in ("Operator",):
+                while i < len(children) and children[i].node_type not in (
+                        "Operator",):
                     self._emit_node(children[i])
                     i += 1
                 self.indent_level -= 1
@@ -437,7 +490,6 @@ class PythonTranspiler:
         """In BASIC-style languages, = is both assignment and comparison.
         When used in an IF condition, single = should become ==.
         Also map <> to !=."""
-        import re
         expr = expr.replace(" <> ", " != ")
         # Replace ' = ' with ' == ' (but not == which is already correct)
         expr = re.sub(r'(?<!=)\s*=\s*(?!=)', ' == ', expr)
@@ -453,8 +505,10 @@ class PythonTranspiler:
             return
 
         # Detect BASIC-style: first child is Operator('WHILE')
-        if children[0].node_type == "Operator" and children[0].value == "WHILE":
-            cond = self._expr_to_str(children[1]) if len(children) > 1 else "True"
+        if (children[0].node_type == "Operator"
+                and children[0].value == "WHILE"):
+            cond = self._expr_to_str(children[1]) if len(
+                children) > 1 else "True"
             self._line(f"while {cond}:")
             self.indent_level += 1
             body = [c for c in children[2:]
@@ -467,11 +521,20 @@ class PythonTranspiler:
             self.indent_level -= 1
             return
 
-        cond = self._expr_to_str(children[0])
+        # Python-style: filter structural keyword operators ('while', ':')
+        # produced by PEG literal matches so they are not used as the
+        # condition.
+        filtered_while = [
+            c for c in children
+            if not (c.node_type == "Operator"
+                    and c.value in ("while", ":"))]
+        if not filtered_while:
+            return
+        cond = self._expr_to_str(filtered_while[0])
         self._line(f"while {cond}:")
         self.indent_level += 1
-        if len(children) > 1:
-            for child in children[1:]:
+        if len(filtered_while) > 1:
+            for child in filtered_while[1:]:
                 if child.node_type in ("block", "Block"):
                     for stmt in child.children:
                         self._emit_node(stmt)
@@ -496,12 +559,20 @@ class PythonTranspiler:
             self._emit_basic_for(children)
             return
 
-        var = self._expr_to_str(children[0])
-        iterable = self._expr_to_str(children[1])
+        # Python-style: filter structural keyword operators ('for', 'in', ':')
+        # produced by PEG literal matches so they don't corrupt var/iterable.
+        filtered_for = [
+            c for c in children
+            if not (c.node_type == "Operator"
+                    and c.value in ("for", "in", ":"))]
+        if len(filtered_for) < 2:
+            return
+        var = self._expr_to_str(filtered_for[0])
+        iterable = self._expr_to_str(filtered_for[1])
         self._line(f"for {var} in {iterable}:")
         self.indent_level += 1
-        if len(children) > 2:
-            for child in children[2:]:
+        if len(filtered_for) > 2:
+            for child in filtered_for[2:]:
                 if child.node_type in ("block", "Block"):
                     for stmt in child.children:
                         self._emit_node(stmt)
@@ -516,16 +587,22 @@ class PythonTranspiler:
         i = 1  # skip FOR
         var = self._expr_to_str(children[i])
         i += 1
-        if i < len(children) and children[i].node_type == "Operator" and children[i].value == "=":
+        if (i < len(children)
+                and children[i].node_type == "Operator"
+                and children[i].value == "="):
             i += 1
         start = self._expr_to_str(children[i])
         i += 1
-        if i < len(children) and children[i].node_type == "Operator" and children[i].value == "TO":
+        if (i < len(children)
+                and children[i].node_type == "Operator"
+                and children[i].value == "TO"):
             i += 1
         end = self._expr_to_str(children[i])
         i += 1
         step = None
-        if i < len(children) and children[i].node_type == "Operator" and children[i].value == "STEP":
+        if (i < len(children)
+                and children[i].node_type == "Operator"
+                and children[i].value == "STEP"):
             i += 1
             step = self._expr_to_str(children[i])
             i += 1
@@ -536,7 +613,8 @@ class PythonTranspiler:
         self.indent_level += 1
         body = []
         while i < len(children):
-            if children[i].node_type == "Operator" and children[i].value == "NEXT":
+            if (children[i].node_type == "Operator"
+                    and children[i].value == "NEXT"):
                 break
             body.append(children[i])
             i += 1
@@ -548,8 +626,14 @@ class PythonTranspiler:
         self.indent_level -= 1
 
     def _emit_return(self, node: SourceAST) -> None:
-        if node.children:
-            val = self._expr_to_str(node.children[0])
+        # Filter structural operator nodes ('return', ';') produced by PEG
+        # literal matches so they are not emitted as the returned expression.
+        meaningful = [
+            c for c in node.children
+            if not (c.node_type == "Operator"
+                    and c.value in ("return", "RETURN", ";"))]
+        if meaningful:
+            val = self._expr_to_str(meaningful[0])
             self._line(f"return {val}")
         else:
             self._line("return")
@@ -561,7 +645,7 @@ class PythonTranspiler:
         elif node.value:
             self._line(f"import {node.value}")
         else:
-            self._line(f"# import (unresolved)")
+            self._line("# import (unresolved)")
 
     def _emit_expr_stmt(self, node: SourceAST) -> None:
         """Emit an expression as a statement."""
@@ -620,8 +704,10 @@ class PythonTranspiler:
     def _emit_let(self, node: SourceAST) -> None:
         """LET IDENT = expr → var = expr"""
         # Children: [Operator('LET'), Identifier, Operator('='), expr]
-        parts = [c for c in node.children
-                 if not (c.node_type == "Operator" and c.value in ("LET", "="))]
+        parts = [
+            c for c in node.children
+            if not (c.node_type == "Operator"
+                    and c.value in ("LET", "="))]
         if len(parts) >= 2:
             var = self._expr_to_str(parts[0])
             val = self._expr_to_str(parts[1])
@@ -633,8 +719,10 @@ class PythonTranspiler:
         """REPEAT count statement+ END → for _ in range(count): body"""
         children = node.children
         # Children: [Operator('REPEAT'), expr, statement+, Operator('END')]
-        parts = [c for c in children
-                 if not (c.node_type == "Operator" and c.value in ("REPEAT", "END"))]
+        parts = [
+            c for c in children
+            if not (c.node_type == "Operator"
+                    and c.value in ("REPEAT", "END"))]
         if not parts:
             return
         count = self._expr_to_str(parts[0])
@@ -670,12 +758,14 @@ class PythonTranspiler:
             self._line(f"# LABEL {label}")
 
     def _emit_turtle_move(self, node: SourceAST) -> None:
-        """FORWARD/FD/BACK/BK expr → turtle.forward(expr) / turtle.backward(expr)"""
+        """FORWARD/FD/BACK/BK expr
+        → turtle.forward(expr) / turtle.backward(expr)"""
         self._imports_needed.add("turtle")
         cmd = ""
         expr_nodes = []
         for c in node.children:
-            if c.node_type == "Operator" and c.value in ("FORWARD", "FD", "BACK", "BK"):
+            if (c.node_type == "Operator"
+                    and c.value in ("FORWARD", "FD", "BACK", "BK")):
                 cmd = c.value
             else:
                 expr_nodes.append(c)
@@ -689,7 +779,8 @@ class PythonTranspiler:
         cmd = ""
         expr_nodes = []
         for c in node.children:
-            if c.node_type == "Operator" and c.value in ("LEFT", "LT", "RIGHT", "RT"):
+            if (c.node_type == "Operator"
+                    and c.value in ("LEFT", "LT", "RIGHT", "RT")):
                 cmd = c.value
             else:
                 expr_nodes.append(c)
@@ -720,7 +811,8 @@ class PythonTranspiler:
         cmd = ""
         expr_nodes = []
         for c in node.children:
-            if c.node_type == "Operator" and c.value in ("SETXY", "SETCOLOR", "CIRCLE", "ARC"):
+            if (c.node_type == "Operator"
+                    and c.value in ("SETXY", "SETCOLOR", "CIRCLE", "ARC")):
                 cmd = c.value
             elif c.node_type != "Operator":
                 expr_nodes.append(c)
@@ -742,13 +834,14 @@ class PythonTranspiler:
         self._line("# CLS (clear screen)")
 
     def _emit_color(self, node: SourceAST) -> None:
-        """COLOR expr → set text color"""
+        """COLOR expr → set turtle pen color via CGA palette."""
+        self._imports_needed.add("turtle")
         parts = [c for c in node.children if c.node_type != "Operator"]
         if parts:
             arg = self._expr_to_str(parts[0])
-            self._line(f"# COLOR {arg}")
+            self._line(f"turtle.color(_cga({arg}))")
         else:
-            self._line("# COLOR")
+            self._line("# COLOR (no argument)")
 
     def _emit_wait(self, node: SourceAST) -> None:
         """WAIT expr → time.sleep(expr)"""
@@ -782,7 +875,8 @@ class PythonTranspiler:
             self._emit_node(child)
 
     def _emit_transparent(self, node: SourceAST) -> None:
-        """For wrapper nodes that don't represent structure (e.g., 'statement').
+        """For wrapper nodes that don't represent structure
+        (e.g., 'statement').
 
         Also detects inline assignment patterns (IDENT '=' expr ';').
         """
@@ -858,8 +952,9 @@ class PythonTranspiler:
 
     def _expr_binary_chain(self, node: SourceAST) -> str:
         """Handle grammar patterns like: term (('+' / '-') term)*
-        
-        AST shape from PEG: [term, Operator('+'), term, Operator('-'), term, ...]
+
+        AST shape from PEG:
+        [term, Operator('+'), term, Operator('-'), term, ...]
         Operators are SourceAST nodes with node_type="Operator".
         """
         if not node.children:
@@ -873,8 +968,8 @@ class PythonTranspiler:
         if node.node_type not in ("comparison",):
             structural.add("=")
 
-        children = [c for c in node.children
-                    if not (c.node_type == "Operator" and c.value in structural)]
+        children = [c for c in node.children if not (
+            c.node_type == "Operator" and c.value in structural)]
 
         if not children:
             if node.value is not None:
@@ -935,6 +1030,13 @@ class PythonTranspiler:
         func = self._expr_to_str(children[0])
         func = self._map_function(func)
 
+        # Track module imports for qualified names like math.sqrt,
+        # random.random
+        if "." in func and not func.startswith("lambda"):
+            module_part = func.split(".")[0]
+            if module_part.isidentifier():
+                self._imports_needed.add(module_part)
+
         # Check if this is actually a call (has opening paren)
         has_paren = any(c.node_type == "Operator" and c.value == "("
                         for c in children)
@@ -950,7 +1052,8 @@ class PythonTranspiler:
                 # Filter Operator(',') from arg_list children
                 args = [self._expr_to_str(a) for a in child.children
                         if not (a.node_type == "Operator" and a.value == ",")]
-            elif child.node_type == "Operator" and child.value in ("(", ")", ","):
+            elif (child.node_type == "Operator"
+                  and child.value in ("(", ")", ",")):
                 continue  # Skip punctuation
             else:
                 args.append(self._expr_to_str(child))
@@ -1005,13 +1108,18 @@ class PythonTranspiler:
             return mapped
         # Built-in BASIC→Python function mappings
         _basic_funcs = {
-            "STR": "str", "VAL": "int", "INT": "int", "ABS": "abs",
-            "LEN": "len", "CHRS": "chr", "ASC": "ord", "UCASE": "str.upper",
-            "LCASE": "str.lower", "MID": "lambda s,i,n: s[i:i+n]",
-            "LEFTS": "lambda s,n: s[:n]", "RIGHTS": "lambda s,n: s[-n:]",
-            "SQR": "math.sqrt", "RND": "random.random", "SGN": "lambda x: (x>0)-(x<0)",
+            "STR": "str", "VAL": "int", "INT": "int",
+            "ABS": "abs", "LEN": "len", "CHRS": "chr",
+            "ASC": "ord", "UCASE": "str.upper",
+            "LCASE": "str.lower",
+            "MID": "lambda s,i,n: s[i:i+n]",
+            "LEFTS": "lambda s,n: s[:n]",
+            "RIGHTS": "lambda s,n: s[-n:]",
+            "SQR": "math.sqrt", "RND": "random.random",
+            "SGN": "lambda x: (x>0)-(x<0)",
             "TIMER": "time.time", "INSTR": "str.find",
-            "TAB": "lambda n: ' '*n", "SPC": "lambda n: ' '*n",
+            "TAB": "lambda n: ' '*n",
+            "SPC": "lambda n: ' '*n",
         }
         return _basic_funcs.get(name, name)
 
@@ -1057,9 +1165,10 @@ def transpile_to_python(ast: SourceAST,
 def transpile_and_exec(ast: SourceAST,
                        keyword_map: Optional[Dict[str, str]] = None,
                        function_map: Optional[Dict[str, str]] = None,
-                       globals_dict: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+                       globals_dict: Optional[Dict[str, Any]] = None
+                       ) -> Dict[str, Any]:
     """Transpile and execute, returning the resulting namespace."""
     code = transpile_to_python(ast, keyword_map, function_map)
     ns = globals_dict or {}
-    exec(code, ns)  # noqa: S102
+    exec(code, ns)  # noqa: S102  # pylint: disable=exec-used
     return ns

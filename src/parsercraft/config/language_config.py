@@ -38,7 +38,7 @@ try:
     YAML_AVAILABLE = True
 except ImportError:
     YAML_AVAILABLE = False
-    yaml = None  # type: ignore[assignment]
+    yaml = None  # type: ignore[assignment]  # noqa: F841
 
 
 @dataclass
@@ -98,7 +98,9 @@ class ParsingConfig:
     key_value_separator: str = ":"
 
     # String literals
-    string_delimiters: list[str] = field(default_factory=lambda: ['"', "'", '"""'])
+    string_delimiters: list[str] = field(  # noqa: E501
+        default_factory=lambda: ['"', "'", '"""']
+    )
     escape_character: str = "\\"
     allow_raw_strings: bool = True
     raw_string_prefix: str = "r"
@@ -141,7 +143,7 @@ class SyntaxOptions:
     """General syntax configuration options."""
 
     # Array indexing
-    array_start_index: int = -1  # -1 for Gulf of Mexico style, 0 for traditional
+    array_start_index: int = -1  # -1 for Gulf of Mexico style, 0 for trad.
     allow_fractional_indexing: bool = True
 
     # String quoting
@@ -210,27 +212,37 @@ class LanguageConfig:
         """Load default keywords."""
         default_keywords = {
             # Control flow
-            "if": KeywordMapping("if", "if", "control", "Conditional statement"),
+            "if": KeywordMapping("if", "if", "control", "Conditional statement"),  # noqa: E501
             "else": KeywordMapping("else", "else", "control", "Else clause"),
-            "elif": KeywordMapping("elif", "elif", "control", "Else-if clause"),
+            "elif": KeywordMapping("elif", "elif", "control", "Else-if clause"),  # noqa: E501
             "while": KeywordMapping("while", "while", "control", "While loop"),
             "for": KeywordMapping("for", "for", "control", "For loop"),
-            "break": KeywordMapping("break", "break", "control", "Break statement"),
+            "break": KeywordMapping(  # noqa: E501
+                "break", "break", "control", "Break statement"
+            ),
             "continue": KeywordMapping(
                 "continue", "continue", "control", "Continue statement"
             ),
-            "pass": KeywordMapping("pass", "pass", "control", "Pass statement"),
-            "when": KeywordMapping("when", "when", "control", "Reactive programming"),
+            "pass": KeywordMapping("pass", "pass", "control", "Pass statement"),  # noqa: E501
+            "when": KeywordMapping(  # noqa: E501
+                "when", "when", "control", "Reactive programming"
+            ),
             # Functions and definitions
-            "def": KeywordMapping("def", "def", "function", "Function definition"),
+            "def": KeywordMapping(  # noqa: E501
+                "def", "def", "function", "Function definition"
+            ),
             "function": KeywordMapping(
                 "function", "function", "function", "Function definition"
             ),
-            "return": KeywordMapping("return", "return", "function", "Return value"),
+            "return": KeywordMapping(  # noqa: E501
+                "return", "return", "function", "Return value"
+            ),
             "lambda": KeywordMapping(
                 "lambda", "lambda", "function", "Lambda expression"
             ),
-            "yield": KeywordMapping("yield", "yield", "function", "Yield statement"),
+            "yield": KeywordMapping(  # noqa: E501
+                "yield", "yield", "function", "Yield statement"
+            ),
             # Exception handling
             "try": KeywordMapping("try", "try", "exception", "Try block"),
             "except": KeywordMapping(
@@ -240,24 +252,34 @@ class LanguageConfig:
                 "finally", "finally", "exception", "Finally block"
             ),
             # Imports and modules
-            "import": KeywordMapping("import", "import", "import", "Import module"),
+            "import": KeywordMapping(  # noqa: E501
+                "import", "import", "import", "Import module"
+            ),
             "from": KeywordMapping("from", "from", "import", "From import"),
             "as": KeywordMapping("as", "as", "import", "Import alias"),
             # Context management
-            "with": KeywordMapping("with", "with", "context", "Context manager"),
+            "with": KeywordMapping(  # noqa: E501
+                "with", "with", "context", "Context manager"
+            ),
             # Variables and constants
             "const": KeywordMapping(
                 "const", "const", "variable", "Constant declaration"
             ),
-            "var": KeywordMapping("var", "var", "variable", "Variable declaration"),
+            "var": KeywordMapping(  # noqa: E501
+                "var", "var", "variable", "Variable declaration"
+            ),
             # Object-oriented
-            "class": KeywordMapping("class", "class", "oop", "Class definition"),
+            "class": KeywordMapping(  # noqa: E501
+                "class", "class", "oop", "Class definition"
+            ),
             # Logical operators (often used as keywords)
             "and": KeywordMapping("and", "and", "logic", "Logical AND"),
             "or": KeywordMapping("or", "or", "logic", "Logical OR"),
             "not": KeywordMapping("not", "not", "logic", "Logical NOT"),
             # Common keywords in other languages
-            "let": KeywordMapping("let", "let", "variable", "Variable declaration"),
+            "let": KeywordMapping(  # noqa: E501
+                "let", "let", "variable", "Variable declaration"
+            ),
             "then": KeywordMapping("then", "then", "control", "Then clause"),
         }
         self.keyword_mappings = default_keywords
@@ -265,7 +287,9 @@ class LanguageConfig:
     def _load_default_functions(self):
         """Load default built-in functions."""
         default_functions = {
-            "print": FunctionConfig("print", -1, "builtin.print", "Print to stdout"),
+            "print": FunctionConfig(  # noqa: E501
+                "print", -1, "builtin.print", "Print to stdout"
+            ),
             "Number": FunctionConfig(
                 "Number", 1, "builtin.to_number", "Convert to number"
             ),
@@ -304,13 +328,16 @@ class LanguageConfig:
             raise ValueError(f"Keyword '{original}' not found")
 
         # Validate new name
+        # pylint: disable-next=import-outside-toplevel
         from .identifier_validator import IdentifierValidator
 
         is_valid, warnings = IdentifierValidator.validate_identifier(
             new_name, allow_reserved=True, allow_symbols=True
         )
         if not is_valid:
-            raise ValueError(f"Invalid keyword name '{new_name}': {warnings[0]}")
+            raise ValueError(
+                f"Invalid keyword name '{new_name}': {warnings[0]}"
+            )
 
         self.keyword_mappings[original].custom = new_name
 
@@ -318,6 +345,7 @@ class LanguageConfig:
         self, name: str, category: str = "custom", description: str = ""
     ) -> None:
         """Add a new custom keyword with validation."""
+        # pylint: disable-next=import-outside-toplevel
         from .identifier_validator import IdentifierValidator
 
         # Validate name
@@ -327,7 +355,9 @@ class LanguageConfig:
         if not is_valid:
             raise ValueError(f"Invalid keyword name '{name}': {warnings[0]}")
 
-        self.keyword_mappings[name] = KeywordMapping(name, name, category, description)
+        self.keyword_mappings[name] = KeywordMapping(
+            name, name, category, description
+        )
 
     def remove_keyword(self, name: str) -> None:
         """Remove a keyword."""
@@ -373,7 +403,8 @@ class LanguageConfig:
         if alias_or_arity is not None:
             if isinstance(alias_or_arity, str):
                 exposed_name = alias_or_arity
-                # If implementation missing, assume internal name maps to builtin.{name}
+                # If implementation missing, assume internal name
+                # maps to builtin.{name}
                 if implementation is None:
                     implementation = f"builtin.{name}"
             else:
@@ -450,154 +481,162 @@ class LanguageConfig:
     @classmethod
     def from_preset(cls, preset_name: str) -> LanguageConfig:
         """Load a preset language configuration."""
-        config = cls()
+        cfg = cls()
 
         if preset_name == "python_like":
-            config.name = "Python-like"
+            cfg.name = "Python-like"
             # Remove 'function' since 'def' is the Python standard
-            config.remove_keyword("function")
-            config.set_array_indexing(0, False)
-            config.syntax_options.statement_terminator = ""
-            config.syntax_options.require_semicolons = False
-            config.disable_satirical_keywords()
+            cfg.remove_keyword("function")
+            cfg.set_array_indexing(0, False)
+            cfg.syntax_options.statement_terminator = ""
+            cfg.syntax_options.require_semicolons = False
+            cfg.disable_satirical_keywords()
 
         elif preset_name == "js_like":
-            config.name = "JavaScript-like"
-            config.set_array_indexing(0, False)
-            config.syntax_options.statement_terminator = ";"
-            config.syntax_options.require_semicolons = True
-            config.disable_satirical_keywords()
+            cfg.name = "JavaScript-like"
+            cfg.set_array_indexing(0, False)
+            cfg.syntax_options.statement_terminator = ";"
+            cfg.syntax_options.require_semicolons = True
+            cfg.disable_satirical_keywords()
 
         elif preset_name == "minimal":
-            config.name = "Minimal"
-            config.description = "Minimal feature set"
-            config.disable_satirical_keywords()
+            cfg.name = "Minimal"
+            cfg.description = "Minimal feature set"
+            cfg.disable_satirical_keywords()
             essential = {"print", "Number", "String", "Boolean", "List"}
-            for func_name in list(config.builtin_functions.keys()):
+            for func_name in list(cfg.builtin_functions.keys()):
                 if func_name not in essential:
-                    config.remove_function(func_name)
+                    cfg.remove_function(func_name)
 
         elif preset_name == "ruby_like":
-            config.name = "Ruby-like"
-            config.description = "Ruby-inspired syntax for educational purposes"
-            config.remove_keyword("function")
-            config.rename_keyword("def", "define")
-            config.rename_keyword("class", "blueprint")
-            config.rename_keyword("if", "when")
-            config.rename_keyword("else", "otherwise")
-            config.rename_keyword("while", "loop_while")
-            config.set_array_indexing(0, False)
-            config.disable_satirical_keywords()
+            cfg.name = "Ruby-like"
+            cfg.description = (  # noqa: E501
+                "Ruby-inspired syntax for educational purposes"
+            )
+            cfg.remove_keyword("function")
+            cfg.rename_keyword("def", "define")
+            cfg.rename_keyword("class", "blueprint")
+            cfg.rename_keyword("if", "when")
+            cfg.rename_keyword("else", "otherwise")
+            cfg.rename_keyword("while", "loop_while")
+            cfg.set_array_indexing(0, False)
+            cfg.disable_satirical_keywords()
 
         elif preset_name == "golang_like":
-            config.name = "Go-like"
-            config.description = "Go/Golang-inspired syntax"
-            config.remove_keyword("function")
-            config.rename_keyword("def", "func")
-            config.rename_keyword("class", "type")
-            config.rename_keyword("return", "return")
-            config.set_array_indexing(0, False)
-            config.syntax_options.statement_terminator = ""
-            config.disable_satirical_keywords()
+            cfg.name = "Go-like"
+            cfg.description = "Go/Golang-inspired syntax"
+            cfg.remove_keyword("function")
+            cfg.rename_keyword("def", "func")
+            cfg.rename_keyword("class", "type")
+            cfg.rename_keyword("return", "return")
+            cfg.set_array_indexing(0, False)
+            cfg.syntax_options.statement_terminator = ""
+            cfg.disable_satirical_keywords()
 
         elif preset_name == "rust_like":
-            config.name = "Rust-like"
-            config.description = "Rust-inspired syntax for systems programming"
-            config.remove_keyword("function")
-            config.rename_keyword("def", "fn")
-            config.rename_keyword("const", "const")
-            config.rename_keyword("var", "let")
-            config.rename_keyword("class", "struct")
-            config.set_array_indexing(0, False)
-            config.disable_satirical_keywords()
+            cfg.name = "Rust-like"
+            cfg.description = "Rust-inspired syntax for systems programming"
+            cfg.remove_keyword("function")
+            cfg.rename_keyword("def", "fn")
+            cfg.rename_keyword("const", "const")
+            cfg.rename_keyword("var", "let")
+            cfg.rename_keyword("class", "struct")
+            cfg.set_array_indexing(0, False)
+            cfg.disable_satirical_keywords()
 
         elif preset_name == "clike":
-            config.name = "C-like"
-            config.description = "C/C++-inspired syntax"
-            config.remove_keyword("function")
-            config.rename_keyword("def", "void")
-            config.rename_keyword("class", "struct")
-            config.rename_keyword("if", "if")
-            config.set_array_indexing(0, False)
-            config.syntax_options.statement_terminator = ";"
-            config.syntax_options.require_semicolons = True
-            config.disable_satirical_keywords()
+            cfg.name = "C-like"
+            cfg.description = "C/C++-inspired syntax"
+            cfg.remove_keyword("function")
+            cfg.rename_keyword("def", "void")
+            cfg.rename_keyword("class", "struct")
+            cfg.rename_keyword("if", "if")
+            cfg.set_array_indexing(0, False)
+            cfg.syntax_options.statement_terminator = ";"
+            cfg.syntax_options.require_semicolons = True
+            cfg.disable_satirical_keywords()
 
         elif preset_name == "functional":
-            config.name = "Functional Lambda"
-            config.description = "A functional language based on lambda calculus"
-            config.rename_keyword("if", "cond")
-            config.rename_keyword("def", "define")
-            config.rename_keyword("lambda", "lambda")
-            config.rename_keyword("let", "let")
-            config.set_array_indexing(0, False)
-            config.syntax_options.statement_terminator = ""
-            config.disable_satirical_keywords()
+            cfg.name = "Functional Lambda"
+            cfg.description = (  # noqa: E501
+                "A functional language based on lambda calculus"
+            )
+            cfg.rename_keyword("if", "cond")
+            cfg.rename_keyword("def", "define")
+            cfg.rename_keyword("lambda", "lambda")
+            cfg.rename_keyword("let", "let")
+            cfg.set_array_indexing(0, False)
+            cfg.syntax_options.statement_terminator = ""
+            cfg.disable_satirical_keywords()
             # Add functional-specific operators if needed, or rely on functions
 
         elif preset_name == "lisp_like":
-            config.name = "Lisp-like"
-            config.description = "Lisp-inspired parenthesized syntax"
-            config.rename_keyword("if", "if")
-            config.rename_keyword("def", "def")
-            config.rename_keyword("lambda", "lambda")
-            config.set_array_indexing(0, False)
-            config.syntax_options.statement_terminator = ""
-            config.parsing_config.function_call_start = "("
-            config.parsing_config.function_call_end = ")"
-            config.parsing_config.block_start = "("
-            config.parsing_config.block_end = ")"
-            config.disable_satirical_keywords()
+            cfg.name = "Lisp-like"
+            cfg.description = "Lisp-inspired parenthesized syntax"
+            cfg.rename_keyword("if", "if")
+            cfg.rename_keyword("def", "def")
+            cfg.rename_keyword("lambda", "lambda")
+            cfg.set_array_indexing(0, False)
+            cfg.syntax_options.statement_terminator = ""
+            cfg.parsing_config.function_call_start = "("
+            cfg.parsing_config.function_call_end = ")"
+            cfg.parsing_config.block_start = "("
+            cfg.parsing_config.block_end = ")"
+            cfg.disable_satirical_keywords()
 
         elif preset_name == "basic_like":
-            config.name = "BASIC-like"
-            config.description = "BASIC-inspired syntax"
-            config.rename_keyword("if", "IF")
-            config.rename_keyword("else", "ELSE")
-            config.rename_keyword("for", "FOR")
-            config.rename_keyword("while", "WHILE")
+            cfg.name = "BASIC-like"
+            cfg.description = "BASIC-inspired syntax"
+            cfg.rename_keyword("if", "IF")
+            cfg.rename_keyword("else", "ELSE")
+            cfg.rename_keyword("for", "FOR")
+            cfg.rename_keyword("while", "WHILE")
             # print is a function, not a keyword
-            config.rename_function("print", "PRINT")
-            config.rename_keyword("def", "DEF")
-            config.rename_keyword("return", "RETURN")
-            config.set_array_indexing(1, False)
-            config.syntax_options.statement_terminator = ""
-            config.disable_satirical_keywords()
+            cfg.rename_function("print", "PRINT")
+            cfg.rename_keyword("def", "DEF")
+            cfg.rename_keyword("return", "RETURN")
+            cfg.set_array_indexing(1, False)
+            cfg.syntax_options.statement_terminator = ""
+            cfg.disable_satirical_keywords()
 
         else:
             raise ValueError(f"Unknown preset: {preset_name}")
 
-        return config
+        return cfg
 
     # === Validation ===
 
     def validate(self) -> list[str]:
         """Validate configuration for consistency."""
-        errors = []
+        errs: list[str] = []
 
         # Check for duplicate custom names
         custom_names = [m.custom for m in self.keyword_mappings.values()]
-        duplicates = [name for name in custom_names if custom_names.count(name) > 1]
+        duplicates = [
+            name for name in custom_names if custom_names.count(name) > 1
+        ]
         if duplicates:
-            errors.append(f"Duplicate keyword names: {set(duplicates)}")
+            errs.append(f"Duplicate keyword names: {set(duplicates)}")
 
         # Check function arities
         for name, func in self.builtin_functions.items():
             if func.arity < -1:
-                errors.append(f"Function '{name}' has invalid arity: {func.arity}")
+                errs.append(
+                    f"Function '{name}' has invalid arity: {func.arity}"
+                )
 
         # Check operator precedences
         for symbol, op in self.operators.items():
             if op.precedence < 0:
-                errors.append(
+                errs.append(
                     f"Operator '{symbol}' has invalid precedence: {op.precedence}"  # noqa: E501
                 )
             if op.associativity not in ["left", "right", "none"]:
-                errors.append(
+                errs.append(
                     f"Operator '{symbol}' has invalid associativity: {op.associativity}"  # noqa: E501 pylint: disable=line-too-long
                 )
 
-        return errors
+        return errs
 
     # === Serialization ===
 
@@ -611,8 +650,12 @@ class LanguageConfig:
                 "author": self.author,
                 "target_interpreter": self.target_interpreter,
             },
-            "keywords": {k: asdict(v) for k, v in self.keyword_mappings.items()},
-            "functions": {k: asdict(v) for k, v in self.builtin_functions.items()},
+            "keywords": {
+                k: asdict(v) for k, v in self.keyword_mappings.items()
+            },
+            "functions": {
+                k: asdict(v) for k, v in self.builtin_functions.items()
+            },
             "operators": {k: asdict(v) for k, v in self.operators.items()},
             "syntax_options": asdict(self.syntax_options),
             "parsing_config": asdict(self.parsing_config),
@@ -626,60 +669,62 @@ class LanguageConfig:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> LanguageConfig:
         """Create configuration from dictionary."""
-        config = cls()
+        cfg = cls()
 
         if "metadata" in data:
-            config.name = data["metadata"].get("name", config.name)
-            config.version = data["metadata"].get("version", config.version)
-            config.description = data["metadata"].get("description", config.description)
-            config.author = data["metadata"].get("author", config.author)
+            cfg.name = data["metadata"].get("name", cfg.name)
+            cfg.version = data["metadata"].get("version", cfg.version)
+            cfg.description = data["metadata"].get(
+                "description", cfg.description
+            )
+            cfg.author = data["metadata"].get("author", cfg.author)
 
         if "keywords" in data:
-            config.keyword_mappings = {
+            cfg.keyword_mappings = {
                 k: KeywordMapping(**v) for k, v in data["keywords"].items()
             }
 
         if "functions" in data:
-            config.builtin_functions = {
+            cfg.builtin_functions = {
                 k: FunctionConfig(**v) for k, v in data["functions"].items()
             }
 
         if "operators" in data:
-            config.operators = {
+            cfg.operators = {
                 k: OperatorConfig(**v) for k, v in data["operators"].items()
             }
 
         if "syntax_options" in data:
-            config.syntax_options = SyntaxOptions(**data["syntax_options"])
+            cfg.syntax_options = SyntaxOptions(**data["syntax_options"])
 
         if "parsing_config" in data:
-            config.parsing_config = ParsingConfig(**data["parsing_config"])
+            cfg.parsing_config = ParsingConfig(**data["parsing_config"])
 
         if "runtime" in data:
-            config.debug_mode = data["runtime"].get("debug_mode", False)
-            config.strict_mode = data["runtime"].get("strict_mode", False)
-            config.compatibility_mode = data["runtime"].get(
+            cfg.debug_mode = data["runtime"].get("debug_mode", False)
+            cfg.strict_mode = data["runtime"].get("strict_mode", False)
+            cfg.compatibility_mode = data["runtime"].get(
                 "compatibility_mode", "standard"
             )
 
-        return config
+        return cfg
 
-    def save(self, filepath: Union[str, Path], format: str = "auto") -> None:
+    def save(self, filepath: Union[str, Path], fmt: str = "auto") -> None:
         """Save configuration to file."""
         filepath = Path(filepath)
 
-        if format == "auto":
-            format = "yaml" if filepath.suffix in [".yaml", ".yml"] else "json"
+        if fmt == "auto":
+            fmt = "yaml" if filepath.suffix in [".yaml", ".yml"] else "json"
 
-        if format == "yaml" and not YAML_AVAILABLE:
+        if fmt == "yaml" and not YAML_AVAILABLE:
             print("Warning: YAML not available, falling back to JSON")
-            format = "json"
+            fmt = "json"
             filepath = filepath.with_suffix(".json")
 
         data = self.to_dict()
 
-        with open(filepath, "w") as f:
-            if format == "yaml":
+        with open(filepath, "w", encoding="utf-8") as f:
+            if fmt == "yaml":
                 yaml.dump(data, f, default_flow_style=False, sort_keys=False)
             else:
                 json.dump(data, f, indent=2)
@@ -699,7 +744,9 @@ class LanguageConfig:
     def to_yaml(self) -> str:
         """Export configuration as YAML string."""
         if YAML_AVAILABLE:
-            return yaml.dump(self.to_dict(), default_flow_style=False, sort_keys=False)
+            return yaml.dump(
+                self.to_dict(), default_flow_style=False, sort_keys=False
+            )
         raise ImportError("PyYAML is not installed")
 
     @classmethod
@@ -713,7 +760,7 @@ class LanguageConfig:
                 "YAML support not available. Install with: pip install pyyaml"
             )
 
-        with open(filepath, "r") as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             if is_yaml:
                 data = yaml.safe_load(f)
             else:
@@ -754,8 +801,9 @@ class LanguageConfig:
                         self.keyword_mappings[key] = KeywordMapping(**value)
             else:
                 self.keyword_mappings = {
-                    k: KeywordMapping(**v) for k, v in updates["keywords"].items()
-                }
+                        k: KeywordMapping(**v)
+                        for k, v in updates["keywords"].items()
+                    }
 
         if "syntax_options" in updates:
             if merge:
@@ -763,7 +811,9 @@ class LanguageConfig:
                     if hasattr(self.syntax_options, key):
                         setattr(self.syntax_options, key, value)
             else:
-                self.syntax_options = SyntaxOptions(**updates["syntax_options"])
+                self.syntax_options = SyntaxOptions(
+                    **updates["syntax_options"]
+                )
 
     def delete_keyword(self, keyword: str) -> bool:
         """Delete a keyword mapping."""
@@ -800,7 +850,9 @@ class LanguageConfig:
             return True
         return False
 
-    def merge(self, other: "LanguageConfig", prefer_other: bool = True) -> None:
+    def merge(
+        self, other: "LanguageConfig", prefer_other: bool = True
+    ) -> None:
         """Merge another configuration into this one."""
         if prefer_other or not self.name:
             self.name = other.name
@@ -815,7 +867,9 @@ class LanguageConfig:
             if prefer_other or key not in self.builtin_functions:
                 self.builtin_functions[key] = deepcopy(func)
 
-    def export_mapping_table(self, filepath: Optional[Union[str, Path]] = None) -> str:
+    def export_mapping_table(
+        self, filepath: Optional[Union[str, Path]] = None
+    ) -> str:
         """Export keyword/function mapping table for documentation."""
         lines = ["# Language Configuration Mapping\n"]
         lines.append(f"**Language:** {self.name}\n")
@@ -824,7 +878,7 @@ class LanguageConfig:
         lines.append("## Keywords\n")
         lines.append("| Original | Custom | Category | Description |")
         lines.append("|----------|--------|----------|-------------|")
-        for original, mapping in sorted(self.keyword_mappings.items()):
+        for _original, mapping in sorted(self.keyword_mappings.items()):
             lines.append(
                 f"| `{mapping.original}` | `{mapping.custom}` | {mapping.category} | {mapping.description} |"  # noqa: E501 pylint: disable=line-too-long
             )
@@ -832,7 +886,7 @@ class LanguageConfig:
         lines.append("\n## Built-in Functions\n")
         lines.append("| Name | Arity | Description | Enabled |")
         lines.append("|------|-------|-------------|---------|")
-        for name, func in sorted(self.builtin_functions.items()):
+        for _name, func in sorted(self.builtin_functions.items()):
             arity_str = "variadic" if func.arity == -1 else str(func.arity)
             enabled_str = "✓" if func.enabled else "✗"
             lines.append(
@@ -842,7 +896,7 @@ class LanguageConfig:
         result = "\n".join(lines)
 
         if filepath:
-            with open(filepath, "w") as f:
+            with open(filepath, "w", encoding="utf-8") as f:
                 f.write(result)
             print(f"Mapping table exported to {filepath}")
 
@@ -878,7 +932,7 @@ def create_custom_config_interactive() -> LanguageConfig:
     """Interactive configuration builder (CLI)."""
     print("=== Language Configuration Builder ===\n")
 
-    config = LanguageConfig()
+    cfg = LanguageConfig()
 
     print("Start from a preset? (y/n): ", end="")
     if input().lower() == "y":
@@ -886,20 +940,20 @@ def create_custom_config_interactive() -> LanguageConfig:
         print("Preset name: ", end="")
         preset = input().strip()
         try:
-            config = LanguageConfig.from_preset(preset)
+            cfg = LanguageConfig.from_preset(preset)
             print(f"Loaded preset: {preset}\n")
         except ValueError:
             print("Invalid preset, starting from default\n")
 
-    print(f"Language name [{config.name}]: ", end="")
-    name = input().strip()
-    if name:
-        config.name = name
+    print(f"Language name [{cfg.name}]: ", end="")
+    lang_name = input().strip()
+    if lang_name:
+        cfg.name = lang_name
 
     print("\nConfiguration complete!")
-    print(config)
+    print(cfg)
 
-    return config
+    return cfg
 
 
 if __name__ == "__main__":

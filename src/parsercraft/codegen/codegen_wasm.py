@@ -1,24 +1,25 @@
 #!/usr/bin/env python3
 """
-WebAssembly (WASM) Backend for Custom Languages
+WebAssembly (WASM) Backend for ParserCraft
 
-Compiles custom language code to WebAssembly for web deployment.
+Translates a SourceAST (produced by the PEG grammar engine) into WebAssembly
+Text Format (WAT) for web deployment or WASM runtime execution.
 
 Features:
-    - WAT (WebAssembly Text) generation
-    - Memory management
-    - Function imports/exports
-    - Type system mapping to WASM types
-    - Optimized instruction selection
-    - WASM module builder
+    - SourceAST → WAT generation (assignments, control flow, functions)
+    - WASM type mapping: i32, i64, f32, f64
+    - Function import/export declarations
+    - WasmModule builder with to_wat() serialisation
 
-Usage:
-    from parsercraft.codegen_wasm import WasmGenerator, WasmModule
-    
+Primary API:
+    from parsercraft.codegen.codegen_wasm import WasmGenerator
+
     gen = WasmGenerator()
-    module = gen.generate_from_ast(ast, config)
+    module = gen.translate_source_ast(ast)  # SourceAST from grammar engine
     wat_text = module.to_wat()
-    module.save("output.wasm")
+
+    # Lower-level entry point with optional config:
+    module = gen.generate_from_ast(ast, config)
 
 WASM Types:
     - i32: 32-bit integer
@@ -206,7 +207,11 @@ class WasmModule:
         # Functions
         for func in self.functions.values():
             for line in func.to_wat().split("\n"):
-                lines.append(f"  {line}" if line and not line.startswith("(export") else line)
+                lines.append(
+                    f"  {line}"
+                    if line and not line.startswith("(export")
+                    else line
+                )
 
         # Data segments
         for address, data in self.data_segment.items():
@@ -218,14 +223,14 @@ class WasmModule:
 
     def save(self, filename: str) -> None:
         """Save module as WAT file."""
-        with open(filename, "w") as f:
+        with open(filename, "w", encoding="utf-8") as f:
             f.write(self.to_wat())
 
 
 class WasmGenerator:
     """Generates WebAssembly from custom language AST."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.module = WasmModule()
         self.type_mapping = {
             "int": WasmType.I32,
@@ -233,6 +238,9 @@ class WasmGenerator:
             "bool": WasmType.I32,
         }
         self.var_count = 0
+        self._locals: List[WasmLocal] = []
+        self._instructions: List[str] = []
+        self._local_index: Dict[str, int] = {}
 
     def translate_type(self, lang_type: str) -> WasmType:
         """Translate language type to WASM type."""
@@ -243,9 +251,10 @@ class WasmGenerator:
         self.var_count += 1
         return f"$temp{self.var_count}"
 
-    def generate_from_ast(self, ast: Any, config: Any = None) -> WasmModule:
+    def generate_from_ast(self, ast: Any, _config: Any = None) -> WasmModule:
         """Generate WASM module from AST."""
-        # This is a framework - actual AST traversal depends on language definition
+        # This is a framework — actual AST traversal depends on
+        # language definition
         # For now, show structure of how it would work
 
         # Add memory
@@ -306,7 +315,7 @@ class WasmGenerator:
                     instructions.append("return")
                 elif stmt.type == "assignment":
                     # Variable assignment
-                    instructions.append(f"(local.set ${stmt.target} ...)") 
+                    instructions.append(f"(local.set ${stmt.target} ...)")
                 elif stmt.type == "call":
                     # Function call
                     instructions.append(f"(call ${stmt.name})")
@@ -334,7 +343,9 @@ class WasmGenerator:
             )
         )
 
-    def generate_binary_op(self, op: str, left_type: WasmType, right_type: WasmType) -> str:
+    def generate_binary_op(
+        self, op: str, left_type: WasmType, _right_type: WasmType
+    ) -> str:
         """Generate WASM for binary operation."""
         # Map operator to WASM instruction
         op_map = {
@@ -359,16 +370,21 @@ class WasmGenerator:
         self, address: int, wasm_type: WasmType, offset: int = 0
     ) -> str:
         """Generate memory load instruction."""
-        # size_map = {WasmType.I32: 32, WasmType.I64: 64, WasmType.F32: 32, WasmType.F64: 64}
+        # size_map = {WasmType.I32: 32, WasmType.I64: 64,
+        #              WasmType.F32: 32, WasmType.F64: 64}
         # size = size_map.get(wasm_type, 32)
 
-        return f"({wasm_type.value}.load offset={offset} (i32.const {address}))"
+        return (
+            f"({wasm_type.value}.load offset={offset} (i32.const {address}))"
+        )
 
     def generate_memory_store(
         self, address: int, wasm_type: WasmType, offset: int = 0
     ) -> str:
         """Generate memory store instruction."""
-        return f"({wasm_type.value}.store offset={offset} (i32.const {address}))"
+        return (
+            f"({wasm_type.value}.store offset={offset} (i32.const {address}))"
+        )
 
     def generate_loop(self, condition: str, body: List[str]) -> List[str]:
         """Generate WASM loop."""
@@ -389,7 +405,10 @@ class WasmGenerator:
         return instructions
 
     def generate_if(
-        self, condition: str, then_body: List[str], else_body: List[str] = None
+        self,
+        condition: str,
+        then_body: List[str],
+        else_body: Optional[List[str]] = None,
     ) -> List[str]:
         """Generate WASM if statement."""
         instructions = ["(if", condition]
@@ -419,9 +438,9 @@ class WasmGenerator:
         """
         self.module = WasmModule()
         self.module.set_memory_size(256)
-        self._locals: List[WasmLocal] = []
-        self._instructions: List[str] = []
-        self._local_index: Dict[str, int] = {}
+        self._locals = []
+        self._instructions = []
+        self._local_index = {}
 
         self._visit_source_node(ast)
 
@@ -450,8 +469,13 @@ class WasmGenerator:
             # Detect inline assignment: IDENT '=' expr ';'
             ops = [c for c in node.children if c.node_type == "Operator"]
             if any(o.value == "=" for o in ops):
-                meaningful = [c for c in node.children
-                              if not (c.node_type == "Operator" and c.value in ("=", ";"))]
+                meaningful = [
+                    c for c in node.children
+                    if not (
+                        c.node_type == "Operator"
+                        and c.value in ("=", ";")
+                    )
+                ]
                 if len(meaningful) >= 2:
                     target = self._source_expr_name(meaningful[0])
                     if target not in self._local_index:
@@ -465,8 +489,10 @@ class WasmGenerator:
                     self._visit_source_node(child)
 
         elif nt in ("assignment", "Assignment"):
-            meaningful = [c for c in node.children
-                          if not (c.node_type == "Operator" and c.value in ("=", ";"))]
+            meaningful = [
+                c for c in node.children
+                if not (c.node_type == "Operator" and c.value in ("=", ";"))
+            ]
             if len(meaningful) >= 2:
                 target = self._source_expr_name(meaningful[0])
                 # Ensure local exists
@@ -479,13 +505,18 @@ class WasmGenerator:
                 self._instructions.append(f"(local.set ${target})")
 
         elif nt in ("expr_stmt", "ExprStmt"):
-            meaningful = [c for c in node.children if c.node_type != "Operator"]
+            meaningful = [
+                c for c in node.children if c.node_type != "Operator"
+            ]
             if meaningful:
                 self._emit_source_expr(meaningful[0])
                 self._instructions.append("(drop)")
 
     def _emit_source_expr(self, node: Any) -> None:
-        """Emit WASM instructions for a SourceAST expression (pushes value on stack)."""
+        """Emit WASM instructions for a SourceAST expression.
+
+        Pushes value on the stack.
+        """
         nt = node.node_type
 
         if nt == "Number":
@@ -502,10 +533,14 @@ class WasmGenerator:
         elif nt == "Operator":
             pass  # Operators are handled by the binary chain
 
-        elif nt in ("expr", "Expr", "comparison", "addition", "multiplication", "term"):
+        elif nt in (
+            "expr", "Expr", "comparison", "addition", "multiplication", "term"
+        ):
             structural = {"=", ";", ":", ",", "(", ")", "{", "}", "[", "]"}
-            children = [c for c in node.children
-                        if not (c.node_type == "Operator" and c.value in structural)]
+            children = [
+                c for c in node.children
+                if not (c.node_type == "Operator" and c.value in structural)
+            ]
             # Separate operands and operators
             operands = [c for c in children if c.node_type != "Operator"]
             operators = [c for c in children if c.node_type == "Operator"]
@@ -516,11 +551,15 @@ class WasmGenerator:
                     if i + 1 < len(operands):
                         self._emit_source_expr(operands[i + 1])
                         self._instructions.append(
-                            self.generate_binary_op(str(op.value), WasmType.I32, WasmType.I32)
+                            self.generate_binary_op(
+                                str(op.value), WasmType.I32, WasmType.I32
+                            )
                         )
 
         elif nt in ("factor", "primary"):
-            meaningful = [c for c in node.children if c.node_type != "Operator"]
+            meaningful = [
+                c for c in node.children if c.node_type != "Operator"
+            ]
             if meaningful:
                 self._emit_source_expr(meaningful[0])
 
@@ -534,7 +573,9 @@ class WasmGenerator:
                 self._instructions.append(f"(call ${func_name})")
 
         elif node.children:
-            meaningful = [c for c in node.children if c.node_type != "Operator"]
+            meaningful = [
+                c for c in node.children if c.node_type != "Operator"
+            ]
             if meaningful:
                 self._emit_source_expr(meaningful[0])
 

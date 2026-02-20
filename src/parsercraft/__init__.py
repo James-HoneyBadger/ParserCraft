@@ -12,7 +12,7 @@ Core pipeline::
         │
         ▼
     PEGInterpreter  ──►  SourceAST  ──►  Backend
-                                         ├── PythonTranspiler  → Python / exec()
+                                         ├── PythonTranspiler → Python / exec()
                                          ├── CCodeGenerator    → ANSI C
                                          ├── WasmGenerator     → WAT
                                          └── LLVMIRGenerator   → LLVM IR

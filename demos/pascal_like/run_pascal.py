@@ -21,6 +21,7 @@ import sys
 # Ensure parsercraft is importable when run directly
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
 
+# pylint: disable=wrong-import-position
 import yaml  # noqa: E402
 
 from parsercraft.parser import GrammarParser, PEGInterpreter  # noqa: E402
@@ -30,6 +31,7 @@ from parsercraft.codegen import (  # noqa: E402
 )
 from parsercraft.codegen.codegen_c import CCodeGenerator  # noqa: E402
 from parsercraft.codegen.codegen_wasm import WasmGenerator  # noqa: E402
+# pylint: enable=wrong-import-position
 
 
 # ---------------------------------------------------------------------------
@@ -125,7 +127,7 @@ def parse_and_run(
     print()
 
     namespace: dict = {}
-    exec(py_code, namespace)  # noqa: S102
+    exec(py_code, namespace)  # noqa: S102  # pylint: disable=exec-used
 
     sub_banner("Execution Results")
     for var, val in sorted(
@@ -172,6 +174,7 @@ def parse_and_run(
 # ---------------------------------------------------------------------------
 
 def main() -> None:
+    """Run the Pascal-like language demo pipeline."""
     config_path = os.path.join(
         os.path.dirname(__file__),
         "..", "..", "configs", "examples", "pascal_like.yaml",
@@ -183,10 +186,12 @@ def main() -> None:
     meta = config.get("metadata", config)       # YAML may lack 'metadata' key
 
     lang_name = (
-        meta.get("name") if isinstance(meta, dict) else config.get("name", "Pascal-Like")
+        meta.get("name") if isinstance(meta, dict)
+        else config.get("name", "Pascal-Like")
     )
     lang_version = (
-        meta.get("version") if isinstance(meta, dict) else config.get("version", "1.0")
+        meta.get("version") if isinstance(meta, dict)
+        else config.get("version", "1.0")
     )
     lang_desc = (
         meta.get("description") if isinstance(meta, dict)
@@ -204,7 +209,9 @@ def main() -> None:
     keywords = config.get("keywords", {})
     print(f"  {'Python keyword':<18} {'Pascal equivalent':<18} description")
     print(f"  {'─' * 17}  {'─' * 17}  {'─' * 20}")
-    for py_kw, pascal_kw in sorted(keywords.items(), key=lambda kv: str(kv[0])):
+    for py_kw, pascal_kw in sorted(
+        keywords.items(), key=lambda kv: str(kv[0])
+    ):
         if isinstance(pascal_kw, dict):
             custom = pascal_kw.get("custom", pascal_kw)
             desc = pascal_kw.get("description", "")
@@ -219,9 +226,15 @@ def main() -> None:
     banner("Built-in Function Mapping")
     functions = config.get("functions", {})
     if functions:
-        print(f"  {'Python function':<18} {'Pascal equivalent':<18} description")
-        print(f"  {'─' * 17}  {'─' * 17}  {'─' * 20}")
-        for py_fn, info in sorted(functions.items(), key=lambda kv: str(kv[0])):
+        print(
+            f"  {'Python function':<18} "
+            f"{'Pascal equivalent':<18} description"
+        )
+        sep = f"  {'─' * 17}  {'─' * 17}  {'─' * 20}"
+        print(sep)
+        for py_fn, info in sorted(
+            functions.items(), key=lambda kv: str(kv[0])
+        ):
             if isinstance(info, dict):
                 pascal_name = info.get("name", py_fn)
                 desc = info.get("description", "")
@@ -250,8 +263,14 @@ def main() -> None:
         rect_source,
         grammar,
     )
-    print(f"  Sanity check — perimeter expected 40, got {rect_vars.get('perimeter')}")
-    print(f"  Sanity check — area expected 96, got {rect_vars.get('area')}")
+    print(
+        f"  Sanity check — perimeter expected 40,"
+        f" got {rect_vars.get('perimeter')}"
+    )
+    print(
+        f"  Sanity check — area expected 96,"
+        f" got {rect_vars.get('area')}"
+    )
     print()
 
     # ── 5. Program 2 — Fibonacci recurrence (unrolled) ─────────────────────
@@ -342,8 +361,10 @@ def main() -> None:
     print("    ✓ Compiled to LLVM IR")
     print()
     print("  Next steps:")
-    print("    • Edit demos/pascal_like/samples/*.pas to try your own programs")
-    print("    • Run:  parsercraft repl configs/examples/pascal_like.yaml")
+    print("    • Edit demos/pascal_like/samples/*.pas "
+          "to try your own programs")
+    print("    • Run:  parsercraft repl "
+          "configs/examples/pascal_like.yaml")
     print("    • Run:  parsercraft validate configs/examples/pascal_like.yaml")
     print()
 

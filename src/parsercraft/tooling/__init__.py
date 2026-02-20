@@ -1,5 +1,6 @@
 """
-parsercraft.tooling — Developer tools for language authoring and IDE integration.
+parsercraft.tooling — Developer tools for language authoring
+and IDE integration.
 
 This subpackage provides:
 

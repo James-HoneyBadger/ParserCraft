@@ -44,7 +44,12 @@ See docs/TUTORIAL.md — Tutorial 5 for a full worked example.
 
 from .codegen_c import CCodeGenerator, CType
 from .codegen_wasm import WasmGenerator, WasmModule, WasmType, WasmOp
-from .python_transpiler import PythonTranspiler, TranspileOptions, transpile_to_python, transpile_and_exec
+from .python_transpiler import (
+    PythonTranspiler,
+    TranspileOptions,
+    transpile_to_python,
+    transpile_and_exec,
+)
 from .llvm_ir import LLVMIRGenerator
 
 __all__ = [

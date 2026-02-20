@@ -52,8 +52,9 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "parsercraft=parsercraft.cli:main",
-            "parsercraft-ide=parsercraft.launch_ide:main",
+            "parsercraft=parsercraft.tooling.cli:main",
+            "parsercraft-ide=parsercraft.ide.app:main",
+            "parsercraft-repl=parsercraft.runtime.repl:main",
             "codex=codex.codex:main",
         ],
     },

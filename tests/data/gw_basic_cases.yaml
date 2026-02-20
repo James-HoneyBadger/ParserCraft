@@ -1,9 +1,0 @@
-- name: print string
-  source: |
-    PRINT("hi")
-  expect_stdout: "hi"
-
-- name: add numbers
-  source: |
-    PRINT(2 + 3)
-  expect_stdout: "5"

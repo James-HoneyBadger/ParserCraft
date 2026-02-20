@@ -1,0 +1,182 @@
+REM ═══════════════════════════════════════════════════════
+REM  TEMPLECODE DEMO — "Star Academy"
+REM  A teaching program with turtle graphics
+REM  For Time Warp IDE / ParserCraft v4.0
+REM ═══════════════════════════════════════════════════════
+REM
+REM  This program demonstrates all three language families:
+REM    BASIC — variables, loops, control flow
+REM    Logo  — turtle drawing
+REM    PILOT — interactive quiz with scoring
+REM
+
+PROGRAM StarAcademy
+
+REM ── Setup ──────────────────────────────────────────────
+LET title = "STAR ACADEMY v1.0"
+LET score = 0
+LET total = 0
+
+CLS
+COLOR 14
+SAY "╔══════════════════════════════════════╗"
+SAY "║       STAR ACADEMY v1.0             ║"
+SAY "║   Learn Shapes with Turtle Graphics ║"
+SAY "╚══════════════════════════════════════╝"
+SAY ""
+COLOR 7
+
+REM ── Part 1: Draw a Square (Logo) ──────────────────────
+SAY "Lesson 1: The Square"
+SAY "A square has 4 equal sides and 4 right angles."
+SAY ""
+SAY "Watch the turtle draw one..."
+WAIT 1
+
+HOME
+PENDOWN
+SETCOLOR 10
+REPEAT 4
+    FORWARD 80
+    RIGHT 90
+END
+PENUP
+
+SAY "Done! The turtle turned RIGHT 90 four times."
+SAY ""
+
+REM ── Quiz 1 (PILOT-style) ──────────────────────────────
+LET total = total + 1
+ASK "How many degrees in each corner of a square? ", answer1
+IF answer1 = 90 THEN
+    SAY "Correct! ★"
+    LET score = score + 1
+    GRADE 1
+ELSE
+    SAY "Not quite. Each corner is 90 degrees."
+    GRADE 0
+ENDIF
+
+REM ── Part 2: Draw a Triangle ───────────────────────────
+SAY ""
+SAY "Lesson 2: The Triangle"
+SAY "An equilateral triangle has 3 equal sides."
+SAY ""
+
+HOME
+PENDOWN
+SETCOLOR 14
+REPEAT 3
+    FORWARD 100
+    RIGHT 120
+END
+PENUP
+
+SAY "The turtle turned RIGHT 120 each time."
+SAY "(Exterior angle = 360 / 3 = 120)"
+SAY ""
+
+REM ── Quiz 2 ────────────────────────────────────────────
+LET total = total + 1
+ASK "How many sides does a triangle have? ", answer2
+IF answer2 = 3 THEN
+    SAY "Correct! ★"
+    LET score = score + 1
+    GRADE 1
+ELSE
+    SAY "A triangle has 3 sides."
+    GRADE 0
+ENDIF
+
+REM ── Part 3: Draw a Star ───────────────────────────────
+SAY ""
+SAY "Lesson 3: The Five-Pointed Star"
+SAY ""
+
+HOME
+PENDOWN
+SETCOLOR 12
+REPEAT 5
+    FORWARD 100
+    RIGHT 144
+END
+PENUP
+
+SAY "A star uses 144-degree turns (= 360/5 * 2)."
+SAY ""
+
+REM ── Quiz 3 ────────────────────────────────────────────
+LET total = total + 1
+ASK "What turn angle makes a 5-pointed star? ", answer3
+IF answer3 = 144 THEN
+    SAY "Correct! ★"
+    LET score = score + 1
+    GRADE 1
+ELSE
+    SAY "The answer is 144 degrees."
+    GRADE 0
+ENDIF
+
+REM ── Part 4: Draw a Circle (approximation) ─────────────
+SAY ""
+SAY "Lesson 4: The Circle"
+SAY "We approximate a circle with many tiny steps."
+SAY ""
+
+HOME
+PENDOWN
+SETCOLOR 11
+REPEAT 36
+    FORWARD 10
+    RIGHT 10
+END
+PENUP
+
+SAY "36 steps × 10 degrees = 360 degrees. A full circle!"
+SAY ""
+
+REM ── Part 5: Spiral ────────────────────────────────────
+SAY "Bonus: A spiral!"
+HOME
+PENDOWN
+SETCOLOR 13
+LET dist = 5
+FOR i = 1 TO 40
+    FORWARD dist
+    RIGHT 15
+    LET dist = dist + 2
+NEXT i
+PENUP
+SAY ""
+
+REM ── Final Score ───────────────────────────────────────
+SAY ""
+COLOR 15
+SAY "═══════════════════════════════"
+SAY "   FINAL SCORE"
+SAY ""
+SAY "   You got " + STR(score) + " out of " + STR(total) + " correct."
+SAY ""
+
+IF score = total THEN
+    COLOR 14
+    SAY "   ★ ★ ★  PERFECT SCORE!  ★ ★ ★"
+ELSEIF score >= 2 THEN
+    COLOR 10
+    SAY "   ★ ★  Great job!  ★ ★"
+ELSEIF score >= 1 THEN
+    COLOR 6
+    SAY "   ★  Keep practicing!  ★"
+ELSE
+    COLOR 4
+    SAY "   Try again — you'll get it!"
+ENDIF
+
+COLOR 7
+SAY ""
+SAY "═══════════════════════════════"
+SAY "Thanks for using Star Academy!"
+SAY "Press any key to exit..."
+ASK "", done
+
+END

@@ -1,0 +1,619 @@
+# ============================================================================
+#  TempleCode — A BASIC/Logo/PILOT Hybrid for Time Warp IDE
+# ============================================================================
+#  An educational scripting language inspired by early 1990s microcomputer
+#  languages. Combines BASIC's line-oriented flow, Logo's turtle graphics
+#  vocabulary, and PILOT's teach-and-test philosophy.
+#
+#  Target: Time Warp Classic IDE (https://github.com/James-HoneyBadger/Time_Warp_Classic)
+#  ParserCraft config v4.0
+# ============================================================================
+
+metadata:
+  name: "TempleCode"
+  version: "1.0"
+  description: >
+    A hybrid educational language combining BASIC structured control flow,
+    Logo turtle graphics commands, and PILOT interactive teaching primitives.
+    Designed to evoke the feel of early-1990s shareware programming environments
+    like QBasic, PC Logo, and SuperPILOT.
+  author: "James-HoneyBadger"
+  year: "1992"
+  target_interpreter: "python"
+  file_extension: ".ret"
+  icon: "retro_floppy.ico"
+
+# ── Keyword Mappings ────────────────────────────────────────────────────────
+keywords:
+  # Program structure (BASIC heritage)
+  program:
+    original: "program"
+    custom: "PROGRAM"
+    category: "structure"
+    description: "Declare program name"
+  end:
+    original: "end"
+    custom: "END"
+    category: "structure"
+    description: "End block or program"
+  rem:
+    original: "comment"
+    custom: "REM"
+    category: "structure"
+    description: "Remark / comment line"
+
+  # Variable declaration (BASIC)
+  let:
+    original: "let"
+    custom: "LET"
+    category: "declaration"
+    description: "Assign a variable"
+  dim:
+    original: "array"
+    custom: "DIM"
+    category: "declaration"
+    description: "Dimension an array"
+  const:
+    original: "const"
+    custom: "CONST"
+    category: "declaration"
+    description: "Define a constant"
+
+  # Control flow (BASIC)
+  if:
+    original: "if"
+    custom: "IF"
+    category: "control_flow"
+    description: "Conditional branch"
+  then:
+    original: "then"
+    custom: "THEN"
+    category: "control_flow"
+    description: "Begin consequent block"
+  else:
+    original: "else"
+    custom: "ELSE"
+    category: "control_flow"
+    description: "Else branch"
+  elif:
+    original: "elif"
+    custom: "ELSEIF"
+    category: "control_flow"
+    description: "Else-if branch"
+  endif:
+    original: "endif"
+    custom: "ENDIF"
+    category: "control_flow"
+    description: "End IF block"
+  for:
+    original: "for"
+    custom: "FOR"
+    category: "loop"
+    description: "Counted loop"
+  to:
+    original: "to"
+    custom: "TO"
+    category: "loop"
+    description: "Loop upper bound"
+  step:
+    original: "step"
+    custom: "STEP"
+    category: "loop"
+    description: "Loop increment"
+  next:
+    original: "endfor"
+    custom: "NEXT"
+    category: "loop"
+    description: "End FOR loop"
+  while:
+    original: "while"
+    custom: "WHILE"
+    category: "loop"
+    description: "Conditional loop"
+  wend:
+    original: "endwhile"
+    custom: "WEND"
+    category: "loop"
+    description: "End WHILE loop"
+  repeat:
+    original: "repeat"
+    custom: "REPEAT"
+    category: "loop"
+    description: "Logo-style repeat block"
+  goto:
+    original: "goto"
+    custom: "GOTO"
+    category: "control_flow"
+    description: "Jump to label"
+  gosub:
+    original: "call"
+    custom: "GOSUB"
+    category: "control_flow"
+    description: "Call subroutine"
+  return:
+    original: "return"
+    custom: "RETURN"
+    category: "control_flow"
+    description: "Return from subroutine"
+
+  # Procedures (Logo heritage)
+  function:
+    original: "function"
+    custom: "TO"
+    category: "declaration"
+    description: "Define a procedure (Logo style)"
+
+  # Logic operators (BASIC)
+  and:
+    original: "and"
+    custom: "AND"
+    category: "operator"
+    description: "Logical AND"
+  or:
+    original: "or"
+    custom: "OR"
+    category: "operator"
+    description: "Logical OR"
+  not:
+    original: "not"
+    custom: "NOT"
+    category: "operator"
+    description: "Logical NOT"
+
+  # Boolean / null (BASIC)
+  "true":
+    original: "true"
+    custom: "TRUE"
+    category: "literal"
+    description: "Boolean true"
+  "false":
+    original: "false"
+    custom: "FALSE"
+    category: "literal"
+    description: "Boolean false"
+  "null":
+    original: "null"
+    custom: "NIL"
+    category: "literal"
+    description: "Null value"
+
+  # I/O (PILOT heritage)
+  print:
+    original: "print"
+    custom: "SAY"
+    category: "io"
+    description: "Display text (PILOT: T:)"
+  input:
+    original: "input"
+    custom: "ASK"
+    category: "io"
+    description: "Accept input (PILOT: A:)"
+  match:
+    original: "match"
+    custom: "MATCH"
+    category: "io"
+    description: "Pattern match input (PILOT: M:)"
+
+  # Module
+  import:
+    original: "import"
+    custom: "LOAD"
+    category: "module"
+    description: "Load a library module"
+
+# ── Built-in Functions ──────────────────────────────────────────────────────
+builtin_functions:
+  # === I/O (BASIC + PILOT) ===
+  say:
+    name: "SAY"
+    arity: -1
+    enabled: true
+    description: "Print values to the console"
+  ask:
+    name: "ASK"
+    arity: 1
+    enabled: true
+    description: "Prompt the user for input"
+  cls:
+    name: "CLS"
+    arity: 0
+    enabled: true
+    description: "Clear the screen"
+  beep:
+    name: "BEEP"
+    arity: 0
+    enabled: true
+    description: "Play system beep"
+  locate:
+    name: "LOCATE"
+    arity: 2
+    enabled: true
+    description: "Move text cursor to row, col"
+  color:
+    name: "COLOR"
+    arity: -1
+    enabled: true
+    description: "Set foreground (and optional background) color"
+
+  # === Turtle Graphics (Logo) ===
+  forward:
+    name: "FORWARD"
+    arity: 1
+    enabled: true
+    description: "Move turtle forward N pixels"
+  fd:
+    name: "FD"
+    arity: 1
+    enabled: true
+    description: "Short alias for FORWARD"
+  back:
+    name: "BACK"
+    arity: 1
+    enabled: true
+    description: "Move turtle backward N pixels"
+  bk:
+    name: "BK"
+    arity: 1
+    enabled: true
+    description: "Short alias for BACK"
+  left:
+    name: "LEFT"
+    arity: 1
+    enabled: true
+    description: "Turn turtle left N degrees"
+  lt:
+    name: "LT"
+    arity: 1
+    enabled: true
+    description: "Short alias for LEFT"
+  right:
+    name: "RIGHT"
+    arity: 1
+    enabled: true
+    description: "Turn turtle right N degrees"
+  rt:
+    name: "RT"
+    arity: 1
+    enabled: true
+    description: "Short alias for RIGHT"
+  penup:
+    name: "PENUP"
+    arity: 0
+    enabled: true
+    description: "Lift the pen (stop drawing)"
+  pu:
+    name: "PU"
+    arity: 0
+    enabled: true
+    description: "Short alias for PENUP"
+  pendown:
+    name: "PENDOWN"
+    arity: 0
+    enabled: true
+    description: "Lower the pen (start drawing)"
+  pd:
+    name: "PD"
+    arity: 0
+    enabled: true
+    description: "Short alias for PENDOWN"
+  home:
+    name: "HOME"
+    arity: 0
+    enabled: true
+    description: "Move turtle to center, heading north"
+  setxy:
+    name: "SETXY"
+    arity: 2
+    enabled: true
+    description: "Move turtle to absolute x, y"
+  setcolor:
+    name: "SETCOLOR"
+    arity: 1
+    enabled: true
+    description: "Set turtle pen color (0-15 CGA palette)"
+  hideturtle:
+    name: "HT"
+    arity: 0
+    enabled: true
+    description: "Hide the turtle cursor"
+  showturtle:
+    name: "ST"
+    arity: 0
+    enabled: true
+    description: "Show the turtle cursor"
+  circle:
+    name: "CIRCLE"
+    arity: 1
+    enabled: true
+    description: "Draw a circle with radius N"
+  arc:
+    name: "ARC"
+    arity: 2
+    enabled: true
+    description: "Draw an arc: ARC angle radius"
+
+  # === Math (BASIC) ===
+  abs:
+    name: "ABS"
+    arity: 1
+    enabled: true
+    description: "Absolute value"
+  sqr:
+    name: "SQR"
+    arity: 1
+    enabled: true
+    description: "Square root"
+  int:
+    name: "INT"
+    arity: 1
+    enabled: true
+    description: "Truncate to integer"
+  rnd:
+    name: "RND"
+    arity: 0
+    enabled: true
+    description: "Random number 0..1"
+  sin:
+    name: "SIN"
+    arity: 1
+    enabled: true
+    description: "Sine (degrees)"
+  cos:
+    name: "COS"
+    arity: 1
+    enabled: true
+    description: "Cosine (degrees)"
+  tan:
+    name: "TAN"
+    arity: 1
+    enabled: true
+    description: "Tangent (degrees)"
+
+  # === String (BASIC) ===
+  len:
+    name: "LEN"
+    arity: 1
+    enabled: true
+    description: "String length"
+  left_str:
+    name: "LEFTS"
+    arity: 2
+    enabled: true
+    description: "Left N characters"
+  right_str:
+    name: "RIGHTS"
+    arity: 2
+    enabled: true
+    description: "Right N characters"
+  mid_str:
+    name: "MIDS"
+    arity: 3
+    enabled: true
+    description: "Substring from position"
+  str:
+    name: "STR"
+    arity: 1
+    enabled: true
+    description: "Number to string"
+  val:
+    name: "VAL"
+    arity: 1
+    enabled: true
+    description: "String to number"
+  chr:
+    name: "CHRS"
+    arity: 1
+    enabled: true
+    description: "ASCII code to character"
+  asc:
+    name: "ASC"
+    arity: 1
+    enabled: true
+    description: "Character to ASCII code"
+  upper:
+    name: "UCASE"
+    arity: 1
+    enabled: true
+    description: "Convert to uppercase"
+  lower:
+    name: "LCASE"
+    arity: 1
+    enabled: true
+    description: "Convert to lowercase"
+  instr:
+    name: "INSTR"
+    arity: 2
+    enabled: true
+    description: "Find substring position"
+
+  # === PILOT Teaching ===
+  score:
+    name: "SCORE"
+    arity: 0
+    enabled: true
+    description: "Return current quiz score"
+  grade:
+    name: "GRADE"
+    arity: 1
+    enabled: true
+    description: "Record answer correctness (1=right, 0=wrong)"
+  timer:
+    name: "TIMER"
+    arity: 0
+    enabled: true
+    description: "Seconds since program start"
+  wait:
+    name: "WAIT"
+    arity: 1
+    enabled: true
+    description: "Pause N seconds"
+
+# ── Operators ───────────────────────────────────────────────────────────────
+operators:
+  - symbol: "+"
+    precedence: 4
+    associativity: "left"
+    description: "Addition / string concatenation"
+  - symbol: "-"
+    precedence: 4
+    associativity: "left"
+    description: "Subtraction"
+  - symbol: "*"
+    precedence: 5
+    associativity: "left"
+    description: "Multiplication"
+  - symbol: "/"
+    precedence: 5
+    associativity: "left"
+    description: "Division"
+  - symbol: "MOD"
+    precedence: 5
+    associativity: "left"
+    description: "Modulo"
+  - symbol: "^"
+    precedence: 6
+    associativity: "right"
+    description: "Exponentiation"
+  - symbol: "="
+    precedence: 2
+    associativity: "right"
+    description: "Assignment / equality test"
+  - symbol: "<>"
+    precedence: 3
+    associativity: "left"
+    description: "Not equal"
+  - symbol: "<"
+    precedence: 3
+    associativity: "left"
+    description: "Less than"
+  - symbol: ">"
+    precedence: 3
+    associativity: "left"
+    description: "Greater than"
+  - symbol: "<="
+    precedence: 3
+    associativity: "left"
+    description: "Less than or equal"
+  - symbol: ">="
+    precedence: 3
+    associativity: "left"
+    description: "Greater than or equal"
+
+# ── Parsing ─────────────────────────────────────────────────────────────────
+parsing:
+  comment_style: "REM"
+  alt_comment_prefix: "'"
+  string_delimiters:
+    - "\""
+  statement_separator: ":"
+  line_continuation: "_"
+  case_sensitive: false
+
+# ── Syntax Options ──────────────────────────────────────────────────────────
+syntax:
+  array_index_base: 1
+  array_index_one_based: true
+  function_keyword_required: true
+  parentheses_required: false
+  block_end_required: true
+  semicolons: "none"
+  indentation_style: "free"
+
+# ── PEG Grammar ─────────────────────────────────────────────────────────────
+# This grammar is processed by ParserCraft's grammar_from_config().
+# It defines the core syntax that the PEGInterpreter can parse and
+# all code-generation backends can translate.
+grammar:
+  name: "TempleCode"
+  start: program
+  skip_whitespace: true
+  comments:
+    - "'.*"
+    - "REM\\b.*"
+  rules:
+    # Top level
+    program:        "statement+ 'END'?"
+    statement:      "let_stmt / say_stmt / ask_stmt / if_stmt / for_stmt / while_stmt / repeat_stmt / gosub_stmt / goto_stmt / return_stmt / cls_stmt / color_stmt / wait_stmt / grade_stmt / program_stmt / label_def / turtle_stmt / assignment / expr_stmt"
+
+    # BASIC: LET x = expr
+    let_stmt:       "'LET' IDENT '=' expr"
+    assignment:     "IDENT '=' expr"
+
+    # I/O (PILOT-inspired naming)
+    say_stmt:       "'SAY' expr"
+    ask_stmt:       "'ASK' STRING ',' IDENT"
+
+    # Screen/system commands
+    cls_stmt:       "'CLS'"
+    color_stmt:     "'COLOR' expr"
+    wait_stmt:      "'WAIT' expr"
+    grade_stmt:     "'GRADE' expr"
+    program_stmt:   "'PROGRAM' IDENT"
+
+    # Control flow
+    if_stmt:        "'IF' expr 'THEN' statement+ ('ELSEIF' expr 'THEN' statement+)* ('ELSE' statement+)? 'ENDIF'"
+    for_stmt:       "'FOR' IDENT '=' expr 'TO' expr ('STEP' expr)? statement+ 'NEXT' IDENT?"
+    while_stmt:     "'WHILE' expr statement+ 'WEND'"
+    repeat_stmt:    "'REPEAT' expr statement+ 'END'"
+    gosub_stmt:     "'GOSUB' IDENT"
+    goto_stmt:      "'GOTO' IDENT"
+    return_stmt:    "'RETURN' expr?"
+    label_def:      "IDENT ':'"
+
+    # Logo turtle commands
+    turtle_stmt:    "turtle_move / turtle_turn / turtle_pen / turtle_pos"
+    turtle_move:    "('FORWARD' / 'FD' / 'BACK' / 'BK') expr"
+    turtle_turn:    "('LEFT' / 'LT' / 'RIGHT' / 'RT') expr"
+    turtle_pen:     "'PENUP' / 'PU' / 'PENDOWN' / 'PD' / 'HOME'"
+    turtle_pos:     "('SETXY' expr expr) / ('SETCOLOR' expr) / ('CIRCLE' expr) / ('ARC' expr expr)"
+
+    # Expressions
+    expr:           "comparison"
+    comparison:     "addition (('=' / '<>' / '<=' / '>=' / '<' / '>') addition)*"
+    addition:       "multiplication (('+' / '-') multiplication)*"
+    multiplication: "unary (('*' / '/') unary)*"
+    unary:          "('-' / 'NOT') unary / call"
+    call:           "primary ('(' arg_list? ')')*"
+    arg_list:       "expr (',' expr)*"
+    primary:        "NUMBER / STRING / IDENT / '(' expr ')'"
+    # Block terminators — must not be consumed as expressions
+    block_end:      "'ENDIF' / 'ELSE' / 'ELSEIF' / 'NEXT' / 'WEND' / 'END'"
+    expr_stmt:      "!block_end expr"
+
+# ── Color Palette (CGA 16-color, for turtle SETCOLOR) ──────────────────────
+color_palette:
+  0:  { name: "Black",        hex: "#000000" }
+  1:  { name: "Blue",         hex: "#0000AA" }
+  2:  { name: "Green",        hex: "#00AA00" }
+  3:  { name: "Cyan",         hex: "#00AAAA" }
+  4:  { name: "Red",          hex: "#AA0000" }
+  5:  { name: "Magenta",      hex: "#AA00AA" }
+  6:  { name: "Brown",        hex: "#AA5500" }
+  7:  { name: "Light Gray",   hex: "#AAAAAA" }
+  8:  { name: "Dark Gray",    hex: "#555555" }
+  9:  { name: "Light Blue",   hex: "#5555FF" }
+  10: { name: "Light Green",  hex: "#55FF55" }
+  11: { name: "Light Cyan",   hex: "#55FFFF" }
+  12: { name: "Light Red",    hex: "#FF5555" }
+  13: { name: "Light Magenta", hex: "#FF55FF" }
+  14: { name: "Yellow",       hex: "#FFFF55" }
+  15: { name: "White",        hex: "#FFFFFF" }
+
+# ── IDE Theme (Time Warp Classic) ──────────────────────────────────────────
+ide_theme:
+  name: "DOS Blue"
+  background: "#0000AA"
+  foreground: "#FFFF55"
+  cursor: "#FFFFFF"
+  selection_bg: "#00AAAA"
+  selection_fg: "#000000"
+  keyword_color: "#FFFFFF"
+  string_color: "#55FF55"
+  number_color: "#FF5555"
+  comment_color: "#555555"
+  turtle_color: "#55FFFF"
+  font_family: "Fixedsys"
+  font_size: 16
+  border_style: "double_line"
+  status_bar: true
+  line_numbers: true

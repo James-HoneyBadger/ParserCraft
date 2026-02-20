@@ -1,5 +1,0 @@
-# TeachScript Example: Hello World
-# The classic first program
-
-say("Hello, World!")
-say("Welcome to TeachScript!")
